@@ -19,7 +19,7 @@ export default function Resources() {
       <PageTitle title="Official Resources" sub="ScholarSAT's questions are original. Pair them with these free official materials." />
       <div className="grid gap-4 md:grid-cols-2">
         {LINKS.map(({ Icon, title, desc, href }) => (
-          <a key={href} href={href} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-4 rounded-2xl border border-line bg-white p-5 shadow-card transition-all hover:-translate-y-0.5 hover:border-red-200">
+          <a key={href} href={href} target="_blank" rel="noopener noreferrer" className="group flex items-start gap-4 rounded-2xl border border-line bg-bg p-5 shadow-card transition-all hover:-translate-y-0.5 hover:border-red-200">
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-red-50 text-red"><Icon /></span>
             <span className="min-w-0 flex-1">
               <span className="block text-[16px] font-medium group-hover:text-red">{title}</span>

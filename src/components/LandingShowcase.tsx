@@ -16,7 +16,7 @@ export function LandingShowcase() {
   const tab = TABS[active];
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-red text-white">
+    <div className="relative overflow-hidden rounded-3xl bg-accent-fill text-white">
       <div className="pattern-grid pointer-events-none absolute inset-0 text-white/[0.07]" />
       <div className="relative px-4 pt-5 sm:px-10 sm:pt-8">
         <div role="tablist" aria-label="App screens" className="flex gap-1.5 overflow-x-auto scroll-thin pb-1">
@@ -30,7 +30,7 @@ export function LandingShowcase() {
               aria-controls="showcase-panel"
               onClick={() => setActive(i)}
               className={`inline-flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-[14px] font-medium transition-colors ${
-                i === active ? "bg-white text-ink" : "text-white/80 hover:bg-white/10 hover:text-white"
+                i === active ? "bg-bg text-ink" : "text-white/80 hover:bg-white/10 hover:text-white"
               }`}
             >
               <t.Icon className="h-4 w-4" /> {t.label}
@@ -38,14 +38,14 @@ export function LandingShowcase() {
           ))}
         </div>
 
-        <div id="showcase-panel" role="tabpanel" aria-labelledby={`showcase-tab-${tab.id}`} className="mt-5 overflow-hidden rounded-t-xl border border-b-0 border-black/20 bg-white shadow-[0_-8px_60px_rgb(0_0_0/0.28)] sm:mt-7">
+        <div id="showcase-panel" role="tabpanel" aria-labelledby={`showcase-tab-${tab.id}`} className="mt-5 overflow-hidden rounded-t-xl border border-b-0 border-black/20 bg-bg shadow-[0_-8px_60px_rgb(0_0_0/0.28)] sm:mt-7">
           <div className="flex items-center gap-3 border-b border-line bg-surface px-4 py-2.5">
             <span className="flex gap-1.5" aria-hidden="true">
               <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
               <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
               <span className="h-2.5 w-2.5 rounded-full bg-line-strong" />
             </span>
-            <span className="mx-auto w-full max-w-xs truncate rounded-md bg-white px-3 py-1 text-center font-mono text-[12px] text-muted">scholarsat.com/{tab.path}</span>
+            <span className="mx-auto w-full max-w-xs truncate rounded-md bg-bg px-3 py-1 text-center font-mono text-[12px] text-muted">scholarsat.com/{tab.path}</span>
             <span className="w-10" aria-hidden="true" />
           </div>
           <div className="relative aspect-[2040/1040] overflow-hidden">

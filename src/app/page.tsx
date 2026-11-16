@@ -91,7 +91,7 @@ function Tile({ title, children, visual, className = "", i = 0 }: { title: strin
   return (
     <div style={idx(i)} className={`lp-stagger lp-lift lp-card flex flex-col overflow-hidden rounded-2xl border border-line bg-surface ${className}`}>
       <div className="flex min-h-[260px] flex-1 items-center justify-center p-6 sm:p-10">{visual}</div>
-      <div className="border-t border-line bg-white p-6">
+      <div className="border-t border-line bg-bg p-6">
         <h3 className="text-[18px] font-medium tracking-[-0.01em] text-ink">{title}</h3>
         <p className="mt-1.5 text-[15px] leading-relaxed text-muted">{children}</p>
       </div>
@@ -116,7 +116,7 @@ export default async function Landing() {
   const primaryLabel = user ? "Open dashboard" : "Create free account";
 
   return (
-    <div className="lp-root bg-white text-[15px]">
+    <div className="lp-root bg-bg text-[15px]">
       <LandingNav signedIn={Boolean(user)} repo={REPO} />
       <div aria-hidden="true" className="h-[60px]" />
 
@@ -140,7 +140,7 @@ export default async function Landing() {
         </section>
 
         {/* Numbers, counted from the bank */}
-        <section className="mt-20 bg-ink text-white sm:mt-28">
+        <section className="mt-20 bg-inverse text-white sm:mt-28">
           <div className={`${WRAP} py-16 sm:py-24`}>
           <Reveal stagger>
           <dl className="grid grid-cols-2 gap-y-10 lg:grid-cols-4">
@@ -184,7 +184,7 @@ export default async function Landing() {
                       {TAXONOMY[sec].map((d) => {
                         const n = c.byDomain[d.domain] ?? 0;
                         return (
-                          <li key={d.domain} className="rounded-xl border border-line bg-white p-4">
+                          <li key={d.domain} className="rounded-xl border border-line bg-bg p-4">
                             <div className="flex items-baseline justify-between gap-4">
                               <span className="font-medium text-ink">{d.domain}</span>
                               <span className="text-muted tabular-nums">{n.toLocaleString()}</span>
@@ -224,7 +224,7 @@ export default async function Landing() {
                   <h3 className="text-[18px] font-medium tracking-[-0.01em] text-ink">Any equivalent answer counts</h3>
                   <ul className="mt-5 grid gap-2">
                     {["0.5", ".5", "1/2"].map((v) => (
-                      <li key={v} className="flex items-center justify-between rounded-xl border border-line bg-white px-4 py-2.5">
+                      <li key={v} className="flex items-center justify-between rounded-xl border border-line bg-bg px-4 py-2.5">
                         <span className="font-mono text-[16px] text-ink">{v}</span>
                         <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ok"><ICheckCircle className="h-4 w-4" /> Correct</span>
                       </li>
@@ -318,7 +318,7 @@ export default async function Landing() {
                 visual={
                   <ul className="grid w-full max-w-md grid-cols-[minmax(0,1fr)] gap-2">
                     {missed.map((s) => (
-                      <li key={s} className="flex items-center gap-3 rounded-xl border border-line bg-white px-5 py-4 lp-chip">
+                      <li key={s} className="flex items-center gap-3 rounded-xl border border-line bg-bg px-5 py-4 lp-chip">
                         <IXCircle className="h-5 w-5 shrink-0 text-bad" />
                         <span className="min-w-0 flex-1 truncate text-[15px] text-ink">{s}</span>
                         <span className="shrink-0 rounded-lg bg-red-50 px-2.5 py-1 text-[13px] font-medium text-red">Retry</span>
@@ -334,7 +334,7 @@ export default async function Landing() {
                 title="Predicted score"
                 i={1}
                 visual={
-                  <div className="flex w-full max-w-sm items-center gap-7 rounded-2xl border border-line bg-white p-6 lp-chip">
+                  <div className="flex w-full max-w-sm items-center gap-7 rounded-2xl border border-line bg-bg p-6 lp-chip">
                     <Ring value={0.725} size={112} stroke={10} label="1270" />
                     <div className="min-w-0 flex-1">
                       <p className="text-[13px] text-muted">Example estimate</p>
@@ -357,8 +357,8 @@ export default async function Landing() {
                 className="lg:order-4"
                 visual={
                   <div className="relative w-full max-w-sm">
-                    <div className="absolute inset-x-4 -bottom-2 h-full rounded-2xl border border-line bg-white" aria-hidden="true" />
-                    <div className="relative rounded-2xl border border-line bg-white p-6 text-center lp-chip">
+                    <div className="absolute inset-x-4 -bottom-2 h-full rounded-2xl border border-line bg-bg" aria-hidden="true" />
+                    <div className="relative rounded-2xl border border-line bg-bg p-6 text-center lp-chip">
                       <p className="text-[36px] font-medium tracking-[-0.03em] text-ink">{word.word}</p>
                       <p className="mt-0.5 text-[13px] italic text-muted">{word.pos}</p>
                       <p className="mt-5 border-t border-line pt-5 text-[16px] text-ink-2">{word.def}</p>
@@ -384,8 +384,8 @@ export default async function Landing() {
                         <span className="shrink-0 text-[13px] font-medium text-ink">Solve</span>
                       </div>
                     ))}
-                    <div className="mt-1 flex items-center gap-2 rounded-xl border border-line bg-white px-4 py-3 lp-chip">
-                      <span className="text-gold"><IFireSolid className="h-5 w-5" /></span>
+                    <div className="mt-1 flex items-center gap-2 rounded-xl border border-line bg-bg px-4 py-3 lp-chip">
+                      <span className="text-gold-600"><IFireSolid className="h-5 w-5" /></span>
                       <span className="mr-auto text-[14px] text-ink">Your streak</span>
                       {[1, 1, 1, 1, 1, 0, 0].map((on, i) => <span key={i} className={`h-2.5 w-2.5 rounded-full ${on ? "bg-gold" : "bg-surface-2"}`} />)}
                     </div>
@@ -402,7 +402,7 @@ export default async function Landing() {
         <section className="border-t border-line">
           <div className={`${WRAP} py-20 sm:py-28`}>
             <Reveal className="grid items-center gap-8 rounded-3xl border border-line bg-surface p-8 sm:p-12 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:gap-12">
-              <div className="grid h-24 w-24 place-items-center rounded-2xl border border-line bg-white sm:h-28 sm:w-28">
+              <div className="grid h-24 w-24 place-items-center rounded-2xl border border-line bg-bg sm:h-28 sm:w-28">
                 <Image src="/codestarters-logo.png" alt="CodeStarters logo" width={72} height={72} className="h-16 w-16 sm:h-[72px] sm:w-[72px]" />
               </div>
               <div>
@@ -441,13 +441,13 @@ export default async function Landing() {
 
         {/* Closing call to action */}
         <section className={`${WRAP} pb-20 sm:pb-28`}>
-          <Reveal className="group relative grid overflow-hidden rounded-3xl bg-red text-white lg:grid-cols-2">
+          <Reveal className="group relative grid overflow-hidden rounded-3xl bg-accent-fill text-white lg:grid-cols-2">
             <div className="pattern-grid pointer-events-none absolute inset-0 text-white/[0.07]" />
             <div className="relative p-8 sm:p-14">
-              <div className="grid h-[88px] w-[88px] place-items-center rounded-2xl bg-white"><Owl size={64} /></div>
+              <div className="grid h-[88px] w-[88px] place-items-center rounded-2xl bg-bg"><Owl size={64} /></div>
               <h2 className="mt-8 max-w-[14ch] text-[36px] leading-[1.05] font-medium tracking-[-0.03em] sm:text-[52px]">Your next point starts with one question.</h2>
               <div className="mt-9 flex flex-wrap gap-3">
-                <Link href={primaryHref} className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-[15px] font-medium text-red hover:bg-gold-50">
+                <Link href={primaryHref} className="inline-flex items-center gap-2 rounded-xl bg-bg px-6 py-3 text-[15px] font-medium text-red hover:bg-gold-50">
                   {user ? "Back to practice" : "Create your free account"} <IArrowR className="h-4 w-4" />
                 </Link>
                 <Link href="/practice" className="inline-flex items-center gap-2 rounded-xl border border-white/30 px-6 py-3 text-[15px] font-medium text-white hover:bg-white/10">

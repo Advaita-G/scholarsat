@@ -82,8 +82,8 @@ export function DailyFullscreen({ initial, section, dayNo }: { initial: Record<S
   );
 
   return (
-    <div className="fixed inset-0 z-40 flex bg-white">
-      <aside className={`${listOpen ? "fixed inset-y-0 left-0 z-50 flex shadow-pop" : "hidden"} w-[256px] shrink-0 flex-col border-r border-line bg-white lg:static lg:flex lg:shadow-none`}>
+    <div className="fixed inset-0 z-40 flex bg-bg">
+      <aside className={`${listOpen ? "fixed inset-y-0 left-0 z-50 flex shadow-pop" : "hidden"} w-[256px] shrink-0 flex-col border-r border-line bg-bg lg:static lg:flex lg:shadow-none`}>
         <div className="flex items-center justify-between px-5 pb-2 pt-5">
           <Logo href="/dashboard" size={36} />
           <button className="rounded-lg p-1.5 text-muted hover:bg-surface-2 lg:hidden" onClick={() => setListOpen(false)} aria-label="Close list"><IX className="h-4 w-4" /></button>
@@ -99,10 +99,10 @@ export function DailyFullscreen({ initial, section, dayNo }: { initial: Record<S
           <LinkButton href="/dashboard" className="w-full text-[13px] tracking-[0.08em] uppercase">Exit daily</LinkButton>
         </div>
       </aside>
-      {listOpen && <div className="fixed inset-0 z-40 bg-ink/30 lg:hidden" onClick={() => setListOpen(false)} />}
+      {listOpen && <div className="fixed inset-0 z-40 bg-inverse/30 lg:hidden" onClick={() => setListOpen(false)} />}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-[60px] shrink-0 items-center gap-2 border-b-4 border-red-700 bg-red px-2 text-white sm:h-[68px] sm:gap-3 sm:px-5">
+        <header className="flex h-[60px] shrink-0 items-center gap-2 border-b-4 border-red-700 bg-accent-fill px-2 text-white sm:h-[68px] sm:gap-3 sm:px-5">
           <button className="rounded-lg p-2 hover:bg-white/10 lg:hidden" onClick={() => setListOpen(true)} aria-label="Show daily questions"><IList /></button>
           <div className="min-w-0 flex-1">
             <p className="truncate text-[15px] font-medium">Daily Question #{dayNo} · {SECTION_LABEL[section]}</p>
@@ -118,7 +118,7 @@ export function DailyFullscreen({ initial, section, dayNo }: { initial: Record<S
             )}
           </div>
         </header>
-        <div className="eyebrow shrink-0 bg-ink py-1 text-center text-white/90">ScholarSAT daily poll</div>
+        <div className="eyebrow shrink-0 bg-inverse py-1 text-center text-white/90">ScholarSAT daily poll</div>
 
         <div className="scroll-thin flex min-h-0 flex-1 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
           <section className="scroll-thin border-b border-line px-6 py-7 lg:w-1/2 lg:overflow-y-auto lg:border-b-0 lg:border-r-4 lg:border-r-surface-2 lg:px-9 lg:py-9" aria-label={split ? "Passage" : "Question"}>
@@ -126,7 +126,7 @@ export function DailyFullscreen({ initial, section, dayNo }: { initial: Record<S
           </section>
           <section className="scroll-thin px-6 py-7 lg:w-1/2 lg:overflow-y-auto lg:px-9 lg:py-9" aria-label="Answer">
             <div className="mb-5 flex items-center gap-3 border-b border-line bg-surface pr-3">
-              <span className="grid h-11 w-11 place-items-center bg-ink text-[17px] font-medium text-white">#{dayNo % 100}</span>
+              <span className="grid h-11 w-11 place-items-center bg-inverse text-[17px] font-medium text-white">#{dayNo % 100}</span>
               <span className="min-w-0 flex-1 truncate text-sm text-muted">{q.skill}</span>
               <DiffBadge d={q.difficulty} />
             </div>
@@ -151,7 +151,7 @@ export function DailyFullscreen({ initial, section, dayNo }: { initial: Record<S
           </section>
         </div>
 
-        <footer className="flex shrink-0 items-center justify-between gap-3 border-t border-line bg-white px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6">
+        <footer className="flex shrink-0 items-center justify-between gap-3 border-t border-line bg-bg px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6">
           <p className="hidden text-xs text-muted md:block">{voted ? "Come back tomorrow for a new question." : "A–D to choose · Enter to vote"}</p>
           <div className="ml-auto flex items-center gap-2">
             {voted ? (

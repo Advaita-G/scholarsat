@@ -49,7 +49,7 @@ export function LandingQuestion({ items }: { items: LandingItem[] }) {
         <Owl key={`${q.id}-${picked ?? "idle"}`} size={76} mood={!answered ? "idle" : correct ? "celebrate" : "sad"} />
       </div>
 
-      <section aria-label="Sample question" className="rounded-2xl border border-line bg-white p-6 shadow-pop sm:p-7">
+      <section aria-label="Sample question" className="rounded-2xl border border-line bg-bg p-6 shadow-pop sm:p-7">
         <div className="flex items-baseline justify-between gap-4">
           <p className="text-[15px] font-medium text-ink">{q.topic}</p>
           <p className="shrink-0 text-[13px] text-muted tabular-nums">
@@ -75,7 +75,7 @@ export function LandingQuestion({ items }: { items: LandingItem[] }) {
                 : answered
                   ? "border-line opacity-60"
                   : "border-line hover:border-ink/40 active:bg-surface";
-            const dot = isAnswer ? "border-ok bg-ok text-white" : isWrongPick ? "border-bad bg-bad text-white" : "border-line-strong text-ink";
+            const dot = isAnswer ? "border-ok bg-ok-fill text-white" : isWrongPick ? "border-bad bg-bad-fill text-white" : "border-line-strong text-ink";
             return (
               <button
                 key={letter}

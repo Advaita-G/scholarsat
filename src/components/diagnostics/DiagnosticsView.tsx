@@ -134,7 +134,7 @@ function ProgressChart({ recs, tests, goal, now }: { recs: AttemptRec[]; tests: 
         : `${fmtDay(days[hover])}: ${data.predicted[hover] !== null ? `predicted ${data.predicted[hover]}` : "no prediction yet"}${data.testAt[hover] !== null ? `, test ${data.testAt[hover]}` : ""}`;
 
   return (
-    <section className="rounded-2xl border border-line bg-white p-5 shadow-card sm:p-6">
+    <section className="rounded-2xl border border-line bg-bg p-5 shadow-card sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-[19px] font-medium">Progress Over Time</h2>
         <div className="flex flex-wrap items-center gap-2">
@@ -145,7 +145,7 @@ function ProgressChart({ recs, tests, goal, now }: { recs: AttemptRec[]; tests: 
           )}
           <div className="inline-flex rounded-lg bg-surface-2 p-0.5" role="tablist" aria-label="Chart view">
             {(["questions", "score"] as const).map((m) => (
-              <button key={m} role="tab" aria-selected={mode === m} onClick={() => setMode(m)} className={`rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors ${mode === m ? "bg-white text-red shadow-card" : "text-muted hover:text-ink"}`}>{m === "questions" ? "Questions" : "SAT score"}</button>
+              <button key={m} role="tab" aria-selected={mode === m} onClick={() => setMode(m)} className={`rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors ${mode === m ? "bg-bg text-red shadow-card" : "text-muted hover:text-ink"}`}>{m === "questions" ? "Questions" : "SAT score"}</button>
             ))}
           </div>
         </div>
@@ -168,7 +168,7 @@ function ProgressChart({ recs, tests, goal, now }: { recs: AttemptRec[]; tests: 
         </ul>
         <div className="inline-flex rounded-lg bg-surface-2 p-0.5" role="tablist" aria-label="Time range">
           {RANGES.map((r) => (
-            <button key={r.key} role="tab" aria-selected={range === r.key} onClick={() => setRange(r.key)} className={`rounded-md px-2.5 py-1.5 text-[12px] font-medium whitespace-nowrap transition-colors sm:px-3 sm:text-[13px] ${range === r.key ? "bg-white text-red shadow-card" : "text-muted hover:text-ink"}`}><span className="sm:hidden">{r.short}</span><span className="hidden sm:inline">{r.label}</span></button>
+            <button key={r.key} role="tab" aria-selected={range === r.key} onClick={() => setRange(r.key)} className={`rounded-md px-2.5 py-1.5 text-[12px] font-medium whitespace-nowrap transition-colors sm:px-3 sm:text-[13px] ${range === r.key ? "bg-bg text-red shadow-card" : "text-muted hover:text-ink"}`}><span className="sm:hidden">{r.short}</span><span className="hidden sm:inline">{r.label}</span></button>
           ))}
         </div>
       </div>
@@ -202,7 +202,7 @@ function ProgressChart({ recs, tests, goal, now }: { recs: AttemptRec[]; tests: 
               {goal && goal >= sLo && goal <= sHi && (
                 <g>
                   <line x1={L} x2={W - R} y1={yS(goal)} y2={yS(goal)} stroke="var(--gold)" strokeWidth="2" strokeDasharray="6 5" />
-                  <rect x={W - R + 6} y={yS(goal) - 11} width={50} height={22} rx="5" fill="var(--gold)" />
+                  <rect x={W - R + 6} y={yS(goal) - 11} width={50} height={22} rx="5" fill="var(--gold-fill)" />
                   <text x={W - R + 31} y={yS(goal) + 4} textAnchor="middle" fontSize="12" fontWeight="500" fill="#fff">{goal}</text>
                 </g>
               )}
@@ -217,7 +217,7 @@ function ProgressChart({ recs, tests, goal, now }: { recs: AttemptRec[]; tests: 
         </svg>
         {((mode === "questions" && !hasData) || (mode === "score" && !scoreHasData)) && (
           <div className="pointer-events-none absolute inset-0 grid place-items-center px-8 text-center text-sm text-muted">
-            <p className="max-w-xs rounded-xl bg-white/90 px-4 py-3">
+            <p className="max-w-xs rounded-xl bg-bg/90 px-4 py-3">
               {mode === "questions" ? "No questions answered in this range yet." : `Answer ${MIN_FOR_PREDICTION} questions in each section, or finish a practice test, and your score will chart here.`}
             </p>
           </div>
@@ -235,7 +235,7 @@ function Select({ label, value, onChange, children }: { label: string; value: st
   return (
     <label className="grid min-w-0 gap-1.5 text-sm font-medium">
       {label}
-      <select value={value} onChange={(e) => onChange(e.target.value)} className="w-full min-w-0 rounded-lg border border-line-strong bg-white px-3 py-2 text-sm font-normal outline-none focus:border-red">{children}</select>
+      <select value={value} onChange={(e) => onChange(e.target.value)} className="w-full min-w-0 rounded-lg border border-line-strong bg-bg px-3 py-2 text-sm font-normal outline-none focus:border-red">{children}</select>
     </label>
   );
 }
@@ -288,7 +288,7 @@ function History({ rows, total, truncated, now }: { rows: HistoryRow[]; total: n
 
   return (
     <section>
-      <div className="grid grid-cols-2 gap-3 rounded-2xl border border-line bg-white p-4 shadow-card sm:grid-cols-3 lg:grid-cols-[repeat(5,minmax(0,1fr))_auto] lg:items-end">
+      <div className="grid grid-cols-2 gap-3 rounded-2xl border border-line bg-bg p-4 shadow-card sm:grid-cols-3 lg:grid-cols-[repeat(5,minmax(0,1fr))_auto] lg:items-end">
         <Select label="Source" value={source} onChange={setSource}><option value="all">All Sources</option><option value="practice">Question Bank</option><option value="test">Practice Tests</option></Select>
         <Select label="Subject" value={subject} onChange={setSubject}><option value="all">All Subjects</option><option value="math">Math</option><option value="rw">Reading &amp; Writing</option></Select>
         <Select label="Result" value={result} onChange={setResult}><option value="all">All Results</option><option value="correct">Correct</option><option value="incorrect">Incorrect</option></Select>
@@ -298,7 +298,7 @@ function History({ rows, total, truncated, now }: { rows: HistoryRow[]; total: n
       </div>
 
       {sessions.length === 0 ? (
-        <div className="mt-6 rounded-2xl border border-line bg-white shadow-card">
+        <div className="mt-6 rounded-2xl border border-line bg-bg shadow-card">
           <EmptyState title={rows.length ? "No attempts match these filters." : "No attempts yet."} action={rows.length ? undefined : <Link href="/practice" className="text-sm font-medium text-red hover:underline">Start practicing →</Link>}>
             {rows.length ? "Try clearing a filter or widening the dates." : "Every question you answer shows up here, grouped into sessions."}
           </EmptyState>
@@ -318,14 +318,14 @@ function History({ rows, total, truncated, now }: { rows: HistoryRow[]; total: n
                 {showDay && (
                   <div className="mb-4 flex items-center gap-4 text-sm text-muted"><span className="h-px flex-1 bg-line" />{dayLabel(s.rows[0].t)}<span className="h-px flex-1 bg-line" /></div>
                 )}
-                <article className="overflow-hidden rounded-2xl border border-line bg-white shadow-card">
-                  <button onClick={() => setClosed((c) => { const n = new Set(c); if (n.has(s.key)) n.delete(s.key); else n.add(s.key); return n; })} aria-expanded={open} className={`flex w-full items-center gap-3 border-t-4 px-5 py-3 text-left text-white ${s.source === "test" ? "border-black bg-ink" : "border-red-700 bg-red"}`}>
+                <article className="overflow-hidden rounded-2xl border border-line bg-bg shadow-card">
+                  <button onClick={() => setClosed((c) => { const n = new Set(c); if (n.has(s.key)) n.delete(s.key); else n.add(s.key); return n; })} aria-expanded={open} className={`flex w-full items-center gap-3 border-t-4 px-5 py-3 text-left text-white ${s.source === "test" ? "border-black bg-inverse" : "border-red-700 bg-accent-fill"}`}>
                     <IChevD className={`h-5 w-5 shrink-0 transition-transform ${open ? "" : "-rotate-90"}`} />
                     <span className="text-[16px] font-medium uppercase tracking-[0.02em]">{s.source === "test" ? "Practice test" : "Question bank"}</span>
-                    <span className="rounded-md bg-white/20 px-2 py-0.5 text-xs font-medium">{SECTION_LABEL[s.section]}</span>
+                    <span className="rounded-md bg-black/15 px-2 py-0.5 text-xs font-medium">{SECTION_LABEL[s.section]}</span>
                     <span className="ml-auto whitespace-nowrap text-[13px] text-white/85">{fmtTime(s.rows[0].t)} <span className="hidden sm:inline">({ago(s.rows[0].t, now)})</span></span>
                   </button>
-                  <div className="eyebrow flex items-center justify-between gap-3 bg-ink px-5 py-1.5 text-white/90">
+                  <div className="eyebrow flex items-center justify-between gap-3 bg-inverse px-5 py-1.5 text-white/90">
                     <span className="min-w-0 truncate">{domains.join(" · ")}</span>
                     <span className="shrink-0 whitespace-nowrap normal-case tracking-normal">{s.rows.length} question{s.rows.length === 1 ? "" : "s"}{ms > 0 && ` · ${fmtDuration(ms)}`}</span>
                   </div>
@@ -398,7 +398,7 @@ export function DiagnosticsView(p: Props) {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
       <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-        <div className="rounded-2xl border border-line bg-white p-4 shadow-card sm:p-5">
+        <div className="rounded-2xl border border-line bg-bg p-4 shadow-card sm:p-5">
           <div className="flex items-center gap-1.5 text-sm text-muted">
             Predicted Score
             <button onClick={() => setInfo((i) => !i)} aria-expanded={info} aria-label="How is this predicted?" className="grid h-4 w-4 place-items-center rounded-full border border-faint text-[10px] leading-none text-faint hover:text-ink">i</button>
@@ -424,18 +424,18 @@ export function DiagnosticsView(p: Props) {
           {info && <p className="mt-3 rounded-lg bg-surface p-2.5 text-xs text-ink-2">We take your latest answer to every question and turn your accuracy in each section into a score on one curve. It needs {MIN_FOR_PREDICTION} answers per section, and it&apos;s an estimate, not an official score.</p>}
         </div>
 
-        <div className="rounded-2xl border border-line bg-white p-4 shadow-card sm:p-5">
+        <div className="rounded-2xl border border-line bg-bg p-4 shadow-card sm:p-5">
           <p className="text-sm text-muted">Total Attempts</p>
           <p className="mt-2 text-[34px] leading-none font-medium tabular-nums sm:text-[40px]">{p.total.toLocaleString()}</p>
           <p className="mt-2 text-xs text-muted tabular-nums">Math: {p.split.math.toLocaleString()} <span className="text-faint">|</span> Reading &amp; Writing: {p.split.rw.toLocaleString()}</p>
         </div>
 
-        <div className="col-span-2 rounded-2xl border border-line bg-white p-4 shadow-card sm:col-span-1 sm:p-5">
+        <div className="col-span-2 rounded-2xl border border-line bg-bg p-4 shadow-card sm:col-span-1 sm:p-5">
           <p className="text-sm text-muted">Strongest Skills</p>
           <SkillList items={p.strongest} empty="No data yet. Answer 3 questions in a skill." tone="ok" />
         </div>
 
-        <div className="col-span-2 rounded-2xl border border-line bg-white p-4 shadow-card sm:col-span-1 sm:p-5">
+        <div className="col-span-2 rounded-2xl border border-line bg-bg p-4 shadow-card sm:col-span-1 sm:p-5">
           <p className="text-sm text-muted">Weakest Skills</p>
           <SkillList items={p.weakest} empty="No data yet. Answer 3 questions in a skill." tone="bad" />
         </div>
@@ -444,10 +444,10 @@ export function DiagnosticsView(p: Props) {
       {now !== null ? (
         <ProgressChart recs={p.recs} tests={p.tests} goal={p.goal} now={now} />
       ) : (
-        <div className="h-[420px] animate-pulse rounded-2xl border border-line bg-white shadow-card" aria-hidden="true" />
+        <div className="h-[420px] animate-pulse rounded-2xl border border-line bg-bg shadow-card" aria-hidden="true" />
       )}
 
-      {now !== null ? <History rows={p.history} total={p.total} truncated={p.historyTruncated} now={now} /> : <div className="h-60 animate-pulse rounded-2xl border border-line bg-white shadow-card" aria-hidden="true" />}
+      {now !== null ? <History rows={p.history} total={p.total} truncated={p.historyTruncated} now={now} /> : <div className="h-60 animate-pulse rounded-2xl border border-line bg-bg shadow-card" aria-hidden="true" />}
 
     </div>
   );

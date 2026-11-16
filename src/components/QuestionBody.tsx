@@ -75,7 +75,7 @@ export function Choices({
             ? "border-bad bg-bad-50"
             : isSel
               ? "border-red bg-red-50"
-              : "border-line-strong bg-white hover:bg-surface";
+              : "border-line-strong bg-bg hover:bg-surface";
         return (
           <div key={l} className="flex items-stretch gap-2">
             <div className="min-w-0 flex-1">
@@ -83,7 +83,7 @@ export function Choices({
               <input type="radio" name={`q-${q.id}`} className="sr-only" checked={isSel} disabled={disabled} onChange={() => onSelect(l)} />
               <span
                 className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 text-sm font-medium transition-colors ${
-                  isAns ? "border-ok-500 bg-ok-500 text-white" : wrongSel ? "border-bad bg-bad text-white" : isSel ? "border-red bg-red text-white" : "border-ink/70 text-ink"
+                  isAns ? "border-ok-500 bg-ok-fill text-white" : wrongSel ? "border-bad bg-bad-fill text-white" : isSel ? "border-red bg-accent-fill text-white" : "border-ink/70 text-ink"
                 }`}
               >
                 {l}
@@ -98,7 +98,7 @@ export function Choices({
               return (
                 <div className="mt-1.5 flex items-center gap-2" aria-label={`${pct} percent of ${total} people chose ${l}`}>
                   <div className="h-5 overflow-hidden rounded-md bg-surface-2" style={{ width: `${Math.max(pct, 12)}%`, minWidth: 72 }}>
-                    <div className={`pct-fill flex h-full w-full items-center px-2 text-[11px] font-medium tabular-nums ${isAns ? "bg-ok-500 text-white" : wrongSel ? "bg-bad text-white" : isSel ? "bg-red text-white" : "bg-line-strong/70 text-ink-2"}`}>{pct}% ({n.toLocaleString()})</div>
+                    <div className={`pct-fill flex h-full w-full items-center px-2 text-[11px] font-medium tabular-nums ${isAns ? "bg-ok-fill text-white" : wrongSel ? "bg-bad-fill text-white" : isSel ? "bg-accent-fill text-white" : "bg-line-strong/70 text-ink-2"}`}>{pct}% ({n.toLocaleString()})</div>
                   </div>
                 </div>
               );
@@ -108,7 +108,7 @@ export function Choices({
               <button
                 type="button"
                 onClick={() => onStrike(l)}
-                className={`w-11 shrink-0 rounded-xl border-2 text-xs font-medium ${isStruck ? "border-ink bg-ink text-white" : "border-line text-muted hover:border-ink/30"}`}
+                className={`w-11 shrink-0 rounded-xl border-2 text-xs font-medium ${isStruck ? "border-ink bg-inverse text-white" : "border-line text-muted hover:border-ink/30"}`}
                 aria-pressed={isStruck}
                 aria-label={isStruck ? `Undo eliminate choice ${l}` : `Eliminate choice ${l}`}
                 title="Eliminate choice"

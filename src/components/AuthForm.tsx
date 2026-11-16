@@ -7,7 +7,7 @@ import { IGoogle } from "./icons";
 import { useOwlShy } from "./AuthShell";
 
 const input =
-  "w-full rounded-xl border border-line-strong bg-white px-4 py-3 text-[15px] outline-none transition-shadow placeholder:text-faint focus:border-red focus:ring-4 focus:ring-red/10";
+  "w-full rounded-xl border border-line-strong bg-bg px-4 py-3 text-[15px] outline-none transition-shadow placeholder:text-faint focus:border-red focus:ring-4 focus:ring-red/10";
 
 const ERRORS: Record<string, string> = {
   google: "Google sign-in didn't work. Please try again.",
@@ -39,7 +39,7 @@ export function AuthForm({ mode, google, error, next }: { mode: "login" | "signu
         <>
           <a
             href={`/api/auth/google?next=${encodeURIComponent(dest)}`}
-            className="btn-3d inline-flex w-full items-center justify-center gap-3 rounded-xl border border-line-strong border-b-line-strong bg-white px-4 py-3 text-[15px] font-medium text-ink hover:bg-surface"
+            className="btn-3d inline-flex w-full items-center justify-center gap-3 rounded-xl border border-line-strong border-b-line-strong bg-bg px-4 py-3 text-[15px] font-medium text-ink hover:bg-surface"
           >
             <IGoogle className="h-5 w-5" /> Continue with Google
           </a>

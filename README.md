@@ -218,7 +218,8 @@ Open <http://localhost:3000>. That's the whole setup. `npm run dev` builds the q
 | `npm run start` | Serves the production build |
 | `npm run bank` | Regenerates `src/data/questions.json` from the generators |
 | `npx tsx scripts/build-vocab.ts` | Validates and rebuilds the vocabulary bank |
-| `npm run typecheck` | Rebuilds the bank, then runs `tsc --noEmit` |
+| `npm run test:theme` | Checks text contrast across both themes and all six accents, including filled controls and button gloss/hover |
+| `npm run typecheck` | Runs the theme regression checks, rebuilds the bank, then runs `tsc --noEmit` |
 | `npm run lint` | ESLint |
 
 ### Configuration

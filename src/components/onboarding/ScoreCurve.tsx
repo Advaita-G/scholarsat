@@ -83,7 +83,7 @@ export function ScoreCurve({ value, onChange, from, presets }: { value: number; 
               type="button"
               onClick={() => onChange(p)}
               aria-pressed={value === p}
-              className={`rounded-full border px-3.5 py-1.5 text-sm font-medium tabular-nums transition-colors ${value === p ? "border-red bg-red text-white" : "border-line-strong bg-white text-ink-2 hover:border-red-200 hover:bg-red-50"}`}
+              className={`rounded-full border px-3.5 py-1.5 text-sm font-medium tabular-nums transition-colors ${value === p ? "border-red bg-accent-fill text-white" : "border-line-strong bg-bg text-ink-2 hover:border-red-200 hover:bg-red-50"}`}
             >
               {p}
             </button>

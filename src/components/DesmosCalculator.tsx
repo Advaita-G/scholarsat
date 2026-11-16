@@ -114,7 +114,7 @@ export function DesmosCalculator({ open, onClose }: { open: boolean; onClose: ()
       aria-label="Calculator"
       hidden={!open}
       style={{ left: pos.x, top: pos.y }}
-      className="fixed z-50 flex h-[min(70vh,560px)] w-[min(92vw,460px)] flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-pop"
+      className="fixed z-50 flex h-[min(70vh,560px)] w-[min(92vw,460px)] flex-col overflow-hidden rounded-2xl border border-line bg-bg shadow-pop"
     >
       <div
         onPointerDown={onPointerDown}
@@ -131,7 +131,7 @@ export function DesmosCalculator({ open, onClose }: { open: boolean; onClose: ()
               role="tab"
               aria-selected={mode === m.id}
               onClick={() => setMode(m.id)}
-              className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${mode === m.id ? "bg-white text-ink shadow-card" : "text-muted hover:bg-surface-2 hover:text-ink"}`}
+              className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors ${mode === m.id ? "bg-bg text-ink shadow-card" : "text-muted hover:bg-surface-2 hover:text-ink"}`}
             >
               {m.label}
             </button>

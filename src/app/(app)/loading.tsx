@@ -13,7 +13,7 @@ export default function Loading() {
       </div>
       <div className="grid gap-6 xl:grid-cols-2">
         {[0, 1].map((i) => (
-          <div key={i} className="grid gap-4 rounded-2xl border border-line bg-white p-5 shadow-card">
+          <div key={i} className="grid gap-4 rounded-2xl border border-line bg-bg p-5 shadow-card">
             <div className="h-6 w-40 animate-pulse rounded-lg bg-surface-2" />
             <div className="h-24 animate-pulse rounded-xl bg-surface" />
             <div className="h-24 animate-pulse rounded-xl bg-surface" />
