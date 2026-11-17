@@ -183,7 +183,7 @@ export function Onboarding({ signedIn, firstName, initial }: Props) {
               aria-label={`Step ${i + 1}${active ? " (current)" : complete ? " (done)" : ""}`}
               aria-current={active ? "step" : undefined}
               className={`grid h-8 w-8 place-items-center rounded-full text-[13px] font-medium transition-all duration-300 ${
-                complete ? "bg-ok-500 text-white hover:scale-110" : active ? "scale-110 bg-red text-white shadow-[0_0_0_4px_rgb(165_12_38/0.15)]" : "bg-surface-2 text-faint"
+                complete ? "bg-ok-fill text-white hover:scale-110" : active ? "scale-110 bg-accent-fill text-white shadow-[0_0_0_4px_rgb(165_12_38/0.15)]" : "bg-surface-2 text-faint"
               }`}
             >
               {complete ? <ICheck className="h-4 w-4" /> : i + 1}
@@ -204,18 +204,18 @@ export function Onboarding({ signedIn, firstName, initial }: Props) {
   if (a.studyMinutes && idx > 5) chips.push({ k: "Daily", v: `${a.studyMinutes} min` });
 
   const stage = (
-    <aside className="relative h-full overflow-hidden rounded-3xl bg-red p-6 text-white lg:flex lg:flex-col lg:items-center lg:justify-center lg:p-10">
+    <aside className="relative h-full overflow-hidden rounded-3xl bg-accent-fill p-6 text-white lg:flex lg:flex-col lg:items-center lg:justify-center lg:p-10">
       <div className="pattern-grid pointer-events-none absolute inset-0 text-white opacity-[0.05]" aria-hidden="true" />
       <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-red-600/60" aria-hidden="true" />
       <div className="pointer-events-none absolute -bottom-32 -right-24 h-80 w-80 rounded-full bg-gold/25" aria-hidden="true" />
       <div className="relative flex items-center gap-4 lg:flex-col lg:gap-6">
-        <div className="relative grid h-[92px] w-[92px] shrink-0 place-items-center rounded-full bg-white shadow-[0_20px_50px_-15px_rgba(0,0,0,0.45)] lg:h-[210px] lg:w-[210px]">
+        <div className="relative grid h-[92px] w-[92px] shrink-0 place-items-center rounded-full bg-bg shadow-[0_20px_50px_-15px_rgba(0,0,0,0.45)] lg:h-[210px] lg:w-[210px]">
           <Owl key={step + owl.mood} mood={owl.mood} size={72} className="lg:hidden" />
           <Owl key={"d" + step + owl.mood} mood={owl.mood} size={160} className="hidden lg:block" />
         </div>
-        <div key={step + owl.text} className="relative max-w-sm animate-[bubble-in_380ms_var(--ease-out)_both] rounded-2xl rounded-bl-md bg-white px-5 py-3.5 text-[15px] leading-snug text-ink shadow-pop lg:rounded-bl-2xl lg:rounded-t-2xl" role="status">
+        <div key={step + owl.text} className="relative max-w-sm animate-[bubble-in_380ms_var(--ease-out)_both] rounded-2xl rounded-bl-md bg-bg px-5 py-3.5 text-[15px] leading-snug text-ink shadow-pop lg:rounded-bl-2xl lg:rounded-t-2xl" role="status">
           {owl.text}
-          <span className="absolute -top-2 left-8 hidden h-4 w-4 rotate-45 rounded-sm bg-white lg:block" aria-hidden="true" />
+          <span className="absolute -top-2 left-8 hidden h-4 w-4 rotate-45 rounded-sm bg-bg lg:block" aria-hidden="true" />
         </div>
       </div>
       {chips.length > 0 && (
@@ -232,9 +232,9 @@ export function Onboarding({ signedIn, firstName, initial }: Props) {
 
   /* ---------- step bodies ---------- */
   const radioRow = (on: boolean) =>
-    `flex w-full items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-colors ${on ? "border-red bg-red-50" : "border-line-strong bg-white hover:border-ink/30"}`;
+    `flex w-full items-center gap-3 rounded-xl border-2 px-4 py-3 text-left transition-colors ${on ? "border-red bg-red-50" : "border-line-strong bg-bg hover:border-ink/30"}`;
   const dot = (on: boolean) => (
-    <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 ${on ? "border-red bg-red text-white" : "border-line-strong"}`}>{on && <ICheck className="h-3 w-3" />}</span>
+    <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 ${on ? "border-red bg-accent-fill text-white" : "border-line-strong"}`}>{on && <ICheck className="h-3 w-3" />}</span>
   );
 
   const content: Record<Exclude<Step, "plan">, { title: string; sub: string; body: ReactNode }> = {
@@ -356,7 +356,7 @@ export function Onboarding({ signedIn, firstName, initial }: Props) {
             {STUDY_OPTIONS.map((o) => {
               const on = a.studyMinutes === o.minutes;
               return (
-                <button key={o.minutes} type="button" role="radio" aria-checked={on} onClick={() => set({ studyMinutes: o.minutes })} className={`rounded-2xl border-2 p-4 text-left transition-all ${on ? "border-red bg-red-50 shadow-card" : "border-line-strong bg-white hover:border-ink/30"}`}>
+                <button key={o.minutes} type="button" role="radio" aria-checked={on} onClick={() => set({ studyMinutes: o.minutes })} className={`rounded-2xl border-2 p-4 text-left transition-all ${on ? "border-red bg-red-50 shadow-card" : "border-line-strong bg-bg hover:border-ink/30"}`}>
                   <p className="eyebrow text-muted">{o.label}</p>
                   <p className="mt-1 text-[22px] leading-tight font-medium tabular-nums">{o.minutes} <span className="text-sm font-normal text-muted">min / day</span></p>
                   <p className="mt-1 text-sm text-muted">≈ {questionsPerDay(o.minutes)} questions</p>
@@ -391,7 +391,7 @@ export function Onboarding({ signedIn, firstName, initial }: Props) {
                       type="button"
                       aria-pressed={on}
                       onClick={() => { setNotSure(false); set({ focus: on ? a.focus.filter((x) => x !== d.domain) : [...a.focus, d.domain] }); }}
-                      className={`rounded-xl border-2 px-3.5 py-2.5 text-left transition-colors ${on ? "border-red bg-red-50" : "border-line-strong bg-white hover:border-ink/30"}`}
+                      className={`rounded-xl border-2 px-3.5 py-2.5 text-left transition-colors ${on ? "border-red bg-red-50" : "border-line-strong bg-bg hover:border-ink/30"}`}
                     >
                       <span className="flex items-center justify-between gap-2 text-[14px] font-medium">{d.domain}{on && <ICheck className="h-4 w-4 shrink-0 text-red" />}</span>
                       <span className="mt-0.5 block text-xs text-muted">{DOMAIN_HINT[d.domain]}</span>
@@ -415,7 +415,7 @@ export function Onboarding({ signedIn, firstName, initial }: Props) {
   const KIND = {
     practice: "bg-red-50 text-red",
     review: "bg-gold-50 text-gold-600",
-    test: "bg-ink text-white",
+    test: "bg-inverse text-white",
     rest: "bg-surface-2 text-muted",
   } as const;
 
@@ -423,7 +423,7 @@ export function Onboarding({ signedIn, firstName, initial }: Props) {
     <div className="mx-auto w-full max-w-[920px]">
       <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
         {stage}
-        <section className="overflow-hidden rounded-3xl border border-line bg-white shadow-card">
+        <section className="overflow-hidden rounded-3xl border border-line bg-bg shadow-card">
           {!ready ? (
             <div className="grid min-h-[420px] place-content-center px-8 py-10">
               <ul className="grid gap-3.5" aria-live="polite">
@@ -431,7 +431,7 @@ export function Onboarding({ signedIn, firstName, initial }: Props) {
                   const ok = built > i;
                   return (
                     <li key={c} className={`flex items-center gap-3 text-[16px] transition-opacity duration-300 ${built >= i ? "opacity-100" : "opacity-30"}`}>
-                      <span className={`grid h-7 w-7 place-items-center rounded-full ${ok ? "animate-[check-pop_320ms_var(--ease-out)] bg-ok-500 text-white" : "border-2 border-line-strong"}`}>{ok && <ICheck className="h-4 w-4" />}</span>
+                      <span className={`grid h-7 w-7 place-items-center rounded-full ${ok ? "animate-[check-pop_320ms_var(--ease-out)] bg-ok-fill text-white" : "border-2 border-line-strong"}`}>{ok && <ICheck className="h-4 w-4" />}</span>
                       {c}
                     </li>
                   );
@@ -440,7 +440,7 @@ export function Onboarding({ signedIn, firstName, initial }: Props) {
             </div>
           ) : (
             <div className="animate-rise">
-              <div className="border-t-4 border-red-700 bg-red px-7 py-5 text-white">
+              <div className="border-t-4 border-red-700 bg-accent-fill px-7 py-5 text-white">
                 <p className="eyebrow text-white/75">Your study plan{a.name ? ` · ${a.name}` : ""}</p>
                 <h1 className="mt-1 text-[26px] leading-tight font-medium tracking-[-0.01em]">{plan.headline}</h1>
               </div>
@@ -473,7 +473,7 @@ export function Onboarding({ signedIn, firstName, initial }: Props) {
                   <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted">
                     <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded bg-red-100" />Practice</span>
                     <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded bg-gold-100" />Review</span>
-                    <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded bg-ink" />Timed test</span>
+                    <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded bg-inverse" />Timed test</span>
                     <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded bg-surface-2" />Rest</span>
                   </p>
                 </div>
@@ -515,7 +515,7 @@ export function Onboarding({ signedIn, firstName, initial }: Props) {
         <div className="w-[200px] max-sm:w-auto"><Logo href={signedIn ? "/dashboard" : "/"} size={34} /></div>
         <div className="hidden sm:block">{dots}</div>
         <div className="flex w-[200px] justify-end max-sm:w-auto">
-          <button type="button" onClick={close} aria-label="Close onboarding" className="grid h-10 w-10 place-items-center rounded-full bg-white text-muted shadow-card transition-colors hover:text-ink"><IX className="h-5 w-5" /></button>
+          <button type="button" onClick={close} aria-label="Close onboarding" className="grid h-10 w-10 place-items-center rounded-full bg-bg text-muted shadow-card transition-colors hover:text-ink"><IX className="h-5 w-5" /></button>
         </div>
       </header>
       <div className="px-5 pb-1 sm:hidden">{dots}</div>
@@ -528,10 +528,10 @@ export function Onboarding({ signedIn, firstName, initial }: Props) {
             <div className="order-1 h-full lg:order-none">{stage}</div>
             <section
               key={step}
-              className="order-2 overflow-hidden rounded-3xl border border-line bg-white shadow-card lg:order-none"
+              className="order-2 overflow-hidden rounded-3xl border border-line bg-bg shadow-card lg:order-none"
               style={{ animation: `${dir === 1 ? "slide-in-r" : "slide-in-l"} 380ms var(--ease-out) both` }}
             >
-              <div className="border-t-4 border-red-700 bg-red px-7 py-5 text-white">
+              <div className="border-t-4 border-red-700 bg-accent-fill px-7 py-5 text-white">
                 <h1 className="text-[24px] leading-tight font-medium tracking-[-0.01em]">{content[step].title}</h1>
                 <p className="mt-1 text-[14px] text-white/85">{content[step].sub}</p>
               </div>

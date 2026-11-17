@@ -40,8 +40,8 @@ export default async function Tests() {
           const n = i + 1;
           if (!t) {
             return (
-              <article key={`empty-${n}`} className={`overflow-hidden rounded-2xl border border-line bg-white shadow-card ${n > rows.length + 2 ? "hidden sm:block" : ""}`}>
-                <div className="bg-red-50 px-5 pb-2 pt-4"><p className="text-[30px] leading-none font-medium tracking-tight text-red/40">TEST {n}</p></div>
+              <article key={`empty-${n}`} className={`overflow-hidden rounded-2xl border border-line bg-bg shadow-card ${n > rows.length + 2 ? "hidden sm:block" : ""}`}>
+                <div className="bg-red-50 px-5 pb-2 pt-4"><p className="text-[30px] leading-none font-medium tracking-tight text-red">TEST {n}</p></div>
                 <p className="eyebrow bg-surface-2 px-5 py-1 text-muted">SAT mock exam</p>
                 <div className="p-5">
                   <p className="eyebrow text-center text-faint">Your total score</p>
@@ -63,11 +63,11 @@ export default async function Tests() {
           const done = !!t.finished_at;
           const total = (t.score_rw ?? 0) + (t.score_math ?? 0);
           return (
-            <article key={t.id} className="overflow-hidden rounded-2xl border border-line bg-white shadow-card">
-              <div className={`border-t-4 px-5 pb-2 pt-3 ${done ? "border-red-700 bg-red" : "border-gold-700 bg-gold"}`}>
+            <article key={t.id} className="overflow-hidden rounded-2xl border border-line bg-bg shadow-card">
+              <div className={`border-t-4 px-5 pb-2 pt-3 ${done ? "border-red-700 bg-accent-fill" : "border-gold-700 bg-gold-fill"}`}>
                 <p className="text-[30px] leading-none font-medium tracking-tight text-white">TEST {n}</p>
               </div>
-              <p className="eyebrow flex justify-between bg-ink px-5 py-1 text-white/90">
+              <p className="eyebrow flex justify-between bg-inverse px-5 py-1 text-white/90">
                 <span>SAT mock exam</span>
                 <span>{new Date(t.started_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
               </p>

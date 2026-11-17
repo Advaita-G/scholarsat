@@ -46,7 +46,7 @@ export function MobileNav({ signedIn, footer }: { signedIn: boolean; footer?: Re
   const path = usePathname();
   useEffect(() => setOpen(false), [path]);
   return (
-    <div className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur lg:hidden">
+    <div className="sticky top-0 z-30 border-b border-line bg-bg/95 backdrop-blur lg:hidden">
       <div className="flex items-center justify-between px-4 py-2.5">
         <Logo href={signedIn ? "/dashboard" : "/"} size={30} />
         <button onClick={() => setOpen((o) => !o)} className="rounded-lg p-2 text-ink hover:bg-surface-2" aria-expanded={open} aria-label={open ? "Close menu" : "Open menu"}>

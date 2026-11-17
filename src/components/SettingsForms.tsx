@@ -31,7 +31,7 @@ import { useTheme, type Theme, type AccentColor } from "./ThemeProvider";
 import type { ActiveSession } from "@/lib/auth";
 
 export const inputCls =
-  "w-full rounded-xl border border-line-strong bg-white px-3.5 py-2.5 text-sm outline-none transition-all focus:border-red focus:ring-3 focus:ring-red/15";
+  "w-full rounded-xl border border-line-strong bg-bg px-3.5 py-2.5 text-sm outline-none transition-all focus:border-red focus:ring-3 focus:ring-red/15";
 
 function Section({
   title,
@@ -48,7 +48,7 @@ function Section({
 }) {
   return (
     <section
-      className={`grid gap-6 rounded-2xl border bg-white p-6 shadow-card md:grid-cols-[260px_1fr] transition-colors ${
+      className={`grid gap-6 rounded-2xl border bg-bg p-6 shadow-card md:grid-cols-[260px_1fr] transition-colors ${
         danger ? "border-bad-100 dark:border-bad/40" : "border-line"
       }`}
     >
@@ -87,11 +87,11 @@ function Toggle({
         aria-checked={checked}
         onClick={() => onChange(!checked)}
         className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red focus:ring-offset-2 ${
-          checked ? "bg-red" : "bg-surface-2"
+          checked ? "bg-accent-fill" : "bg-surface-2"
         }`}
       >
         <span
-          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-[#ffffff] shadow-sm ring-0 transition duration-200 ease-in-out ${
             checked ? "translate-x-5" : "translate-x-0"
           }`}
           style={{ backgroundColor: "#ffffff" }}
@@ -350,7 +350,7 @@ export function SettingsForms({ user, hasPassword, googleLinked, googleAvailable
                     className={`relative flex flex-col items-start rounded-xl border-2 p-4 text-left transition-all ${
                       isSelected
                         ? "border-red bg-red-50/40 dark:bg-red-950/20 shadow-xs"
-                        : "border-line bg-white hover:border-line-strong"
+                        : "border-line bg-bg hover:border-line-strong"
                     }`}
                   >
                     <div className="flex w-full items-center justify-between">
@@ -362,7 +362,7 @@ export function SettingsForms({ user, hasPassword, googleLinked, googleAvailable
                       </div>
                       <span
                         className={`grid h-4 w-4 place-items-center rounded-full border text-[10px] ${
-                          isSelected ? "border-red bg-red text-white" : "border-line-strong bg-white"
+                          isSelected ? "border-red bg-accent-fill text-white" : "border-line-strong bg-bg"
                         }`}
                       >
                         {isSelected && <ICheck className="h-3 w-3 stroke-[3]" />}
@@ -392,7 +392,7 @@ export function SettingsForms({ user, hasPassword, googleLinked, googleAvailable
                     className={`flex items-center gap-3 rounded-xl border p-3 text-left transition-all ${
                       isSelected
                         ? "border-ink-2 bg-surface shadow-xs ring-2 ring-ink/10"
-                        : "border-line bg-white hover:border-line-strong"
+                        : "border-line bg-bg hover:border-line-strong"
                     }`}
                   >
                     <span
@@ -694,7 +694,7 @@ export function SettingsForms({ user, hasPassword, googleLinked, googleAvailable
                 )}
                 <button
                   type="submit"
-                  className="btn-3d rounded-xl border-b-[#7f1a12] bg-bad px-4 py-2.5 text-sm font-medium text-white hover:brightness-105"
+                  className="btn-3d rounded-xl border-b-[#7f1a12] bg-bad-fill px-4 py-2.5 text-sm font-medium text-white hover:brightness-105"
                 >
                   Delete account
                 </button>
@@ -737,7 +737,7 @@ export function SettingsForms({ user, hasPassword, googleLinked, googleAvailable
                       className="flex flex-wrap items-center justify-between gap-3 p-4 transition-colors hover:bg-surface"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line bg-white text-muted">
+                        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl border border-line bg-bg text-muted">
                           <DeviceIcon className="h-5 w-5" />
                         </span>
                         <div>
@@ -798,7 +798,7 @@ export function SettingsForms({ user, hasPassword, googleLinked, googleAvailable
             >
               <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line p-4">
                 <div className="flex items-center gap-3">
-                  <span className="grid h-10 w-10 place-items-center rounded-full border border-line bg-white">
+                  <span className="grid h-10 w-10 place-items-center rounded-full border border-line bg-bg">
                     <IGoogle className="h-5 w-5" />
                   </span>
                   <div>

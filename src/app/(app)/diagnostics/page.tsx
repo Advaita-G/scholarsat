@@ -15,7 +15,7 @@ export default async function DiagnosticsPage() {
   const d = getDiagnostics(user.id);
   return (
     <div className="animate-rise">
-      <Link href="/onboarding" className="mb-3 inline-flex items-center gap-1.5 rounded-lg border border-line bg-white px-3 py-1.5 text-[13px] text-muted shadow-card hover:text-ink">
+      <Link href="/onboarding" className="mb-3 inline-flex items-center gap-1.5 rounded-lg border border-line bg-bg px-3 py-1.5 text-[13px] text-muted shadow-card hover:text-ink">
         <IRefresh className="h-4 w-4" /> Redo onboarding
       </Link>
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4">

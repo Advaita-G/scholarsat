@@ -14,11 +14,11 @@ const sizes: Record<Size, string> = {
   lg: "px-6 py-3 text-[15px]",
 };
 const variants: Record<Variant, string> = {
-  primary: "btn-3d btn-gloss bg-red text-white border-b-red-700",
-  gold: "btn-3d btn-gloss bg-gold text-white border-b-gold-700",
-  success: "btn-3d btn-gloss bg-ok-500 text-white border-b-ok-700",
-  dark: "btn-3d btn-gloss bg-ink text-white border-b-black",
-  secondary: "btn-3d border border-line-strong border-b-line-strong bg-white text-ink hover:bg-surface",
+  primary: "btn-3d btn-gloss bg-accent-fill text-white border-b-red-700",
+  gold: "btn-3d btn-gloss bg-gold-fill text-white border-b-gold-700",
+  success: "btn-3d btn-gloss bg-ok-fill text-white border-b-ok-700",
+  dark: "btn-3d btn-gloss bg-inverse text-white border-b-black",
+  secondary: "btn-3d border border-line-strong border-b-line-strong bg-bg text-ink hover:bg-surface",
   ghost: "text-muted hover:bg-surface-2 hover:text-ink transition-colors",
 };
 
@@ -35,15 +35,15 @@ export function LinkButton({ variant = "primary", size = "md", className = "", .
 }
 
 export function Card({ className = "", children }: { className?: string; children: ReactNode }) {
-  return <div className={`rounded-2xl border border-line bg-white p-5 shadow-card ${className}`}>{children}</div>;
+  return <div className={`rounded-2xl border border-line bg-bg p-5 shadow-card ${className}`}>{children}</div>;
 }
 
 type Tone = "red" | "gold" | "ok" | "ink";
 const HEADER_TONE: Record<Tone, string> = {
-  red: "bg-red text-white border-t-red-700",
-  gold: "bg-gold text-white border-t-gold-700",
-  ok: "bg-ok-500 text-white border-t-ok-700",
-  ink: "bg-ink text-white border-t-black",
+  red: "bg-accent-fill text-white border-t-red-700",
+  gold: "bg-gold-fill text-white border-t-gold-700",
+  ok: "bg-ok-fill text-white border-t-ok-700",
+  ink: "bg-inverse text-white border-t-black",
 };
 
 /** Card with a solid colored header strip: the core dashboard surface. */
@@ -63,7 +63,7 @@ export function HeaderCard({
   bodyClassName?: string;
 }) {
   return (
-    <section className={`overflow-hidden rounded-2xl border border-line bg-white shadow-card ${className}`}>
+    <section className={`overflow-hidden rounded-2xl border border-line bg-bg shadow-card ${className}`}>
       <header className={`flex min-h-14 items-center justify-between gap-3 border-t-4 px-5 py-3 ${HEADER_TONE[tone]}`}>
         <h2 className="min-w-0 text-[17px] font-medium">{title}</h2>
         {right && <div className="flex shrink-0 items-center gap-3 text-[13px] text-white/90">{right}</div>}
@@ -124,7 +124,7 @@ export function Ring({ value, size = 64, stroke = 7, label, tone = "red" }: { va
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const v = value === null ? 0 : Math.max(0, Math.min(1, value));
-  const color = { red: "var(--red)", ok: "var(--ok-500)", gold: "var(--gold)" }[tone];
+  const color = { red: "var(--red)", ok: "var(--ok-500)", gold: "var(--gold-600)" }[tone];
   return (
     <div className="relative grid shrink-0 place-items-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90" aria-hidden="true">
@@ -182,7 +182,7 @@ export function Avatar({
 
   // Preset vector avatar icons
   const presetGradients: Record<string, string> = {
-    cap: "from-red to-red-700",
+    cap: "from-accent-fill to-red-700",
     flame: "from-orange-500 to-red-600",
     star: "from-amber-500 to-yellow-600",
     target: "from-rose-500 to-red-700",
@@ -205,7 +205,7 @@ export function Avatar({
 
   if (avatar && presetIcons[avatar]) {
     const IconComp = presetIcons[avatar]!;
-    const grad = presetGradients[avatar] || "from-red to-gold";
+    const grad = presetGradients[avatar] || "from-accent-fill to-gold-fill";
     const iconDim = Math.max(16, Math.round(size * 0.52));
     return (
       <span
@@ -222,7 +222,7 @@ export function Avatar({
 
   return (
     <span
-      className={`grid shrink-0 place-items-center rounded-full bg-gradient-to-br from-red to-gold font-medium text-white shadow-xs select-none ${className}`}
+      className={`grid shrink-0 place-items-center rounded-full bg-gradient-to-br from-accent-fill to-gold-fill font-medium text-white shadow-xs select-none ${className}`}
       style={{ width: size, height: size, fontSize: size * 0.38 }}
       aria-hidden="true"
     >

@@ -49,7 +49,7 @@ export function UserMenu({
         <IChevD className={`h-4 w-4 shrink-0 text-muted transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div role="menu" className="absolute bottom-full left-0 right-0 mb-2 overflow-hidden rounded-xl border border-line bg-white p-1 shadow-pop">
+        <div role="menu" className="absolute bottom-full left-0 right-0 mb-2 overflow-hidden rounded-xl border border-line bg-bg p-1 shadow-pop">
           <p className="truncate px-3 py-2 text-xs text-muted">{email}</p>
           <Link role="menuitem" href="/settings" onClick={() => setOpen(false)} className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-ink hover:bg-surface-2">
             <IGear className="h-4 w-4" /> Settings

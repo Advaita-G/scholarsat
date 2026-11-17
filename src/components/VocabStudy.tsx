@@ -335,7 +335,7 @@ export function VocabStudy({
       </div>
 
       {/* Main Bar: Study Mode Pills & Deck Selector */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-white p-3 sm:p-4 shadow-card">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-bg p-3 sm:p-4 shadow-card">
         {/* Mode Selector */}
         <div className="inline-flex rounded-xl bg-surface-2 p-1 gap-1">
           <button
@@ -343,8 +343,8 @@ export function VocabStudy({
             onClick={() => setMode("flashcards")}
             className={`flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-sm font-medium transition-all ${
               mode === "flashcards"
-                ? "bg-white text-ink shadow-xs"
-                : "text-muted hover:text-ink hover:bg-white/50"
+                ? "bg-bg text-ink shadow-xs"
+                : "text-muted hover:text-ink hover:bg-bg/50"
             }`}
           >
             <ICards className="h-4 w-4" /> Flashcards
@@ -354,8 +354,8 @@ export function VocabStudy({
             onClick={() => setMode("browse")}
             className={`flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-sm font-medium transition-all ${
               mode === "browse"
-                ? "bg-white text-ink shadow-xs"
-                : "text-muted hover:text-ink hover:bg-white/50"
+                ? "bg-bg text-ink shadow-xs"
+                : "text-muted hover:text-ink hover:bg-bg/50"
             }`}
           >
             <ISearch className="h-4 w-4" /> Browse & Search
@@ -365,8 +365,8 @@ export function VocabStudy({
             onClick={() => setMode("quiz")}
             className={`flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-sm font-medium transition-all ${
               mode === "quiz"
-                ? "bg-white text-ink shadow-xs"
-                : "text-muted hover:text-ink hover:bg-white/50"
+                ? "bg-bg text-ink shadow-xs"
+                : "text-muted hover:text-ink hover:bg-bg/50"
             }`}
           >
             <ITarget className="h-4 w-4" /> Quick Quiz
@@ -438,8 +438,8 @@ export function VocabStudy({
                 onClick={() => setFlipped((f) => !f)}
                 className={`group relative flex flex-col justify-between min-h-[340px] sm:min-h-[380px] w-full rounded-2xl border-2 p-7 sm:p-9 text-center shadow-card cursor-pointer select-none transition-all duration-300 ${
                   flipped
-                    ? "border-gold-200 dark:border-gold-700/60 bg-gradient-to-b from-gold-50/70 to-white dark:from-gold-950/20 dark:to-surface"
-                    : "border-line bg-white hover:border-red-200 dark:hover:border-red-800/60"
+                    ? "border-gold-200 dark:border-gold-700/60 bg-gradient-to-b from-gold-50/70 to-bg dark:from-gold-950/20 dark:to-surface"
+                    : "border-line bg-bg hover:border-red-200 dark:hover:border-red-800/60"
                 }`}
                 role="button"
                 tabIndex={0}
@@ -599,7 +599,7 @@ export function VocabStudy({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search words, definitions, parts of speech..."
-              className="w-full rounded-xl border border-line bg-white pl-10 pr-10 py-2.5 text-sm outline-none transition-all focus:border-red focus:ring-3 focus:ring-red/15 text-ink placeholder:text-muted"
+              className="w-full rounded-xl border border-line bg-bg pl-10 pr-10 py-2.5 text-sm outline-none transition-all focus:border-red focus:ring-3 focus:ring-red/15 text-ink placeholder:text-muted"
             />
             {searchQuery && (
               <button
@@ -638,8 +638,8 @@ export function VocabStudy({
                   key={w.word}
                   className={`flex flex-col justify-between rounded-xl border p-4 sm:p-5 transition-all shadow-card ${
                     isKnown
-                      ? "border-ok/30 bg-white hover:border-ok"
-                      : "border-line bg-white hover:border-line-strong"
+                      ? "border-ok/30 bg-bg hover:border-ok"
+                      : "border-line bg-bg hover:border-line-strong"
                   }`}
                 >
                   <div>
@@ -697,7 +697,7 @@ export function VocabStudy({
           </div>
 
           {filteredWords.length === 0 && (
-            <div className="text-center py-12 border border-dashed border-line rounded-2xl p-6 bg-white">
+            <div className="text-center py-12 border border-dashed border-line rounded-2xl p-6 bg-bg">
               <p className="text-lg font-medium text-ink">No words match &ldquo;{searchQuery}&rdquo;</p>
               <p className="mt-1 text-sm text-muted">Try searching another keyword or part of speech.</p>
               <Button variant="secondary" size="sm" onClick={() => setSearchQuery("")} className="mt-4">
@@ -712,7 +712,7 @@ export function VocabStudy({
       {mode === "quiz" && (
         <div className="max-w-xl mx-auto w-full grid gap-4">
           {!quizFinished && currentQuiz ? (
-            <div className="rounded-2xl border border-line bg-white p-6 sm:p-8 shadow-card grid gap-6">
+            <div className="rounded-2xl border border-line bg-bg p-6 sm:p-8 shadow-card grid gap-6">
               {/* Quiz Header */}
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium uppercase tracking-wider text-muted">
@@ -756,7 +756,7 @@ export function VocabStudy({
                     } else if (isChosen && !isTarget) {
                       btnStyle = "border-bad bg-bad-50 dark:bg-bad/20 text-bad font-medium";
                     } else {
-                      btnStyle = "opacity-50 border-line bg-white text-muted";
+                      btnStyle = "opacity-50 border-line bg-bg text-muted";
                     }
                   }
 
@@ -790,7 +790,7 @@ export function VocabStudy({
             </div>
           ) : (
             /* Quiz Complete Screen */
-            <div className="rounded-2xl border border-line bg-white p-8 text-center shadow-card flex flex-col items-center">
+            <div className="rounded-2xl border border-line bg-bg p-8 text-center shadow-card flex flex-col items-center">
               <Owl size={96} mood={quizScore >= 4 ? "celebrate" : "idle"} />
               <h2 className="mt-4 text-2xl font-medium text-ink">Quiz complete!</h2>
               <p className="mt-1 text-sm text-muted">

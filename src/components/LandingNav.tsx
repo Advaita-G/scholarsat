@@ -40,8 +40,8 @@ export function LandingNav({ signedIn, repo }: { signedIn: boolean; repo: string
       <div
         className={`border backdrop-blur-xl backdrop-saturate-150 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none ${
           scrolled
-            ? "mt-3 rounded-full border-white/70 bg-white/55 py-2 shadow-[0_8px_32px_rgb(38_37_30/0.12),0_1px_0_rgb(255_255_255/0.9)_inset]"
-            : "mt-0 rounded-none border-transparent border-b-line bg-white py-3 shadow-none"
+            ? "mt-3 rounded-full border-white/70 bg-bg/55 py-2 shadow-[0_8px_32px_rgb(38_37_30/0.12),0_1px_0_rgb(255_255_255/0.9)_inset]"
+            : "mt-0 rounded-none border-transparent border-b-line bg-bg py-3 shadow-none"
         }`}
         style={{
           marginInline: scrolled ? "max(12px, calc((100% - 1060px) / 2))" : "0px",

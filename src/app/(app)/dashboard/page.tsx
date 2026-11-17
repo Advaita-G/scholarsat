@@ -58,7 +58,7 @@ export default async function Dashboard() {
         {/* Left column */}
         <div className="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
           <HeaderCard
-            title={<span className="flex items-center gap-2.5">Daily Questions <span className="rounded-md bg-white/20 px-2 py-0.5 text-[13px]">#{dayNo}</span></span>}
+            title={<span className="flex items-center gap-2.5">Daily Questions <span className="rounded-md bg-black/15 px-2 py-0.5 text-[13px]">#{dayNo}</span></span>}
             right={<span>{dateLabel}</span>}
             bodyClassName=""
           >

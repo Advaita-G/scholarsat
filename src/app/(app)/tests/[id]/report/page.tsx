@@ -35,8 +35,8 @@ export default async function Report({ params }: { params: Promise<{ id: string 
   return (
     <div className="animate-rise">
       <PageTitle title={`Test #${id} score report`} sub={new Date(t.finished_at).toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })} action={<LinkButton href="/tests" variant="secondary">All tests</LinkButton>} />
-      <section className="overflow-hidden rounded-2xl border border-line bg-white shadow-card">
-        <div className="relative grid gap-6 bg-red px-6 py-8 text-white sm:px-8 md:grid-cols-[auto_1fr] md:items-center">
+      <section className="overflow-hidden rounded-2xl border border-line bg-bg shadow-card">
+        <div className="relative grid gap-6 bg-accent-fill px-6 py-8 text-white sm:px-8 md:grid-cols-[auto_1fr] md:items-center">
           <div className="flex items-center gap-5">
             <Owl size={88} mood="celebrate" />
             <div>
@@ -47,7 +47,7 @@ export default async function Report({ params }: { params: Promise<{ id: string 
           </div>
           <div className="grid gap-3 sm:grid-cols-2 md:justify-self-end">
             {(["rw", "math"] as const).map((sec) => (
-              <div key={sec} className="min-w-[200px] rounded-xl bg-white p-4 text-ink">
+              <div key={sec} className="min-w-[200px] rounded-xl bg-bg p-4 text-ink">
                 <p className="text-sm text-muted">{SECTION_LABEL[sec]}</p>
                 <p className="text-[32px] leading-tight font-medium tabular-nums">{sec === "rw" ? t.score_rw : t.score_math}</p>
                 <p className="text-xs text-muted">200–800 · Module 2: <span className="font-medium text-ink">{s.modules[sec === "rw" ? 1 : 3].path === "harder" ? "Harder" : "Easier"}</span></p>

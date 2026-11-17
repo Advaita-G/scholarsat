@@ -31,7 +31,7 @@ export default async function Settings({ searchParams }: { searchParams: Promise
         </p>
       )}
 
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-white p-5 shadow-card transition-colors hover:border-red-200">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-bg p-5 shadow-card transition-colors hover:border-red-200">
         <div>
           <span className="block text-[15px] font-medium text-ink">Personalized study plan</span>
           <span className="text-sm text-muted">

@@ -86,7 +86,7 @@ export function ProgressBody({
               role="tab"
               aria-selected={tab === s.key}
               onClick={() => setTab(s.key)}
-              className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${tab === s.key ? "bg-white text-red shadow-card" : "text-muted hover:text-ink"}`}
+              className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${tab === s.key ? "bg-bg text-red shadow-card" : "text-muted hover:text-ink"}`}
             >
               {s.key === "rw" ? "Reading & Writing" : s.label}
             </button>

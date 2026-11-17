@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "katex/dist/katex.min.css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ---------------------------------------------------------------------------
    ScholarSAT tokens. Brand: owl red + cap gold on a cool grey canvas.
    Typography follows the Cramzo system: CursorGothic (Inter fallback) for UI,
@@ -14,11 +16,17 @@
   --ink: #26251e;
   --ink-2: #3f3e37;
   --muted: #6b6a63;
-  --faint: #9b9a93;
+  --faint: #6b6a63;
   --line: #e3e4e8;
   --line-strong: #d3d5db;
 
   --red: #a50c26;
+  /* Filled controls keep white text; foreground accents adapt independently. */
+  --accent-fill: #a50c26;
+  --gold-fill: #76551a;
+  --ok-fill: #116631;
+  --bad-fill: #8f1c13;
+  --inverse: #26251e;
   --red-600: #8c0a20;
   --red-700: #6e0818;
   --red-50: #fcf1f2;
@@ -26,13 +34,13 @@
   --red-200: #f0bcc4;
 
   --gold: #c1912f;
-  --gold-600: #9c7323;
+  --gold-600: #76551a;
   --gold-700: #7a5a1b;
   --gold-50: #fbf5e8;
   --gold-100: #f4e6c6;
 
   --ok: #15803d;
-  --ok-500: #16a34a;
+  --ok-500: #15803d;
   --ok-700: #116631;
   --ok-50: #ecf7f0;
   --ok-100: #cfeedd;
@@ -62,6 +70,11 @@
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
   --color-red: var(--red);
+  --color-accent-fill: var(--accent-fill);
+  --color-gold-fill: var(--gold-fill);
+  --color-ok-fill: var(--ok-fill);
+  --color-bad-fill: var(--bad-fill);
+  --color-inverse: var(--inverse);
   --color-red-600: var(--red-600);
   --color-red-700: var(--red-700);
   --color-red-50: var(--red-50);
@@ -161,6 +174,7 @@
   }
   ::selection {
     background: var(--gold-100);
+    color: var(--ink);
   }
   :focus-visible {
     outline: 2px solid var(--red);
@@ -216,7 +230,7 @@
     content: "";
     position: absolute;
     inset: 0 0 50% 0;
-    background: rgb(255 255 255 / 0.18);
+    background: rgb(255 255 255 / 0.08);
     pointer-events: none;
   }
 
@@ -317,13 +331,13 @@
   100% { transform: scale(1.5); opacity: 0; }
 }
 @keyframes pick {
-  0%, 18% { background: #fff; border-color: var(--line-strong); }
-  30%, 86% { background: #ecf7f0; border-color: #16a34a; }
-  100% { background: #fff; border-color: var(--line-strong); }
+  0%, 18% { background: var(--bg); border-color: var(--line-strong); }
+  30%, 86% { background: var(--ok-50); border-color: var(--ok); }
+  100% { background: var(--bg); border-color: var(--line-strong); }
 }
 @keyframes pick-dot {
   0%, 18% { background: transparent; color: var(--ink); border-color: var(--ink); }
-  30%, 86% { background: #16a34a; color: #fff; border-color: #16a34a; }
+  30%, 86% { background: var(--ok-fill); color: #fff; border-color: var(--ok-fill); }
   100% { background: transparent; color: var(--ink); border-color: var(--ink); }
 }
 @keyframes explain-in {
@@ -470,12 +484,12 @@ html.dark {
   --surface-2: #242630;
   --ink: #f5f6f8;
   --ink-2: #d5d6de;
-  --muted: #9497a5;
-  --faint: #626574;
+  --muted: #adb0bd;
+  --faint: #a6a9b7;
   --line: #23252d;
   --line-strong: #323541;
 
-  --red: #e12d4d;
+  --red: #ff8095;
   --red-600: #c41b39;
   --red-700: #9f122d;
   --red-50: #291016;
@@ -483,8 +497,8 @@ html.dark {
   --red-200: #691a2e;
 
   --gold: #dca735;
-  --gold-600: #b88624;
-  --gold-700: #8f6515;
+  --gold-600: #eac066;
+  --gold-700: #eac066;
   --gold-50: #261f0e;
   --gold-100: #3f3214;
 
@@ -494,7 +508,7 @@ html.dark {
   --ok-50: #0f2918;
   --ok-100: #174227;
 
-  --bad: #ef4444;
+  --bad: #ff8787;
   --bad-50: #331316;
   --bad-100: #4e191f;
 
@@ -506,188 +520,11 @@ html.dark {
   --shadow-pop: 0 16px 36px rgb(0 0 0 / 65%), 0 0 0 1px rgb(255 255 255 / 6%);
 }
 
-html.dark body {
-  background-color: var(--canvas);
-  color: var(--ink);
-}
-
-/* Card and Container Backgrounds in Dark Mode */
-html.dark aside,
-html.dark nav,
-html.dark section,
-html.dark article,
-html.dark main,
-html.dark .shadow-card,
-html.dark [role="menu"],
-html.dark div.bg-white:not([role="switch"] *):not(.owl *):not(.keep-white) {
-  background-color: var(--bg);
-}
-
-/* Ensure pure white text on dark or colored buttons and headers */
-html.dark .text-white,
-html.dark .text-white * {
-  color: #ffffff !important;
-}
-
-/* Toggle switch knob stays pure white */
-html.dark [role="switch"] span {
-  background-color: #ffffff !important;
-}
-
-/* Secondary 3D button in dark mode */
-html.dark button.bg-white,
-html.dark a.bg-white,
-html.dark .btn-3d.bg-white {
-  background-color: var(--surface) !important;
-  color: var(--ink) !important;
-  border-color: var(--line-strong) !important;
-}
-html.dark button.bg-white:hover,
-html.dark a.bg-white:hover,
-html.dark .btn-3d.bg-white:hover {
-  background-color: var(--surface-2) !important;
-}
-
-/* Primary buttons in dark mode */
-html.dark .btn-3d.bg-red,
-html.dark a.btn-3d.bg-red {
-  background-color: var(--red) !important;
-  color: #ffffff !important;
-  border-bottom-color: var(--red-700) !important;
-}
-html.dark .btn-3d.bg-gold,
-html.dark a.btn-3d.bg-gold {
-  background-color: var(--gold) !important;
-  color: #ffffff !important;
-  border-bottom-color: var(--gold-700) !important;
-}
-html.dark .btn-3d.bg-ok-500,
-html.dark a.btn-3d.bg-ok-500 {
-  background-color: var(--ok-500) !important;
-  color: #ffffff !important;
-  border-bottom-color: var(--ok-700) !important;
-}
-
-/* Inputs and Forms in Dark Mode */
-html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-html.dark select,
-html.dark textarea {
-  background-color: var(--surface) !important;
-  color: var(--ink) !important;
-  border-color: var(--line) !important;
-}
-html.dark input:focus,
-html.dark select:focus,
-html.dark textarea:focus {
-  background-color: var(--bg) !important;
-  border-color: var(--red) !important;
-  box-shadow: 0 0 0 3px rgba(225, 45, 77, 0.25) !important;
-}
-html.dark input::placeholder,
-html.dark textarea::placeholder {
-  color: var(--muted) !important;
-}
-
-/* Borders and dividers */
-html.dark .border-line {
-  border-color: var(--line) !important;
-}
-html.dark .border-line-strong {
-  border-color: var(--line-strong) !important;
-}
-html.dark .divide-line > * + * {
-  border-color: var(--line) !important;
-}
-
-/* Subtle Tinted Alert/Badge Backgrounds */
-html.dark .bg-red-50 {
-  background-color: var(--red-50) !important;
-}
-html.dark .border-red-200,
-html.dark .border-red-100 {
-  border-color: var(--red-200) !important;
-}
-html.dark .bg-gold-50 {
-  background-color: var(--gold-50) !important;
-}
-html.dark .border-gold-100,
-html.dark .border-gold-200 {
-  border-color: var(--gold-100) !important;
-}
-html.dark .bg-ok-50 {
-  background-color: var(--ok-50) !important;
-}
-html.dark .border-ok-100 {
-  border-color: var(--ok-100) !important;
-}
-html.dark .bg-bad-50 {
-  background-color: var(--bad-50) !important;
-}
-html.dark .border-bad-100 {
-  border-color: var(--bad-100) !important;
-}
-html.dark .bg-warn-50 {
-  background-color: var(--warn-50) !important;
-}
-
-/* Text Overrides */
-html.dark .text-ink {
-  color: var(--ink) !important;
-}
-html.dark .text-ink-2 {
-  color: var(--ink-2) !important;
-}
-html.dark .text-muted {
-  color: var(--muted) !important;
-}
-html.dark .text-faint {
-  color: var(--faint) !important;
-}
-
-/* Surfaces & Hovers */
-html.dark .bg-surface {
-  background-color: var(--surface) !important;
-}
-html.dark .bg-surface-2 {
-  background-color: var(--surface-2) !important;
-}
-html.dark .hover\:bg-surface:hover {
-  background-color: var(--surface) !important;
-}
-html.dark .hover\:bg-surface-2:hover {
-  background-color: var(--surface-2) !important;
-}
-html.dark .hover\:bg-white\/50:hover {
-  background-color: var(--surface) !important;
-}
-
-/* HeaderCard Colored Strips - Text Always White */
-html.dark header.bg-red,
-html.dark header.bg-gold,
-html.dark header.bg-ok-500,
-html.dark header.bg-ink {
-  color: #ffffff !important;
-}
-html.dark header.bg-red *,
-html.dark header.bg-gold *,
-html.dark header.bg-ok-500 *,
-html.dark header.bg-ink * {
-  color: #ffffff !important;
-}
-
-/* Shadows */
-html.dark .shadow-card {
-  box-shadow: var(--shadow-card) !important;
-}
-html.dark .shadow-pop {
-  box-shadow: var(--shadow-pop) !important;
-}
-
 /* Accent Colors */
 /* 1. Crimson (Default) */
 html.dark:not([data-accent]),
 html.dark[data-accent="red"] {
-  --red: #e12d4d;
+  --red: #ff8095;
   --red-600: #c41b39;
   --red-700: #9f122d;
   --red-50: #291016;
@@ -697,7 +534,8 @@ html.dark[data-accent="red"] {
 
 /* 2. Gold / Amber */
 html[data-accent="gold"] {
-  --red: #c1912f;
+  --red: #76551a;
+  --accent-fill: #76551a;
   --red-600: #9c7323;
   --red-700: #7a5a1b;
   --red-50: #fbf5e8;
@@ -705,7 +543,7 @@ html[data-accent="gold"] {
   --red-200: #ebd49a;
 }
 html.dark[data-accent="gold"] {
-  --red: #dca735;
+  --red: #fcd34d;
   --red-600: #b88624;
   --red-700: #8f6515;
   --red-50: #261f0e;
@@ -715,7 +553,8 @@ html.dark[data-accent="gold"] {
 
 /* 3. Blue / Cobalt */
 html[data-accent="blue"] {
-  --red: #2563eb;
+  --red: #1d4ed8;
+  --accent-fill: #1e40af;
   --red-600: #1d4ed8;
   --red-700: #1e40af;
   --red-50: #eff6ff;
@@ -723,7 +562,7 @@ html[data-accent="blue"] {
   --red-200: #bfdbfe;
 }
 html.dark[data-accent="blue"] {
-  --red: #3b82f6;
+  --red: #93c5fd;
   --red-600: #2563eb;
   --red-700: #1d4ed8;
   --red-50: #0f1c38;
@@ -733,7 +572,8 @@ html.dark[data-accent="blue"] {
 
 /* 4. Green / Emerald */
 html[data-accent="green"] {
-  --red: #15803d;
+  --red: #116631;
+  --accent-fill: #116631;
   --red-600: #166534;
   --red-700: #14532d;
   --red-50: #f0fdf4;
@@ -741,7 +581,7 @@ html[data-accent="green"] {
   --red-200: #bbf7d0;
 }
 html.dark[data-accent="green"] {
-  --red: #22c55e;
+  --red: #86efac;
   --red-600: #16a34a;
   --red-700: #15803d;
   --red-50: #0a2615;
@@ -751,7 +591,8 @@ html.dark[data-accent="green"] {
 
 /* 5. Purple / Violet */
 html[data-accent="purple"] {
-  --red: #7c3aed;
+  --red: #6d28d9;
+  --accent-fill: #6d28d9;
   --red-600: #6d28d9;
   --red-700: #5b21b6;
   --red-50: #f5f3ff;
@@ -759,7 +600,7 @@ html[data-accent="purple"] {
   --red-200: #ddd6fe;
 }
 html.dark[data-accent="purple"] {
-  --red: #8b5cf6;
+  --red: #c4b5fd;
   --red-600: #7c3aed;
   --red-700: #6d28d9;
   --red-50: #21113b;
@@ -769,7 +610,8 @@ html.dark[data-accent="purple"] {
 
 /* 6. Rose / Coral */
 html[data-accent="rose"] {
-  --red: #e11d48;
+  --red: #be123c;
+  --accent-fill: #9f1239;
   --red-600: #be123c;
   --red-700: #9f1239;
   --red-50: #fff1f2;
@@ -777,7 +619,7 @@ html[data-accent="rose"] {
   --red-200: #fecdd3;
 }
 html.dark[data-accent="rose"] {
-  --red: #f43f5e;
+  --red: #fda4af;
   --red-600: #e11d48;
   --red-700: #be123c;
   --red-50: #330b15;
