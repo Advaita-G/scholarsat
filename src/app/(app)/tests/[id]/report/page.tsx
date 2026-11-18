@@ -21,14 +21,15 @@ export default async function Report({ params }: { params: Promise<{ id: string 
 
   const domainStats: Record<string, { right: number; n: number; section: string }> = {};
   const rows = s.modules.flatMap((m, mi) =>
-    m.ids.map((qid, k) => {
-      const q = BY_ID.get(qid)!;
+    m.ids.flatMap((qid, k) => {
+      const q = BY_ID.get(qid);
+      if (!q) return []; // skip ids that no longer exist in the bank
       const resp = s.answers[qid] ?? "";
       const ok = !!resp && isCorrect(q, resp);
       const d = (domainStats[q.domain] ??= { right: 0, n: 0, section: q.section });
       d.n++;
       d.right += ok ? 1 : 0;
-      return { mi, k, q, resp, ok };
+      return [{ mi, k, q, resp, ok }];
     }),
   );
 

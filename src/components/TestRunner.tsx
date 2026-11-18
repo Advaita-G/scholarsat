@@ -64,7 +64,7 @@ export function TestRunner({ id }: { id: number }) {
       if (l === 0) submit();
     }, 500);
     return () => clearInterval(t);
-  }, [v?.started, v?.current, submit]);
+  }, [v?.started, submit]);
 
   if (!v) return <div className="grid h-96 place-items-center"><Owl size={72} mood="loading" title="Loading test" /></div>;
 
@@ -142,7 +142,23 @@ export function TestRunner({ id }: { id: number }) {
           </div>
           <Rich text={q.stem} className="mb-5 text-[17px] text-ink" />
           {q.type === "mcq" ? (
-            <Choices q={q} selected={answer} onSelect={setAnswer} struck={struck[q.id] ?? new Set()} onStrike={strikeMode ? (l) => setStruck((s) => { const n = new Set(s[q.id] ?? []); n.has(l) ? n.delete(l) : n.add(l); return { ...s, [q.id]: n }; }) : undefined} />
+            <Choices
+              q={q}
+              selected={answer}
+              onSelect={setAnswer}
+              struck={struck[q.id] ?? new Set()}
+              onStrike={
+                strikeMode
+                  ? (l) =>
+                      setStruck((s) => {
+                        const n = new Set(s[q.id] ?? []);
+                        if (n.has(l)) n.delete(l);
+                        else n.add(l);
+                        return { ...s, [q.id]: n };
+                      })
+                  : undefined
+              }
+            />
           ) : (
             <SprInput value={answer} onChange={setAnswer} />
           )}

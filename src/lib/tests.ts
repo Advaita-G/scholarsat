@@ -90,7 +90,8 @@ export function saveState(id: number, state: TestState) {
 function moduleScore(ids: string[], answers: Record<string, string>) {
   let got = 0, max = 0;
   for (const id of ids) {
-    const q = BY_ID.get(id)!;
+    const q = BY_ID.get(id);
+    if (!q) continue; // ids saved before a bank rebuild may no longer exist
     max += W[q.difficulty];
     if (answers[id] !== undefined && isCorrect(q, answers[id])) got += W[q.difficulty];
   }
@@ -132,8 +133,10 @@ export function submitModule(userId: number, id: number): TestState | null {
   const tx = db.transaction(() => {
     for (const m of s.modules)
       for (const qid of m.ids) {
+        const q = BY_ID.get(qid);
+        if (!q) continue; // skip ids that no longer exist in the bank
         const resp = s.answers[qid] ?? "";
-        ins.run(userId, qid, resp, resp && isCorrect(BY_ID.get(qid)!, resp) ? 1 : 0, now);
+        ins.run(userId, qid, resp, resp && isCorrect(q, resp) ? 1 : 0, now);
       }
     db.prepare("UPDATE tests SET state = ?, finished_at = ?, score_rw = ?, score_math = ? WHERE id = ?").run(JSON.stringify(s), now, rw, math, id);
   });
@@ -143,8 +146,11 @@ export function submitModule(userId: number, id: number): TestState | null {
 
 /** Correct / total per module (RW1, RW2, Math1, Math2) for the score cards. */
 export function moduleCorrect(s: TestState) {
-  return s.modules.map((m) => ({
-    total: m.ids.length,
-    correct: m.ids.filter((id) => s.answers[id] !== undefined && isCorrect(BY_ID.get(id)!, s.answers[id])).length,
-  }));
+  return s.modules.map((m) => {
+    const ids = m.ids.filter((id) => BY_ID.has(id));
+    return {
+      total: ids.length,
+      correct: ids.filter((id) => s.answers[id] !== undefined && isCorrect(BY_ID.get(id)!, s.answers[id])).length,
+    };
+  });
 }

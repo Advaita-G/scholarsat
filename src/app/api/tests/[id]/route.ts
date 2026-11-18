@@ -24,7 +24,7 @@ function view(t: NonNullable<ReturnType<typeof getTest>>) {
     minutes: cfg.minutes,
     started: !!mod.startedAt,
     remainingMs,
-    questions: mod.ids.map((qid) => toPublic(BY_ID.get(qid)!)),
+    questions: mod.ids.filter((qid) => BY_ID.has(qid)).map((qid) => toPublic(BY_ID.get(qid)!)),
     answers: Object.fromEntries(mod.ids.filter((q) => s.answers[q] !== undefined).map((q) => [q, s.answers[q]])),
     flags: s.flags.filter((f) => mod.ids.includes(f)),
   };

@@ -349,7 +349,7 @@ export function SettingsForms({ user, hasPassword, googleLinked, googleAvailable
                     onClick={() => setTheme(id)}
                     className={`relative flex flex-col items-start rounded-xl border-2 p-4 text-left transition-all ${
                       isSelected
-                        ? "border-red bg-red-50/40 dark:bg-red-950/20 shadow-xs"
+                        ? "border-red bg-red-50/40 shadow-xs"
                         : "border-line bg-bg hover:border-line-strong"
                     }`}
                   >
@@ -489,7 +489,7 @@ export function SettingsForms({ user, hasPassword, googleLinked, googleAvailable
                         title={a.label}
                         className={`flex flex-col items-center justify-center p-2.5 rounded-xl border transition-all ${
                           isSelected
-                            ? "border-red bg-red-50 dark:bg-red-950/40 ring-2 ring-red/20 text-red"
+                            ? "border-red bg-red-50 ring-2 ring-red/20 text-red"
                             : "border-line bg-surface hover:bg-surface-2 text-ink-2"
                         }`}
                       >
@@ -763,7 +763,7 @@ export function SettingsForms({ user, hasPassword, googleLinked, googleAvailable
                           variant="ghost"
                           size="sm"
                           onClick={() => handleRevokeSession(sess.id)}
-                          className="text-bad hover:bg-bad-50 dark:hover:bg-bad/20"
+                          className="text-bad hover:bg-bad-50"
                         >
                           Revoke
                         </Button>

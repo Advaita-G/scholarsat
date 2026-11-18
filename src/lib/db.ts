@@ -5,7 +5,6 @@ import path from "node:path";
 const DATA_DIR = process.env.DATA_DIR ?? path.join(process.cwd(), "data");
 
 declare global {
-  // eslint-disable-next-line no-var
   var __db: Database.Database | undefined;
 }
 

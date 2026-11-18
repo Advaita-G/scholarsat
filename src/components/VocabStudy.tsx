@@ -71,9 +71,11 @@ export function VocabStudy({
   // Filter curated decks
   const curatedDeck = useMemo(() => {
     switch (deckFilter) {
-      case "daily":
-        // 15 stable words for today
-        return words.slice(0, 15);
+      case "daily": {
+        // 15 words that rotate at midnight UTC, matching how the daily questions turn over
+        const start = (Math.floor(Date.now() / 86_400_000) * 15) % words.length;
+        return [...words.slice(start), ...words.slice(0, start)].slice(0, 15);
+      }
       case "top50":
         // Top 50 core Digital SAT words
         return words.slice(0, 50);
@@ -312,7 +314,7 @@ export function VocabStudy({
         <Card className="flex flex-col justify-between p-4 sm:p-5">
           <div className="flex items-center justify-between text-muted">
             <span className="text-xs font-medium uppercase tracking-wider">Starred</span>
-            <IStar className="h-4 w-4 text-amber-500 fill-amber-500" />
+            <IStar className="h-4 w-4 text-gold fill-gold" />
           </div>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="text-2xl sm:text-3xl font-medium tabular-nums text-ink">{starred.size}</span>
@@ -394,7 +396,7 @@ export function VocabStudy({
               }}
               className={`rounded-lg border px-3 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
                 deckFilter === d.id
-                  ? "border-red bg-red-50 dark:bg-red-950/30 text-red"
+                  ? "border-red bg-red-50 text-red"
                   : "border-line text-muted hover:text-ink hover:border-line-strong hover:bg-surface"
               }`}
             >
@@ -438,8 +440,8 @@ export function VocabStudy({
                 onClick={() => setFlipped((f) => !f)}
                 className={`group relative flex flex-col justify-between min-h-[340px] sm:min-h-[380px] w-full rounded-2xl border-2 p-7 sm:p-9 text-center shadow-card cursor-pointer select-none transition-all duration-300 ${
                   flipped
-                    ? "border-gold-200 dark:border-gold-700/60 bg-gradient-to-b from-gold-50/70 to-bg dark:from-gold-950/20 dark:to-surface"
-                    : "border-line bg-bg hover:border-red-200 dark:hover:border-red-800/60"
+                    ? "border-gold-100 dark:border-gold-700/60 bg-gradient-to-b from-gold-50/70 to-bg"
+                    : "border-line bg-bg hover:border-red-200"
                 }`}
                 role="button"
                 tabIndex={0}
@@ -468,11 +470,11 @@ export function VocabStudy({
                       title={currentWordIsStarred ? "Remove star" : "Star this word"}
                       className={`p-2 rounded-lg transition-colors ${
                         currentWordIsStarred
-                          ? "text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/30"
+                          ? "text-gold hover:bg-gold-50"
                           : "text-muted hover:text-ink hover:bg-surface-2"
                       }`}
                     >
-                      <IStar className={`h-4 w-4 ${currentWordIsStarred ? "fill-amber-500" : ""}`} />
+                      <IStar className={`h-4 w-4 ${currentWordIsStarred ? "fill-gold" : ""}`} />
                     </button>
                   </div>
                 </div>
@@ -490,7 +492,7 @@ export function VocabStudy({
                   </div>
                 ) : (
                   <div className="my-auto py-4 animate-rise max-w-lg mx-auto">
-                    <p className="text-lg font-medium text-gold-600 dark:text-gold-400">
+                    <p className="text-lg font-medium text-gold-600">
                       {currentWord.word}
                     </p>
                     <p className="mt-3 text-xl sm:text-2xl font-medium text-ink leading-snug">
@@ -558,7 +560,7 @@ export function VocabStudy({
               </div>
             </>
           ) : (
-            <div className="grid min-h-[340px] place-items-center rounded-2xl border-2 border-gold-100 bg-gold-50 dark:bg-gold-950/20 p-8 text-center">
+            <div className="grid min-h-[340px] place-items-center rounded-2xl border-2 border-gold-100 bg-gold-50 p-8 text-center">
               <div className="flex flex-col items-center">
                 <Owl size={96} mood="celebrate" />
                 <p className="mt-4 text-2xl font-medium text-ink">Deck completed!</p>
@@ -664,18 +666,18 @@ export function VocabStudy({
                           type="button"
                           onClick={() => toggleStar(w.word)}
                           className={`p-1.5 rounded-lg transition-colors ${
-                            isStarred ? "text-amber-500" : "text-faint hover:text-ink"
+                            isStarred ? "text-gold" : "text-faint hover:text-ink"
                           }`}
                           title={isStarred ? "Starred" : "Star word"}
                         >
-                          <IStar className={`h-4 w-4 ${isStarred ? "fill-amber-500" : ""}`} />
+                          <IStar className={`h-4 w-4 ${isStarred ? "fill-gold" : ""}`} />
                         </button>
                         <button
                           type="button"
                           onClick={() => toggleKnown(w.word, !isKnown)}
                           className={`p-1.5 rounded-lg transition-colors ${
                             isKnown
-                              ? "text-ok bg-ok-50 dark:bg-ok-950/30"
+                              ? "text-ok bg-ok-50"
                               : "text-faint hover:text-ink hover:bg-surface-2"
                           }`}
                           title={isKnown ? "Mark as learning" : "Mark as mastered"}
@@ -752,9 +754,9 @@ export function VocabStudy({
                   if (quizSubmitted) {
                     if (isTarget) {
                       btnStyle =
-                        "border-ok bg-ok-50 dark:bg-ok-950/40 text-ok font-medium ring-2 ring-ok/20";
+                        "border-ok bg-ok-50 text-ok font-medium ring-2 ring-ok/20";
                     } else if (isChosen && !isTarget) {
-                      btnStyle = "border-bad bg-bad-50 dark:bg-bad/20 text-bad font-medium";
+                      btnStyle = "border-bad bg-bad-50 text-bad font-medium";
                     } else {
                       btnStyle = "opacity-50 border-line bg-bg text-muted";
                     }

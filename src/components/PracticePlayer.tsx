@@ -78,14 +78,20 @@ export function PracticePlayer({ items, signedIn, title, backHref = "/practice" 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement)?.tagName === "INPUT") {
-        if (e.key === "Enter") (result ? next() : check());
+        if (e.key === "Enter") {
+          if (result) next();
+          else check();
+        }
         return;
       }
       if ((e.target as HTMLElement)?.tagName === "SELECT" || !q) return;
       if (!result && q.type === "mcq" && ["a", "b", "c", "d", "1", "2", "3", "4"].includes(e.key.toLowerCase())) {
         const map: Record<string, string> = { a: "A", b: "B", c: "C", d: "D", "1": "A", "2": "B", "3": "C", "4": "D" };
         setResp(map[e.key.toLowerCase()]);
-      } else if (e.key === "Enter") result ? next() : check();
+      } else if (e.key === "Enter") {
+        if (result) next();
+        else check();
+      }
       else if (e.key === "ArrowRight" && result) next();
       else if (e.key === "ArrowLeft") prev();
     };
@@ -193,7 +199,17 @@ export function PracticePlayer({ items, signedIn, title, backHref = "/practice" 
                   selected={resp}
                   onSelect={setResp}
                   struck={struck}
-                  onStrike={strikeMode ? (l) => setStruck((s) => { const x = new Set(s); x.has(l) ? x.delete(l) : x.add(l); return x; }) : undefined}
+                  onStrike={
+                    strikeMode
+                      ? (l) =>
+                          setStruck((s) => {
+                            const x = new Set(s);
+                            if (x.has(l)) x.delete(l);
+                            else x.add(l);
+                            return x;
+                          })
+                      : undefined
+                  }
                   reveal={result ? { answer: result.answer, dist: result.dist } : null}
                   disabled={!!result}
                 />
