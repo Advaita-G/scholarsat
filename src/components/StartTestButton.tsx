@@ -15,9 +15,14 @@ export function StartTestButton({ label = "Start a new test", size = "lg", class
       disabled={busy}
       onClick={async () => {
         setBusy(true);
-        const r = await fetch("/api/tests", { method: "POST" }).then((x) => x.json());
-        if (r.id) router.push(`/tests/${r.id}`);
-        else setBusy(false);
+        try {
+          const r = await fetch("/api/tests", { method: "POST" });
+          const data = (await r.json().catch(() => ({}))) as { id?: number };
+          if (data.id) router.push(`/tests/${data.id}`);
+          else setBusy(false);
+        } catch {
+          setBusy(false);
+        }
       }}
     >
       {busy ? "Preparing…" : <>{label} <IArrowR className="h-4 w-4" /></>}

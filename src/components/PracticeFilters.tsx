@@ -100,7 +100,7 @@ export function PracticeFilters({
                   </button>
                   <div>
                     <h2 className="text-[22px] leading-tight font-medium">{d.domain}</h2>
-                    <p className="text-sm text-muted">{Math.round((total / sectionTotal) * 100)}% of the {SECTION_LABEL[section]} bank</p>
+                    <p className="text-sm text-muted">{sectionTotal ? Math.round((total / sectionTotal) * 100) : 0}% of the {SECTION_LABEL[section]} bank</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
