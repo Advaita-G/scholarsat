@@ -1,4 +1,5 @@
 "use client";
+import { Tutor } from "./Tutor";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Difficulty, Question } from "@/lib/types";
@@ -226,6 +227,7 @@ export function PracticePlayer({ items, signedIn, title, backHref = "/practice" 
                     </p>
                   </div>
                   <div className="mt-3 text-[15px] text-ink"><Rich text={result.explanation} /></div>
+                  <Tutor key={q.id} item={q.id}/>
                   {!result.saved && (
                     <p className="mt-3 text-xs text-muted">
                       <Link href="/signup" className="font-medium text-red hover:underline">Create a free account</Link> to save progress and track weak spots.

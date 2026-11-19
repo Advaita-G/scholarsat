@@ -1,94 +1,361 @@
-/* Landing page motion. Kept out of globals.css; everything here is disabled under prefers-reduced-motion. */
-
-@keyframes lp-rise {
-  from { opacity: 0; transform: translateY(26px); }
-  to { opacity: 1; transform: none; }
+.edition {
+  --paper: #f7f3e9;
+  --print: #241e1c;
+  --wine: #81233b;
+  --rule: #c8bfb2;
+  background: var(--paper);
+  color: var(--print);
+  font-family: var(--font-inter), Arial, sans-serif;
 }
-@keyframes lp-pop {
-  from { opacity: 0; transform: translateY(48px) scale(0.965); }
-  to { opacity: 1; transform: none; }
+.edition nav,
+.edition-actions,
+.edition footer,
+.edition footer > div,
+.edition-nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 3vw, 42px);
 }
-@keyframes lp-line {
-  from { background-size: 0% 6px; }
-  to { background-size: 100% 6px; }
+.edition-nav,
+.edition footer {
+  justify-content: space-between;
+  max-width: 1440px;
+  margin: auto;
+  padding: 20px 5.5%;
+  font-size: 14px;
 }
-
-/* Hero entrance: plays on load, no JavaScript needed. */
-.lp-in {
-  animation: lp-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: var(--d, 0ms);
+.edition-nav {
+  border-bottom: 1px solid var(--rule);
 }
-.lp-pop {
-  animation: lp-pop 1100ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: var(--d, 0ms);
+.edition .nav-account {
+  border: 1px solid var(--rule);
+  border-radius: 100px;
+  padding: 9px 19px;
 }
-.lp-line {
-  background-image: linear-gradient(var(--gold), var(--gold));
-  background-repeat: no-repeat;
-  background-position: 0 96%;
-  background-size: 100% 6px;
-  padding-bottom: 0.04em;
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-  animation: lp-line 900ms cubic-bezier(0.16, 1, 0.3, 1) 1000ms both;
+.edition-nav > a span,
+.edition footer > a span {
+  color: var(--print);
 }
-
-/* Scroll reveal (see components/Reveal.tsx). Content is visible by default; it is only hidden once
-   the component has armed itself in the browser, so a failed script never leaves the page blank. */
-.lp-reveal[data-armed="true"]:not([data-in="true"]),
-.lp-group[data-armed="true"]:not([data-in="true"]) .lp-stagger {
-  opacity: 0;
+.edition-hero,
+.contents,
+.sample {
+  max-width: 1440px;
+  margin: auto;
+  padding: clamp(34px, 5vw, 80px) 5.5%;
+  display: grid;
+  align-items: center;
+  gap: 5%;
+  grid-template-columns: 1.12fr 1fr;
 }
-.lp-reveal[data-in="true"] {
-  animation: lp-rise 800ms cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms) backwards;
+.imprint,
+.cover-top,
+.book-caption,
+.contents small,
+.contents a > span {
+  font:
+    500 12px/1.5 ui-monospace,
+    monospace;
+  letter-spacing: 0.05em;
 }
-.lp-group[data-in="true"] .lp-stagger {
-  animation: lp-rise 750ms cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 90ms) backwards;
+.imprint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-
-/* Bars grow from the left once their block scrolls into view. */
-.lp-bar {
-  transform-origin: left center;
-  transition: transform 1200ms cubic-bezier(0.16, 1, 0.3, 1) calc(300ms + var(--i, 0) * 90ms);
+.imprint span {
+  width: 28px;
+  height: 2px;
+  background: var(--wine);
 }
-.lp-reveal[data-armed="true"]:not([data-in="true"]) .lp-bar,
-.lp-group[data-armed="true"]:not([data-in="true"]) .lp-bar {
-  transform: scaleX(0);
+.edition h1,
+.edition h2,
+.book strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -0.065em;
 }
-
-/* Cards lift under a mouse; touch screens skip it. */
-.lp-lift {
-  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms ease;
+.edition h1 {
+  font-size: clamp(58px, 6.8vw, 104px);
+  line-height: 0.98;
+  margin: 28px 0 22px;
 }
-@media (hover: hover) and (pointer: fine) {
-  .lp-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-pop);
+.deck,
+.sample > div > p:last-child {
+  max-width: 42ch;
+  line-height: 1.6;
+  font-size: clamp(16px, 1.3vw, 19px);
+}
+.edition-actions {
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.edition-actions a:first-child {
+  background: var(--wine);
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 4px;
+}
+.edition-actions span {
+  margin-left: 20px;
+}
+.edition-actions a:last-child {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.book-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(390px, 34vw, 510px);
+  background-color: #e8dfcc;
+  background-image:
+    linear-gradient(#97836420 1px, transparent 1px),
+    linear-gradient(90deg, #97836420 1px, transparent 1px);
+  background-size: 24px 24px;
+  isolation: isolate;
+}
+.book {
+  width: 58%;
+  aspect-ratio: 0.77;
+  max-width: 315px;
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    #531326,
+    #7a1f38 3%,
+    #501225 4%,
+    #902b43 6%,
+    #752139 100%
+  );
+  color: #fff0d1;
+  transform: perspective(900px) rotateY(-13deg) rotateZ(7deg);
+  border-radius: 1px 4px 3px 2px;
+  box-shadow:
+    2px 3px #dfd1b3,
+    4px 5px #fbefce,
+    6px 7px #712039,
+    10px 15px 18px #45311c40,
+    22px 31px 35px #45311c25;
+  overflow: hidden;
+  transition: transform 0.45s ease;
+}
+.book-stage:hover .book,
+.book-stage:focus-visible .book {
+  transform: perspective(900px) rotateY(-5deg) rotateZ(3deg) translateY(-5px);
+}
+.cover-top,
+.cover-foot {
+  position: absolute;
+  left: 11%;
+  right: 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f5d9aa80;
+  padding-bottom: 6px;
+  top: 5%;
+  font-size: clamp(9px, 0.85vw, 12px);
+}
+.book strong {
+  position: absolute;
+  left: 9%;
+  top: 11%;
+  font-size: clamp(72px, 7.8vw, 118px);
+  line-height: 1;
+}
+.contours {
+  position: absolute;
+  inset: 37% 0 15%;
+  overflow: hidden;
+}
+.contours i {
+  position: absolute;
+  left: 49%;
+  top: 65%;
+  border: 1px solid #ead7ab;
+  transform: translate(-50%, -50%) rotate(-26deg);
+  border-radius: 59% 41% 32% 68% / 33% 51% 49% 67%;
+}
+.cover-foot {
+  bottom: 4%;
+  top: auto;
+  border: 0;
+  border-top: 1px solid #f5d9aa80;
+  padding: 8px 0 0;
+}
+.cover-foot b {
+  font:
+    400 clamp(15px, 1.6vw, 24px) Georgia,
+    serif;
+}
+.cover-foot span {
+  font-size: 9px;
+  text-align: right;
+}
+.book-caption {
+  position: absolute;
+  bottom: 9px;
+  right: 13px;
+  font-size: 10px;
+}
+.contents,
+.sample {
+  border-top: 1px solid var(--rule);
+  grid-template-columns: 0.8fr 1.6fr;
+  align-items: start;
+}
+.edition h2 {
+  font-size: clamp(44px, 5vw, 78px);
+  line-height: 1.02;
+  margin: 12px 0 20px;
+}
+.contents a {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 19px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.contents a:first-child {
+  padding-top: 0;
+}
+.contents small,
+.contents b {
+  color: var(--wine);
+}
+.contents h3 {
+  font-size: clamp(19px, 2vw, 28px);
+  letter-spacing: -0.035em;
+}
+.contents a p {
+  font-size: 14px;
+  color: #575048;
+}
+.contents a > span {
+  margin-left: auto;
+  white-space: nowrap;
+  font-size: 11px;
+}
+.contents a:hover h3,
+.edition footer a:hover,
+.edition-nav nav a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.sample {
+  background: #e8dfcc;
+  align-items: center;
+  padding-top: 85px;
+}
+.sample section {
+  color: var(--ink);
+}
+.edition footer {
+  flex-wrap: wrap;
+}
+@keyframes book-arrive {
+  from {
+    opacity: 0.3;
+    translate: 0 12px;
+  }
+  to {
+    opacity: 1;
+    translate: 0;
   }
 }
-
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.reduce-motion) .book {
+    animation: book-arrive 0.7s ease-out both;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .lp-in,
-  .lp-pop,
-  .lp-line,
-  .lp-reveal[data-in="true"],
-  .lp-group[data-in="true"] .lp-stagger {
-    animation: none !important;
-  }
-  .lp-bar,
-  .lp-lift {
-    transition: none !important;
+  .book {
+    transition: none;
   }
 }
-
-/* Page-wide type and depth */
-.lp-root { letter-spacing: 0; }
-.lp-card {
-  box-shadow: 0 1px 2px rgb(38 37 30 / 0.05), 0 14px 32px -18px rgb(38 37 30 / 0.2);
+.reduce-motion .book {
+  transition: none;
 }
-.lp-chip {
-  box-shadow: 0 1px 2px rgb(38 37 30 / 0.06), 0 8px 18px -10px rgb(38 37 30 / 0.18);
+@media (max-width: 760px) {
+  .edition-hero,
+  .contents,
+  .sample {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+  .edition-nav nav > a:first-child {
+    display: none;
+  }
+  .book-stage {
+    min-height: 330px;
+  }
+  .book {
+    width: 185px;
+  }
+  .book strong {
+    font-size: 76px;
+  }
+  .contents a {
+    gap: 12px;
+  }
+  .contents a > span {
+    display: none;
+  }
+  .contents b {
+    margin-left: auto;
+  }
+  .sample {
+    gap: 62px;
+  }
+  .edition footer {
+    font-size: 13px;
+  }
 }
-@media (hover: hover) and (pointer: fine) {
-  .lp-card.lp-lift:hover { box-shadow: 0 1px 2px rgb(38 37 30 / 0.06), 0 22px 44px -18px rgb(38 37 30 / 0.28); }
+.questions details {
+  border-bottom: 1px solid var(--rule);
+  padding: 15px 0;
+}
+.questions summary {
+  cursor: pointer;
+  font-size: clamp(17px, 1.5vw, 22px);
+}
+.questions details p {
+  margin: 12px 0;
+  max-width: 55ch;
+}
+.questions details a {
+  display: inline;
+  padding: 0;
+  text-decoration: underline;
+  border: 0;
+}
+@media (max-width: 400px) {
+  .edition-nav {
+    padding: 14px 5%;
+  }
+  .edition-nav nav,
+  .edition-actions {
+    gap: 12px;
+  }
+  .edition .nav-account {
+    padding: 8px 12px;
+    white-space: nowrap;
+  }
+  .edition h1 {
+    font-size: clamp(44px, 13.5vw, 54px);
+    margin: 18px 0;
+  }
+  .edition-actions {
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  .edition-actions a:first-child {
+    padding: 12px 15px;
+  }
+  .edition-actions span {
+    margin-left: 6px;
+  }
+}
+@media (max-width: 360px) {
+  .edition-nav nav > a[href="/vocab"] { display: none; }
 }
