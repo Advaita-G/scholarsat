@@ -8,7 +8,6 @@ import { lessons } from "@/data/context-lessons";
 import { Logo } from "@/components/Logo";
 import { type LandingItem } from "@/components/LandingQuestion";
 import { LandingNav } from "@/components/LandingNav";
-import { LandingShowcase } from "@/components/LandingShowcase";
 import { PracticeSetPicker } from "@/components/PracticeSetPicker";
 import { TestTiming } from "@/components/TestTiming";
 import { LandingStudio } from "@/components/LandingStudio";
@@ -126,7 +125,11 @@ export default async function Landing() {
               {user ? "Open dashboard" : "Create a free account"} <span aria-hidden="true">↗</span>
             </Link>
           </div>
-          <LandingShowcase />
+          <nav className="study-index" aria-label="Study tools">
+            <Link href="/review">Mistake review <span aria-hidden="true">↗</span></Link>
+            <Link href="/diagnostics">Skill diagnostics <span aria-hidden="true">↗</span></Link>
+            <Link href="/vocab">Vocabulary practice <span aria-hidden="true">↗</span></Link>
+          </nav>
         </section>
 
         <aside className="prep-width access-note" id="faq" aria-labelledby="access-title">
