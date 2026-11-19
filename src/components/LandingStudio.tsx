@@ -118,7 +118,6 @@ export function LandingStudio({question}: { question: FeaturedQuestion }) {
     <article className="atlas measure" ref={story}>
       <header className="atlas-cover"><div className="atlas-stage">
         <div className="cover-copy">
-          <p className="overline"><span className="signal-dot" />Free SAT practice <span>/</span> Reading &amp; writing</p>
           <h1>Reading <br />the Moon.</h1>
           <p className="cover-deck">Explore ten nights of lunar change, then try a ScholarSAT passage about how ancient astronomers kept time.</p>
           <Link className="read-action" href="/#passage"><span className="action-arrow" aria-hidden="true">↓</span>Enter the passage</Link>

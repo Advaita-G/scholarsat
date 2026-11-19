@@ -13,6 +13,7 @@ async function verify() {
       [1512, 862, "no-preference"], [1920, 1200, "no-preference"], [390, 844, "no-preference"], [320, 650, "reduce"],
     ]) {
       const page = await browser.newPage({ viewport: { width, height }, reducedMotion });
+      page.setDefaultTimeout(10000);
       const errors = [];
       page.on("pageerror", error => errors.push(error.message));
       await page.goto(url);
@@ -21,8 +22,8 @@ async function verify() {
       assert.match(await page.getByRole("heading", { level: 1 }).innerText(), /Reading\s+the Moon/);
       assert.equal(await page.getByText("From the question bank", {exact: false}).count(), 0);
       assert.ok((await page.locator("#passage-title").evaluate(el => getComputedStyle(el).fontFamily)).includes("Mona Sans"));
-      const pathOffsets = () => page.locator(".path-ink").evaluateAll(lines => lines.map(line => Number(line.style.strokeDashoffset)));
-      const pathStart = await pathOffsets();
+      assert.equal(await page.locator(".cover-copy").getByText(/Free SAT practice/i).count(), 0);
+      assert.equal(await page.getByText("Rehearse the full test.").count(),0);
       const plate = page.locator(".exposure-origin figure").last();
       const transform = () => plate.evaluate(el => getComputedStyle(el).transform);
       const before = await transform();
@@ -46,11 +47,9 @@ async function verify() {
         await settle(page);
         assert.notEqual(await transform(), before);
       }
-      if (reducedMotion !== "reduce") assert.ok((await pathOffsets())[0] < pathStart[0]);
       await page.evaluate(() => scrollTo(0,0));
       await settle(page);
       assert.equal(await transform(), before);
-      assert.deepEqual(await pathOffsets(), pathStart);
       assert.equal(await reading.innerText(), initial);
       await scrub.focus();
       await page.keyboard.press("End");
@@ -78,24 +77,41 @@ async function verify() {
       await page.getByText("Exactly.").waitFor();
       assert.equal(await page.locator(".insertion").innerText(),"For example,");
       assert.ok(await page.getByRole("link",{name:"Practice five more transitions"}).isVisible());
+      // Jump to the center of each native chapter, then drive a leaf partway and rewind it.
+      const folio = page.locator(".folio-stage");
+      const chapter = async (id, offset = 0) => {
+        await page.locator(id).evaluate((el, offset) => {
+          const r = el.getBoundingClientRect();
+          scrollTo(0, scrollY+r.top+r.height/2-innerHeight*(innerWidth <= 760 ? .72 : .53)+offset);
+        },offset);
+        await settle(page);
+      };
+      await chapter("#bank");
+      assert.equal(await folio.getAttribute("data-spread"),"1");
+      await chapter("#tests");
+      assert.equal(await folio.getAttribute("data-spread"),"2");
+      const leafAngle = () => page.locator(".folio-leaf").nth(1).evaluate(el => parseFloat(el.style.getPropertyValue("--angle")));
+      assert.ok(await leafAngle() < -175);
+      if (reducedMotion !== "reduce") {
+        const gap = await page.evaluate(() => document.querySelector("#tests").offsetTop-document.querySelector("#bank").offsetTop);
+        await chapter("#tests",-gap*.5);
+        const angle = await leafAngle();
+        assert.ok(angle < -6 && angle > -174, "A partly turned page should stay in the reader's hands");
+      }
       await page.getByRole("navigation",{name:"Study options"}).getByRole("link",{name:"Mock tests"}).click();
-      await page.getByRole("button",{name:"Math Module 2"}).click();
-      assert.equal(await page.locator(".timer-display strong").innerText(), "35");
+      await page.waitForURL("**/#tests");
+      await page.getByLabel("Explore a module").selectOption("3");
       assert.match(await page.locator(".module-detail").innerText(),/22 questions · 35 minutes/);
-      await page.getByRole("navigation",{name:"Study options"}).getByRole("link",{name:"Study tools"}).click();
+      assert.match(await page.locator(".module-imprint").innerText(),/Math/);
+      assert.equal(await page.locator(".response-print [data-selected=true] i").count(),22);
+      await chapter("#tools");
+      assert.equal(await folio.getAttribute("data-spread"),"3");
       await page.getByRole("link",{name:/Retry questions you missed/}).waitFor();
       await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
       await settle(page);
-      assert.deepEqual(await pathOffsets(), [0,0,0,0,0,0]);
+      assert.equal(await folio.getAttribute("data-spread"),"4");
       const entry = page.getByRole("link",{name:"Open the question bank"});
       assert.equal(await entry.getAttribute("href"), "/practice");
-      if (reducedMotion !== "reduce") {
-        assert.ok(await page.evaluate(() => {
-          const tip = document.querySelector(".study-path circle").getBoundingClientRect();
-          const port = document.querySelector(".entry-port").getBoundingClientRect();
-          return Math.hypot(tip.x + tip.width/2 - port.x - port.width/2, tip.y + tip.height/2 - port.y - port.height/2) < 2;
-        }), "The final point of the path must meet the product entry");
-      }
       await entry.click();
       await page.waitForURL("**/practice");
       await page.getByRole("heading", {name: "Question bank", exact: true}).waitFor();
@@ -103,6 +119,7 @@ async function verify() {
       await page.getByRole("navigation",{name:"Study options"}).getByRole("link",{name:"Practice sets"}).click();
       await page.locator(".subject-choices button").last().click();
       await page.getByLabel("Choose a skill").selectOption("Transitions");
+      assert.equal(await page.locator(".set-imprint strong").innerText(), "Transitions");
       assert.match(await page.locator(".set-start").getAttribute("href"), /section=rw&skill=Transitions&limit=5/);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
       const chosenEntry = page.locator(".journey-entry").getByRole("link", {name:"Start my set"});

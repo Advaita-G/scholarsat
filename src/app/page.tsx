@@ -4,7 +4,6 @@ import { BY_ID, counts } from "@/lib/bank";
 import { MODULES } from "@/lib/tests";
 import { LandingStudio } from "@/components/LandingStudio";
 import { LandingNav } from "@/components/LandingNav";
-import { StudyPath } from "@/components/StudyPath";
 import { StudyDesk } from "@/components/StudyDesk";
 import "@/components/landing.css";
 
@@ -20,10 +19,9 @@ export default async function Landing() {
       <Link className="lunar-skip" href="/#passage">Skip to practice</Link>
       <LandingNav signedIn={!!user} />
       <main className="practice-journey">
-        <StudyPath />
         <LandingStudio question={{ passage: question.passage, stem: question.stem, choices: question.choices,
           answer: question.answer, explanation: question.explanation }} />
-        <StudyDesk signedIn={!!user} modules={MODULES} counts={bank.bySkill} total={bank.total} />
+        <StudyDesk passage={question.passage} signedIn={!!user} modules={MODULES} counts={bank.bySkill} total={bank.total} />
       </main>
       <footer className="lunar-footer measure">
         <div><strong>ScholarSAT</strong><span>Free SAT practice by <a href="https://codestarters.org">CodeStarters</a>.</span></div>
