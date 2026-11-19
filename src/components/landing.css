@@ -142,6 +142,36 @@
   --scene-inset: clamp(18px, 3.6vw, 51px);
   border-radius: 4px;
 }
+
+@supports (animation-timeline: view()) and (animation-range: exit-crossing 0% exit-crossing 65%) {
+  @media (prefers-reduced-motion: no-preference) {
+    html:not(.reduce-motion) .exam-scene {
+      position: relative;
+      isolation: isolate;
+      background: none;
+      view-timeline: --question-stage block;
+    }
+
+    html:not(.reduce-motion) .exam-scene::before {
+      content: "";
+      position: absolute;
+      inset: 0 calc(0px - var(--gutter));
+      z-index: -1;
+      pointer-events: none;
+      background: var(--stage);
+      clip-path: inset(0 var(--gutter) round 4px);
+      animation: widen-question-stage auto linear both;
+      animation-timeline: --question-stage;
+      animation-range: exit-crossing 0% exit-crossing 65%;
+    }
+  }
+}
+
+@keyframes widen-question-stage {
+  from { clip-path: inset(0 var(--gutter) round 4px); }
+  to { clip-path: inset(0); }
+}
+
 .exam-spine {
   display: flex;
   justify-content: space-between;
