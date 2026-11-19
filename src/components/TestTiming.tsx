@@ -28,8 +28,7 @@ export function TestTiming({ modules }: { modules: Module[] }) {
     <section id="tests" className="timing" aria-labelledby="timing-title">
       <div className="timing-scene">
         <div className="timing-intro">
-          <p className="folio-meta">Full-length mock tests</p>
-          <h2 id="timing-title">Find your pace.</h2>
+          <h2 id="timing-title">Mock tests</h2>
           <p>
             {questions} questions. {Math.floor(total / 60)} hours and{" "}
             {total % 60} minutes of testing.
@@ -38,7 +37,11 @@ export function TestTiming({ modules }: { modules: Module[] }) {
         </div>
         <div className="time-remaining">
           <span>Testing time left · hrs/min</span>
-          <strong>{timestamp(total - minute)}</strong>
+          <strong aria-label={timestamp(total - minute)}>
+            {timestamp(total - minute).split("").map((digit, i) => (
+              <span className="time-wheel" aria-hidden="true" key={i}><span key={digit}>{digit}</span></span>
+            ))}
+          </strong>
         </div>
       </div>
       <div className="time-console">

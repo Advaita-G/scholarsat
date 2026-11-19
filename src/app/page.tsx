@@ -6,7 +6,7 @@ import { DIFFICULTY_LABEL, type Question } from "@/lib/types";
 import { MODULES } from "@/lib/tests";
 import { lessons } from "@/data/context-lessons";
 import { Logo } from "@/components/Logo";
-import { type LandingItem } from "@/components/LandingQuestion";
+import { LandingQuestion, type LandingItem } from "@/components/LandingQuestion";
 import { LandingNav } from "@/components/LandingNav";
 import { PracticeSetPicker } from "@/components/PracticeSetPicker";
 import { TestTiming } from "@/components/TestTiming";
@@ -17,8 +17,8 @@ export const dynamic = "force-dynamic";
 const REPO = process.env.NEXT_PUBLIC_REPO_URL ?? "https://github.com/Codestarters-Foundation/scholarsat";
 const CODESTARTERS = "https://codestarters.org";
 const SAMPLES = [
-  { id: "r9980c71a", label: "Grammar", title: "Which verb fits the sentence?", work: "grammar" },
   { id: "m7cf3173b", label: "Systems", title: "Solve the system.", work: "systems" },
+  { id: "rae347f9e", label: "Grammar", title: "Which verb fits?", work: "grammar" },
   { id: "m30ee0293", label: "Percents", title: "What’s the final price?", work: "percentages" },
 ] as const;
 
@@ -39,16 +39,14 @@ function bankSample(q: Question, tab: Pick<LandingItem, "label" | "title" | "wor
   const stem = tab.work === "systems"
     ? [...q.stem.split("<br>").slice(0, 2), "At the solution, what is \\(x + y\\)?"].join("<br>")
     : q.stem;
-  const passage = tab.work === "grammar"
-    ? q.passage?.replace(", donated by the author's family,", "").replace(" in the library's main hall", "")
-    : q.passage;
+  const passage = q.passage;
   return [{
     id: q.id,
     ...tab,
     topic: q.section === "math" ? "Math" : "Reading and Writing",
     difficulty: DIFFICULTY_LABEL[q.difficulty],
     passageHtml: passage ? rich(passage, "htmlAndMathml") : undefined,
-    sentence: tab.work === "grammar" && passage ? sentenceParts(passage, "collection") : undefined,
+    sentence: tab.work === "grammar" && passage ? sentenceParts(passage, "Each") : undefined,
     stemHtml: rich(stem, "htmlAndMathml"),
     choices: q.choices.map((choice) => {
       const number = /^\\\(([-−]?\d+(?:\.\d+)?)\\\)$/.exec(choice)?.[1];
@@ -94,46 +92,41 @@ export default async function Landing() {
       <a className="folio-skip" href="#main">Skip to content</a>
       <LandingNav signedIn={!!user} />
       <main id="main">
-        <LandingStudio items={sampleItems()} />
+        <LandingStudio />
+        <div className="practice-floor">
+          <LandingQuestion items={sampleItems()} />
 
-        <section className="prep-width bank-section" id="bank" aria-labelledby="bank-title">
-          <div className="bank-copy">
-            <div>
-              <p className="folio-meta">Question bank</p>
-              <h2 id="bank-title">Practice by skill.</h2>
+          <section className="prep-width bank-section" id="bank" aria-labelledby="bank-title">
+            <div className="bank-copy">
+              <h2 id="bank-title">Build a practice set</h2>
+              <Link className="folio-link" href="/practice">
+                Browse {bank.total.toLocaleString("en-US")} questions <span aria-hidden="true">↗</span>
+              </Link>
             </div>
-            <Link className="folio-link" href="/practice">
-              Browse {bank.total.toLocaleString("en-US")} questions <span aria-hidden="true">↗</span>
-            </Link>
-          </div>
-          <p className="bank-lede">Pick one skill and work through up to five questions.</p>
-          <PracticeSetPicker counts={bank.bySkill} />
-        </section>
+            <p className="bank-lede">Pick one skill and work through up to five questions.</p>
+            <PracticeSetPicker counts={bank.bySkill} />
+          </section>
+        </div>
 
         <div className="timing-band">
-          <div className="prep-width">
+          <div className="study-room prep-width">
             <TestTiming modules={MODULES} />
+            <section className="tools-wing" id="tools" aria-labelledby="tools-title">
+              <h2 id="tools-title">Study tools</h2>
+              <nav className="study-index" aria-label="Study tools">
+                <Link href="/review">Mistake review <span aria-hidden="true">↗</span></Link>
+                <Link href="/diagnostics">Skill diagnostics <span aria-hidden="true">↗</span></Link>
+                <Link href="/vocab">Vocabulary <span aria-hidden="true">↗</span></Link>
+              </nav>
+              <Link className="folio-link" href={user ? "/dashboard" : "/signup"}>
+                {user ? "Open dashboard" : "Save progress with a free account"} <span aria-hidden="true">↗</span>
+              </Link>
+            </section>
           </div>
         </div>
 
-        <section className="prep-width tour-section" id="tools" aria-labelledby="tools-title">
-          <div className="tour-copy">
-            <p className="folio-meta">Study tools</p>
-            <h2 id="tools-title">Learn from a miss.</h2>
-            <p>Retry missed questions, track accuracy by skill, and use what you learn to choose what to practice next.</p>
-            <Link className="folio-link" href={user ? "/dashboard" : "/signup"}>
-              {user ? "Open dashboard" : "Create a free account"} <span aria-hidden="true">↗</span>
-            </Link>
-          </div>
-          <nav className="study-index" aria-label="Study tools">
-            <Link href="/review">Mistake review <span aria-hidden="true">↗</span></Link>
-            <Link href="/diagnostics">Skill diagnostics <span aria-hidden="true">↗</span></Link>
-            <Link href="/vocab">Vocabulary practice <span aria-hidden="true">↗</span></Link>
-          </nav>
-        </section>
-
         <aside className="prep-width access-note" id="faq" aria-labelledby="access-title">
-          <h2 id="access-title">A note on access</h2>
+          <h2 id="access-title">Free access</h2>
           <div>
             <p>The question bank and <Link href="/vocab">vocabulary practice</Link> are free. An account unlocks full tests and saved progress. Optional AI explanations use your own plan or API billing.</p>
             <p>ScholarSAT is an independent CodeStarters project. Find official materials in the <Link href="/resources">SAT resource library</Link>.</p>
@@ -144,8 +137,7 @@ export default async function Landing() {
       <footer className="folio-footer">
         <div className="prep-width">
           <div className="footer-action">
-            <p>Free SAT prep.</p>
-            <Link className="folio-button" href="/practice">Start practicing <span aria-hidden="true">↗</span></Link>
+            <Link className="closing-link" href="/practice">Start practicing<span aria-hidden="true">↗</span></Link>
           </div>
           <div className="footer-links">
             <Logo size={28} light mood="still" />

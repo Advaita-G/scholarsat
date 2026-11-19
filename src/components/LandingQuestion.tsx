@@ -139,7 +139,7 @@ export function LandingQuestion({ items }: { items: LandingItem[] }) {
         data-revealed={locked}
         data-motion={pointerFeedback ? "active" : "still"}
       >
-        <div className="exam-problem">
+        <div className="exam-problem" key={q.id}>
           <p className="folio-meta exam-topic">
             {q.topic}{q.difficulty && <span> / {q.difficulty}</span>}
           </p>
