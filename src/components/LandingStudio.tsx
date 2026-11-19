@@ -1,76 +1,101 @@
 "use client";
+
 import Link from "next/link";
 import { useState } from "react";
 import { LandingQuestion, type LandingItem } from "./LandingQuestion";
-import { Owl } from "./Owl";
 import { lessons } from "@/data/context-lessons";
 
-export function LandingStudio({ items }: { items: LandingItem[] }) {
+export function LandingStudio({
+  items,
+  total,
+}: {
+  items: LandingItem[];
+  total: number;
+}) {
   const [reading, setReading] = useState(false);
   const [picked, setPicked] = useState<string | null>(null);
-  const [bankResult, setBankResult] = useState<boolean | null>(null);
   const lesson = lessons[0];
-  const result = reading ? (picked === null ? null : picked === lesson.word) : bankResult;
   return (
-    <div id="sample" className="practice-desk">
-      <div className="desk-spine">
-        <div className="desk-mascot">
-          <Owl
-            size={106}
-            mood={result === true ? "celebrate" : result === false ? "sad" : "idle"}
-          />
-        </div>
-        <h2>Try a question.</h2>
-        <p>Pick an answer for a worked explanation.</p>
-        <div className="desk-modes" role="group" aria-label="Sample mode">
+    <section
+      id="sample"
+      className="prep-width sample-studio"
+      aria-label="Try free SAT practice"
+    >
+      <div className="studio-toolbar">
+        <p>Free SAT practice</p>
+        <div role="group" aria-label="Sample mode">
           <button aria-pressed={!reading} onClick={() => setReading(false)}>
-            Question bank <span>→</span>
+            Question bank
           </button>
           <button aria-pressed={reading} onClick={() => setReading(true)}>
-            Vocabulary <span>→</span>
+            Vocabulary
           </button>
         </div>
       </div>
-      <div className="desk-pages">
-        <div className="desk-pencil" aria-hidden="true">
-          <i />
-          <b />
-        </div>
-        <div hidden={reading}>
-          <LandingQuestion items={items} onResult={setBankResult} />
-        </div>
-        {reading && (
-          <section className="vocab-sheet" aria-label="Sample vocabulary">
-            <div className="sheet-meta">Vocabulary studio</div>
-            <h3>Which word fits?</h3>
-            <p className="vocab-passage">
+      <div hidden={reading}>
+        <LandingQuestion items={items} />
+      </div>
+      {reading && (
+        <section className="studio-spread" aria-label="Sample vocabulary">
+          <div className="challenge-copy">
+            <p className="studio-meta">
+              Reading and writing · Words in context
+            </p>
+            <h1 className="challenge-type">
+              <span>
+                <b>Which word</b>
+              </span>
+              <span>
+                <b>fits?</b>
+              </span>
+            </h1>
+            <p className="challenge-prompt">
               {lesson.passage.split("____")[0]}
               <strong key={picked}>{picked ?? "____"}</strong>.
             </p>
-            <div className="vocab-choices">
-              {lesson.choices.map((w) => (
+          </div>
+          <div className="answer-sheet">
+            <h2>Complete the sentence</h2>
+            <div
+              className="answer-lines"
+              role="group"
+              aria-label="Vocabulary choices"
+            >
+              {lesson.choices.map((word, i) => (
                 <button
-                  key={w}
-                  aria-pressed={picked === w}
-                  onClick={() => setPicked(w)}
+                  key={word}
+                  aria-pressed={picked === word}
+                  onClick={() => setPicked(word)}
                 >
-                  {w}
+                  <small>{"ABC"[i]}</small>
+                  <span>{word}</span>
                 </button>
               ))}
             </div>
             <div aria-live="polite">
               {picked && (
-                <p className="sheet-feedback">
+                <p key={picked} className="answer-note">
                   {picked === lesson.word
                     ? "Correct. " + lesson.why
-                    : "The map will be redrawn. Which word means that the boundary is temporary?"}
+                    : "The map will be redrawn. Which word means temporary?"}
                 </p>
               )}
             </div>
-            <Link href="/vocab">Practice more vocabulary →</Link>
-          </section>
-        )}
+            <Link className="sheet-link" href="/vocab">
+              Practice more vocabulary →
+            </Link>
+          </div>
+        </section>
+      )}
+      <div className="studio-footer">
+        <Link href="/practice">
+          Explore {total.toLocaleString("en-US")} free questions{" "}
+          <span aria-hidden="true">→</span>
+        </Link>
+        <a href="#tests">
+          Try a practice test <span aria-hidden="true">↓</span>
+        </a>
       </div>
-    </div>
+    </section>
   );
 }

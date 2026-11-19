@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { btn } from "./ui";
-import { IArrowR, ICheckCircle, IXCircle } from "./icons";
 
 export type LandingItem = {
   id: string;
@@ -20,182 +18,149 @@ export type LandingItem = {
 
 const LETTERS = "ABCD";
 
-/** A real question from the bank that visitors can answer on the landing page. Each choice reveals the worked explanation. */
-export function LandingQuestion({
-  items,
-  onResult,
-}: {
-  items: LandingItem[];
-  onResult: (correct: boolean | null) => void;
-}) {
+export function LandingQuestion({ items }: { items: LandingItem[] }) {
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
   const [right, setRight] = useState(0);
-
   const q = items[idx];
   const answered = picked !== null;
-  const correct = picked === q.answer;
-  const last = idx === items.length - 1;
+  const jacket = q.id === "m30ee0293";
 
   function pick(letter: string) {
     if (answered) return;
     setPicked(letter);
-    onResult(letter === q.answer);
     if (letter === q.answer) setRight((n) => n + 1);
   }
 
-  function next() {
-    setIdx((i) => i + 1);
-    setPicked(null);
-    onResult(null);
-  }
-
   return (
-    <div className="relative">
-      <section
-        key={q.id}
-        aria-label="Sample question"
-        className="rounded-2xl border border-line bg-bg p-6 shadow-pop sm:p-7"
-      >
-        <div className="flex items-baseline justify-between gap-4">
-          <p className="text-[15px] font-medium text-ink">{q.topic}</p>
-          <p className="shrink-0 text-[13px] text-muted tabular-nums">
-            Question {idx + 1} of {items.length}
-          </p>
-        </div>
-        <p className="mt-0.5 text-[13px] text-muted">
-          {q.difficulty} difficulty
+    <section key={q.id} className="studio-spread" aria-label="Sample question">
+      <div className="challenge-copy">
+        <p className="studio-meta">
+          {q.topic} · {q.difficulty}
         </p>
-
-        <div className="mt-5 space-y-3 text-[16px] text-ink">
-          {q.passageHtml && (
+        {jacket ? (
+          <>
+            <h1 key={String(answered)} className="challenge-type">
+              <span>
+                <b>{answered ? "Up $25." : "Up 25%."}</b>
+              </span>
+              <span>
+                <b>{answered ? "Down $12.50." : "Down 10%."}</b>
+              </span>
+            </h1>
+            <p className="challenge-prompt">
+              A $100 jacket gets marked up, then discounted. What percentage of
+              its original price do you pay?
+            </p>
+          </>
+        ) : (
+          <>
+            <h1 className="challenge-heading">
+              {q.topic.split(" · ")[1] || q.topic}
+            </h1>
+            {q.passageHtml && (
+              <div
+                className="qtext challenge-passage"
+                dangerouslySetInnerHTML={{ __html: q.passageHtml }}
+              />
+            )}
             <div
-              className="qtext"
-              dangerouslySetInnerHTML={{ __html: q.passageHtml }}
+              className="qtext challenge-prompt"
+              dangerouslySetInnerHTML={{ __html: q.stemHtml }}
             />
-          )}
-          <div
-            className="qtext font-medium"
-            dangerouslySetInnerHTML={{ __html: q.stemHtml }}
-          />
+          </>
+        )}
+      </div>
+      <div className="answer-sheet">
+        <div className="sheet-title">
+          <h2>Answer sheet</h2>
+          <span>
+            {idx + 1} / {items.length}
+          </span>
         </div>
-
-        <div
-          className="mt-5 grid gap-2.5"
-          role="group"
-          aria-label="Answer choices"
-        >
+        {jacket && (
+          <div className="jacket-total">
+            <span>Final price</span>
+            <strong
+              key={String(answered)}
+              aria-label={answered ? "112 dollars and 50 cents" : "Unknown"}
+            >
+              {answered ? "$112.50" : "$?.??"}
+            </strong>
+          </div>
+        )}
+        <div className="answer-lines" role="group" aria-label="Answer choices">
           {q.choicesHtml.map((html, i) => {
             const letter = LETTERS[i];
-            const isAnswer = answered && letter === q.answer;
-            const isWrongPick = answered && letter === picked && !correct;
-            const tone = isAnswer
-              ? "border-ok bg-ok-50"
-              : isWrongPick
-                ? "border-bad bg-bad-50"
-                : answered
-                  ? "border-line opacity-60"
-                  : "border-line hover:border-ink/40 active:bg-surface";
-            const dot = isAnswer
-              ? "border-ok bg-ok-fill text-white"
-              : isWrongPick
-                ? "border-bad bg-bad-fill text-white"
-                : "border-line-strong text-ink";
+            const status =
+              answered && letter === q.answer
+                ? "Correct"
+                : letter === picked
+                  ? "Incorrect"
+                  : undefined;
             return (
               <button
                 key={letter}
                 type="button"
                 onClick={() => pick(letter)}
+                data-result={status}
                 aria-disabled={answered}
                 aria-pressed={letter === picked}
-                className={`flex min-h-[52px] w-full items-center gap-3.5 rounded-xl border-2 px-3.5 py-2.5 text-left text-[15px] transition-colors ${tone} ${answered ? "cursor-default" : ""}`}
               >
+                <small>{letter}</small>
                 <span
-                  className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 text-[13px] font-medium ${dot}`}
-                >
-                  {letter}
-                </span>
-                <span
-                  className="qtext min-w-0 flex-1"
+                  className="qtext"
                   dangerouslySetInnerHTML={{ __html: html }}
                 />
-                {isAnswer && (
-                  <ICheckCircle className="h-5 w-5 shrink-0 text-ok" />
-                )}
-                {isWrongPick && (
-                  <IXCircle className="h-5 w-5 shrink-0 text-bad" />
-                )}
+                {status && <em>{status}</em>}
               </button>
             );
           })}
         </div>
-
         <div aria-live="polite">
           {answered && (
-            <div className="mt-5 animate-rise border-t border-line pt-5">
-              <p
-                className={`text-[15px] font-medium ${correct ? "text-ok" : "text-bad"}`}
-              >
-                {correct ? "Correct." : `Not quite. The answer is ${q.answer}.`}
+            <div className="answer-note">
+              <p>
+                <b>
+                  {picked === q.answer
+                    ? "Correct."
+                    : "The answer is " + q.answer + "."}
+                </b>
               </p>
-              {q.id === "m30ee0293" && (
-                <ol
-                  className="price-working"
-                  aria-label="Price changes for a jacket that starts at 100 dollars"
-                >
-                  {[
-                    ["Original", 100],
-                    ["After 25% increase", 125],
-                    ["After 10% decrease", 112.5],
-                  ].map(([label, value], i) => (
-                    <li key={label}>
-                      <span>{label}</span>
-                      <b>
-                        {Number(value).toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        })}
-                      </b>
-                      <i
-                        aria-hidden="true"
-                        style={{
-                          width: (Number(value) / 125) * 100 + "%",
-                          animationDelay: i * 170 + "ms",
-                        }}
-                      />
-                    </li>
-                  ))}
-                </ol>
+              {jacket ? (
+                <p>
+                  The markup takes the jacket to $125. The discount takes $12.50
+                  off that new price, leaving 112.5% of the original.
+                </p>
+              ) : (
+                <div
+                  className="qtext"
+                  dangerouslySetInnerHTML={{ __html: q.explanationHtml }}
+                />
               )}
-              <div
-                className="qtext mt-1.5 text-[15px] text-ink-2"
-                dangerouslySetInnerHTML={{ __html: q.explanationHtml }}
-              />
-              <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                {last ? (
-                  <>
-                    <p className="text-[14px] text-muted">
-                      You got {right} of {items.length}.
-                    </p>
-                    <Link href="/practice" className={btn("primary", "md")}>
-                      Keep going in the question bank{" "}
-                      <IArrowR className="h-4 w-4" />
-                    </Link>
-                  </>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={next}
-                    className={`${btn("dark", "md")} ml-auto`}
-                  >
-                    Next question <IArrowR className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
+              {idx + 1 < items.length ? (
+                <button
+                  type="button"
+                  className="sheet-link"
+                  onClick={() => {
+                    setIdx(idx + 1);
+                    setPicked(null);
+                  }}
+                >
+                  Next question →
+                </button>
+              ) : (
+                <p>
+                  {right} of {items.length} correct.{" "}
+                  <Link className="sheet-link" href="/practice">
+                    Keep practicing →
+                  </Link>
+                </p>
+              )}
             </div>
           )}
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }

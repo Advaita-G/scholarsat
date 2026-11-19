@@ -55,26 +55,11 @@ export default async function Landing() {
     <div className="lp-root scholar-home">
       <LandingNav signedIn={!!user} repo={REPO} />
       <main>
-        <section className="welcome">
-          <div className="welcome-copy">
-            <h1>Free SAT prep.</h1>
-            <p>
-              Study with {bank.total.toLocaleString("en-US")} practice
-              questions, adaptive tests, and vocabulary in context.
-            </p>
-            <div className="welcome-actions">
-              <LinkButton href="/practice" size="lg">
-                Start practicing →
-              </LinkButton>
-              <a href="#tests">Practice tests</a>
-            </div>
-          </div>
-          <LandingStudio items={sampleItems()} />
-        </section>
+        <LandingStudio items={sampleItems()} total={bank.total} />
         <section className="prep-width section-space" id="bank">
           <Reveal>
             <div className="prep-heading">
-              <h2>Practice by skill</h2>
+              <h2>Build a five-question set</h2>
               <Link href="/practice">Full question bank →</Link>
             </div>
             <PracticeSetPicker counts={bank.bySkill} />
@@ -83,10 +68,11 @@ export default async function Landing() {
         <section className="tour-band" id="tools">
           <div className="prep-width tour-grid">
             <Reveal>
-              <h2>Your study space.</h2>
+              <h2>Where did you lose points?</h2>
               <p>
-                See the skills you’ve practiced, find the questions that tripped
-                you up, and pick up where you left off.
+                Revisit a missed question, read the explanation, and try it
+                again. Your dashboard keeps track of the skills you’ve
+                practiced.
               </p>
               <LinkButton href={user ? "/dashboard" : "/signup"}>
                 {user ? "Open dashboard" : "Create free account"} →

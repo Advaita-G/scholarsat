@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState, type CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { LinkButton } from "./ui";
 import type { Section } from "@/lib/types";
 
@@ -10,7 +10,6 @@ function timestamp(minutes: number) {
 
 export function TestTiming({ modules }: { modules: Module[] }) {
   const [minute, setMinute] = useState(0);
-  const scene = useRef<HTMLDivElement>(null);
   const boundaries = [0];
   for (const part of modules)
     boundaries.push(boundaries[boundaries.length - 1] + part.minutes);
@@ -27,38 +26,26 @@ export function TestTiming({ modules }: { modules: Module[] }) {
   const questions = modules.reduce((sum, m) => sum + m.n, 0);
   return (
     <section id="tests" className="timing" aria-labelledby="timing-title">
-      <div
-        className="timing-scene"
-        style={
-          { "--slice-light": 60 + (minute / total) * 27 + "%" } as CSSProperties
-        }
-        ref={scene}
-        onPointerMove={(e) => {
-          if (e.pointerType !== "mouse" || !scene.current) return;
-          const rect = scene.current.getBoundingClientRect();
-          scene.current.style.setProperty(
-            "--lens-x",
-            ((e.clientX - rect.left) / rect.width) * 100 + "%",
-          );
-          scene.current.style.setProperty(
-            "--lens-y",
-            ((e.clientY - rect.top) / rect.height) * 100 + "%",
-          );
-        }}
-        onPointerLeave={() => {
-          scene.current?.style.removeProperty("--lens-x");
-          scene.current?.style.removeProperty("--lens-y");
-        }}
-      >
-        <div className="clock-art" aria-hidden="true" />
-        <div className="clock-light" aria-hidden="true" />
+      <div className="timing-scene">
         <div className="timing-intro">
-          <h2 id="timing-title">The timed SAT</h2>
+          <h2 id="timing-title">Pace your SAT</h2>
           <p>
             {questions} questions. {Math.floor(total / 60)} hours and{" "}
             {total % 60} minutes of testing.
           </p>
           <LinkButton href="/tests">View practice tests →</LinkButton>
+        </div>
+        <div className="time-remaining">
+          <span>Testing time left · hrs/min</span>
+          <strong aria-label={timestamp(total - minute)}>
+            {timestamp(total - minute)
+              .split("")
+              .map((digit, place) => (
+                <span key={place}>
+                  <b key={digit}>{digit}</b>
+                </span>
+              ))}
+          </strong>
         </div>
       </div>
       <div className="time-console">
