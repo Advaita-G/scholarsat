@@ -1,6 +1,6 @@
 "use client";
 import { useState, type CSSProperties } from "react";
-import { LinkButton } from "./ui";
+import Link from "next/link";
 import type { Section } from "@/lib/types";
 
 type Module = { section: Section; minutes: number; n: number };
@@ -28,12 +28,13 @@ export function TestTiming({ modules }: { modules: Module[] }) {
     <section id="tests" className="timing" aria-labelledby="timing-title">
       <div className="timing-scene">
         <div className="timing-intro">
-          <h2 id="timing-title">Pace your SAT</h2>
+          <p className="folio-meta">Full-length mock tests</p>
+          <h2 id="timing-title">Find your pace.</h2>
           <p>
             {questions} questions. {Math.floor(total / 60)} hours and{" "}
             {total % 60} minutes of testing.
           </p>
-          <LinkButton href="/tests">View practice tests →</LinkButton>
+          <Link className="folio-link" href="/tests">View practice tests <span aria-hidden="true">↗</span></Link>
         </div>
         <div className="time-remaining">
           <span>Testing time left · hrs/min</span>

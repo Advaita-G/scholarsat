@@ -6,13 +6,13 @@ const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replac
  * Renders question text: escapes HTML, renders \( ... \) as KaTeX, keeps <br>, turns newlines into line breaks
  * and "______" into an accessible blank.
  */
-export function rich(text: string): string {
+export function rich(text: string, mathOutput: "html" | "htmlAndMathml" = "html"): string {
   const parts = text.split(/(\\\([\s\S]*?\\\))/g);
   return parts
     .map((p) => {
       if (p.startsWith("\\(") && p.endsWith("\\)")) {
         try {
-          return katex.renderToString(p.slice(2, -2), { throwOnError: false, output: "html" });
+          return katex.renderToString(p.slice(2, -2), { throwOnError: false, output: mathOutput });
         } catch {
           return esc(p);
         }
