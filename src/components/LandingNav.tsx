@@ -1,25 +1,13 @@
 import Link from "next/link";
-import { Logo } from "./Logo";
+import { Owl } from "./Owl";
 
 export function LandingNav({ signedIn }: { signedIn: boolean }) {
   return (
-    <header className="folio-header">
-      <div className="prep-width folio-nav">
-        <Logo size={31} light mood="still" />
-        <nav aria-label="Site">
-          <a href="#bank">Question bank</a>
-          <a href="#tests">Mock tests</a>
-          <a href="#tools">Study tools</a>
-        </nav>
-        {signedIn ? (
-          <Link className="folio-account" href="/dashboard">Dashboard <span aria-hidden="true">↗</span></Link>
-        ) : (
-          <div className="folio-auth">
-            <Link href="/login">Log in</Link>
-            <Link className="folio-account" href="/signup">Sign up <span aria-hidden="true">↗</span></Link>
-          </div>
-        )}
-      </div>
+    <header className="lunar-nav measure">
+      <Link href="/" className="masthead" aria-label="ScholarSAT home"><Owl size={32} mood="still" />ScholarSAT</Link>
+      <nav aria-label="Main navigation"><Link href="/practice">Question bank</Link><a href="#tests">Mock tests</a><a href="#tools">Study tools</a></nav>
+      <div className="account-actions">{!signedIn && <Link href="/signup">Sign up</Link>}
+      <Link className="account-link" href={signedIn ? "/dashboard" : "/login"}>{signedIn ? "Dashboard" : "Log in"} <span aria-hidden="true">↗</span></Link></div>
     </header>
   );
 }

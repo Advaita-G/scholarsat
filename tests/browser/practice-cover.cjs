@@ -2,55 +2,73 @@
 const assert = require("node:assert/strict");
 const { chromium } = require("playwright");
 
+const url = process.env.PREVIEW_URL ?? "http://127.0.0.1:3822/";
+async function settle(page) {
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+}
 async function verify() {
   const browser = await chromium.launch({ channel: "chrome", headless: true });
   try {
     for (const [width, height, reducedMotion] of [
-      [1440, 900, "no-preference"], [390, 844, "no-preference"], [320, 650, "reduce"],
+      [1512, 862, "no-preference"], [1920, 1200, "no-preference"], [390, 844, "no-preference"], [320, 650, "reduce"],
     ]) {
       const page = await browser.newPage({ viewport: { width, height }, reducedMotion });
       const errors = [];
-      page.on("pageerror", e => errors.push(e.message));
-      await page.addInitScript(() => {
-        // Sample the model-view transform actually sent to the GPU.
-        const gl = WebGL2RenderingContext.prototype;
-        const locations = new WeakSet();
-        const get = gl.getUniformLocation;
-        gl.getUniformLocation = function(program, name) {
-          const location = get.call(this, program, name);
-          if (location && name === "modelViewMatrix") locations.add(location);
-          return location;
-        };
-        const send = gl.uniformMatrix4fv;
-        gl.uniformMatrix4fv = function(location, transpose, matrix, ...rest) {
-          if (locations.has(location) && this.canvas.isConnected) window.lastModelView = Array.from(matrix).join();
-          return send.call(this, location, transpose, matrix, ...rest);
-        };
-      });
-      await page.goto(process.env.PREVIEW_URL ?? "http://127.0.0.1:3822/");
-      await page.locator(".type-sculpture[data-rendered]").waitFor();
-      await page.evaluate(() => document.fonts.ready);
-      await page.waitForTimeout(2300);
-      const before = await page.evaluate(() => window.lastModelView);
-      assert.ok(before, "The type sculpture should render real geometry.");
-      assert.ok(await page.locator("#sample").evaluate(el => el.getBoundingClientRect().top >= innerHeight - 1));
+      page.on("pageerror", error => errors.push(error.message));
+      await page.goto(url);
+      await page.locator(".atlas[data-motion]").waitFor();
+      await page.evaluate(() => Promise.all([document.fonts.ready, ...Array.from(document.images, image => image.decode())]));
+      assert.match(await page.getByRole("heading", { level: 1 }).innerText(), /Reading\s+the Moon/);
+      const plate = page.locator(".exposure-origin figure").last();
+      const transform = () => plate.evaluate(el => getComputedStyle(el).transform);
+      const before = await transform();
+      await page.evaluate(() => scrollTo(0, innerHeight * .5));
+      await settle(page);
+      assert.equal((await transform()) === before, reducedMotion === "reduce");
+      await page.evaluate(() => scrollTo(0,0));
+      await settle(page);
+      assert.equal(await transform(), before);
+
+      await page.getByRole("link", { name: "Enter the passage" }).click();
+      await settle(page);
+      if (reducedMotion !== "reduce") {
+        assert.ok(await page.evaluate(() =>
+          Array.from(document.querySelectorAll(".exposure-origin figure")).every((frame, i) => {
+            const a = frame.getBoundingClientRect(), b = document.querySelectorAll(".archive-slot")[i].getBoundingClientRect();
+            return Math.abs(a.x-b.x) < 2 && Math.abs(a.y-b.y) < 2 && Math.abs(a.width-b.width) < 2;
+          })), "All four moving frames should land in their own date slots");
+      }
+      const contrast = page.getByRole("button", {name:"By contrast,"});
+      await contrast.focus();
+      assert.equal(await page.locator(".insertion").innerText(),"By contrast,");
+      await page.keyboard.press("Enter");
+      await page.getByText("Try another transition.").waitFor();
+      await page.getByRole("button", {name:"For example,"}).click();
+      await page.getByText("Exactly.").waitFor();
+      assert.equal(await page.locator(".insertion").innerText(),"For example,");
+      assert.ok(await page.getByRole("link",{name:"Practice five more transitions"}).isVisible());
+      await page.getByRole("tab",{name:"Mock tests"}).click();
+      await page.getByRole("button",{name:"Math Module 2"}).click();
+      assert.match(await page.locator(".module-detail").innerText(),/22 questions · 35 minutes/);
+      await page.getByRole("tab",{name:"Mock tests"}).focus();
+      await page.keyboard.press("ArrowRight");
+      await page.getByRole("link",{name:/Retry questions you missed/}).waitFor();
+      await page.getByRole("tab",{name:"Practice sets"}).click();
+      await page.locator(".subject-choices button").last().click();
+      await page.getByLabel("Choose a skill").selectOption("Transitions");
+      assert.match(await page.locator(".set-start").getAttribute("href"), /section=rw&skill=Transitions&limit=5/);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-      await page.evaluate(() => window.scrollTo(0, 270));
-      await page.waitForTimeout(250);
-      assert.equal(await page.evaluate(() => window.lastModelView) === before, reducedMotion === "reduce");
-      await page.getByRole("link", { name: "Try a question" }).click();
-      await page.locator(".exam-answers button").first().click();
-      await page.locator(".exam-feedback strong").waitFor();
-      await page.getByRole("button", { name: "Next question" }).click();
-      await page.getByRole("tab", { name: "Grammar", selected: true }).waitFor();
-      await page.getByRole("button", { name: "Next module" }).click();
-      await page.getByRole("heading", { name: /Module 2/ }).waitFor();
+      await page.locator(".set-start").click();
+      await page.getByText("Question 1 of 5",{exact:true}).first().waitFor();
+      await page.locator(".practice-player fieldset label").first().click();
+      await page.getByRole("button",{name:"Check",exact:true}).click();
+      await page.locator(".practice-player [role=status]").first().waitFor();
       assert.deepEqual(errors, []);
+      console.log(`${width}×${height} · ${reducedMotion} · passage, motion, feedback, mock modules, study tools and graded set passed`);
       await page.close();
     }
   } finally {
     await browser.close();
   }
 }
-
 verify().catch(error => { console.error(error); process.exitCode = 1; });
