@@ -4,6 +4,7 @@ import { BY_ID, counts } from "@/lib/bank";
 import { MODULES } from "@/lib/tests";
 import { LandingStudio } from "@/components/LandingStudio";
 import { LandingNav } from "@/components/LandingNav";
+import { StudyPath } from "@/components/StudyPath";
 import { StudyDesk } from "@/components/StudyDesk";
 import "@/components/landing.css";
 
@@ -16,12 +17,22 @@ export default async function Landing() {
   if (!question?.passage || !question.choices) throw new Error("Featured transition question is missing");
   return (
     <div className="lunar-home">
-      <a className="lunar-skip" href="#passage">Skip to practice</a>
+      <Link className="lunar-skip" href="/#passage">Skip to practice</Link>
       <LandingNav signedIn={!!user} />
-      <main>
+      <main className="practice-journey">
+        <StudyPath />
         <LandingStudio question={{ passage: question.passage, stem: question.stem, choices: question.choices,
           answer: question.answer, explanation: question.explanation }} />
         <StudyDesk modules={MODULES} counts={bank.bySkill} total={bank.total} />
+        <section className="journey-entry measure" aria-label="Enter ScholarSAT">
+          <div>
+            <h2>Enter ScholarSAT</h2>
+            <p>{user ? "Your saved progress, missed questions, and next practice session are in your dashboard." : "Choose a skill and start practicing for free. Create an account whenever you want to save your progress."}</p>
+          </div>
+          <Link className="entry-link" href={user ? "/dashboard" : "/practice"}>
+            {user ? "Open my dashboard" : "Open the question bank"} <span className="entry-port" aria-hidden="true">↗</span>
+          </Link>
+        </section>
       </main>
       <footer className="lunar-footer measure">
         <div><strong>ScholarSAT</strong><span>Free SAT practice by <a href="https://codestarters.org">CodeStarters</a>.</span></div>

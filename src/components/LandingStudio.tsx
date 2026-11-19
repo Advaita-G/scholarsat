@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { LandingQuestion, type FeaturedQuestion } from "./LandingQuestion";
 
@@ -62,8 +63,8 @@ export function LandingStudio({question}: { question: FeaturedQuestion }) {
         <div className="cover-copy">
           <p className="overline"><span className="signal-dot" />Free SAT practice <span>/</span> Reading &amp; writing</p>
           <h1>Reading <br />the Moon.</h1>
-          <p className="cover-deck">Ancient astronomers kept time by the Moon. Find the missing connection in their story.</p>
-          <a className="read-action" href="#passage"><span className="action-arrow" aria-hidden="true">↓</span>Enter the passage</a>
+          <p className="cover-deck">Explore ten nights of lunar change, then try a ScholarSAT passage about how ancient astronomers kept time.</p>
+          <Link className="read-action" href="/#passage"><span className="action-arrow" aria-hidden="true">↓</span>Enter the passage</Link>
         </div>
         <div className="exposure-field" aria-hidden="true">
           {phases.map(p => <div className="exposure-origin" key={p.frame}><figure>
@@ -80,6 +81,7 @@ export function LandingStudio({question}: { question: FeaturedQuestion }) {
           <div className="archive-strip">{phases.map(p => <div key={p.frame}>
             <div className="archive-slot"><Image unoptimized src={`/landing/lunar/${p.frame}.webp`} alt={p.phase} width={120} height={120} /></div>
             <span>Jan {p.day}</span>
+            <div className="archive-meter" aria-label={p.lit + " illuminated"}><i style={{width:p.lit}} /></div>
           </div>)}</div>
           <figcaption>Moon phase sequence, January 2025.<br /><a href="https://svs.gsfc.nasa.gov/5415/">NASA Goddard / Ernie Wright ↗</a></figcaption>
         </figure>

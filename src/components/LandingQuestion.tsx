@@ -23,7 +23,6 @@ export function LandingQuestion({ question }: { question: FeaturedQuestion }) {
   const [first, second] = question.passage.split(/\s*_{4,}\s*/);
   return (
     <div className="passage-copy" data-solved={correct}>
-      <p className="overline">From the question bank <span>/</span> Transitions</p>
       <h2 id="passage-title" tabIndex={-1}>Connect the ideas.</h2>
       <p className="reading-text">
         <span className="claim">{emphasize(first,"Several ancient cultures")}</span>{" "}
