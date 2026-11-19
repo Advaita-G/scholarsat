@@ -5,10 +5,10 @@ import { rich } from "@/lib/render";
 import { DIFFICULTY_LABEL } from "@/lib/types";
 import { VOCAB } from "@/data/vocab";
 import { Logo } from "@/components/Logo";
-import {
-  LandingQuestion,
-  type LandingItem,
-} from "@/components/LandingQuestion";
+import { type LandingItem } from "@/components/LandingQuestion";
+import { SolidStudy } from "@/components/SolidStudy";
+import { LandingStudio } from "@/components/LandingStudio";
+import { CountUp, Reveal } from "@/components/Reveal";
 import "@/components/landing.css";
 
 export const dynamic = "force-dynamic";
@@ -46,174 +46,120 @@ function sampleItems(): LandingItem[] {
 export default async function Landing() {
   const user = await getUser();
   const bank = counts();
-  const entries = [
-    [
-      "/practice",
-      "Question bank",
-      "Choose a skill in math or reading and writing.",
-      bank.total.toLocaleString() + " questions",
-    ],
-    [
-      "/vocab",
-      "Vocabulary studio",
-      "Read the passage. Pick a word. Find the evidence.",
-      VOCAB.length.toLocaleString() + " words",
-    ],
-    [
-      "/tests",
-      "Practice tests",
-      "Sit for a timed, adaptive digital SAT.",
-      "Full length",
-    ],
-    [
-      "/resources",
-      "Resource library",
-      "Find official practice material for your next session.",
-      "Study guides",
-    ],
-  ];
   return (
-    <div className="edition">
-      <header className="edition-nav">
-        <Logo size={34} />
-        <nav aria-label="Main navigation">
-          <a href="#contents">Study guide</a>
-          <Link href="/vocab">Vocabulary</Link>
-          <Link className="nav-account" href={user ? "/dashboard" : "/login"}>
-            {user ? "Dashboard" : "Log in"} →
-          </Link>
-        </nav>
-      </header>
-      <main>
-        <section className="edition-hero">
-          <div className="edition-intro">
-            <p className="imprint">
-              <span aria-hidden="true" /> A study guide by CodeStarters
-            </p>
+    <div className="sat-lab">
+      <div className="lab-blue">
+        <header className="lab-nav">
+          <Logo size={34} light />
+          <nav aria-label="Main navigation">
+            <Link href="/practice">Question bank</Link>
+            <Link href="/vocab">Vocabulary</Link>
+            <Link href={user ? "/dashboard" : "/login"}>
+              {user ? "Dashboard" : "Log in"} ↗
+            </Link>
+          </nav>
+        </header>
+        <main className="lab-hero">
+          <div className="lab-copy">
             <h1>
-              The SAT
-              <br />
-              Practice Book<span aria-hidden="true">.</span>
+              <span>
+                <b>Digital SAT</b>
+              </span>
+              <span>
+                <b>practice.</b>
+              </span>
             </h1>
-            <p className="deck">
-              An open study guide for the digital SAT. Work through original
-              practice problems, unpack tricky words, and see how each answer
-              fits.
+            <p>
+              Work through a math problem, find the clue in a passage, or sit
+              for a timed test. Pick where you want to start.
             </p>
-            <div className="edition-actions">
-              <Link href="/practice">
-                Start practicing <span>↗</span>
+            <div className="lab-actions">
+              <Link className="lab-primary" href="/practice">
+                Start practicing <i aria-hidden="true">↗</i>
               </Link>
               <a href="#sample">Try a question ↓</a>
             </div>
           </div>
-          <a
-            className="book-stage"
-            href="#sample"
-            aria-label="Open the practice book to a sample question"
-          >
-            <div className="book">
-              <div className="cover-top">
-                <span>ScholarSAT</span>
-                <span>Digital edition</span>
-              </div>
-              <strong>SAT</strong>
-              <div className="contours" aria-hidden="true">
-                {Array.from({ length: 24 }, (_, i) => (
-                  <i
-                    key={i}
-                    style={{ width: 110 + i * 11, height: 115 + i * 9 }}
-                  />
-                ))}
-              </div>
-              <div className="cover-foot">
-                <b>Practice Book</b>
-                <span>
-                  Math
-                  <br />
-                  Reading &amp; Writing
-                </span>
-              </div>
-            </div>
-            <span className="book-caption">
-              Open sample <b>↗</b>
+          <SolidStudy />
+        </main>
+        <div className="lab-foot">
+          <span>Free to study · Open source</span>
+          <a href={CODESTARTERS}>Made by CodeStarters ↗</a>
+        </div>
+      </div>
+      <section className="lab-sample" id="sample">
+        <Reveal>
+          <LandingStudio items={sampleItems()} />
+        </Reveal>
+      </section>
+      <section className="lab-library" aria-label="Study library">
+        <Reveal className="library-inner">
+          <div className="library-count">
+            <span className="big-count">
+              <CountUp to={bank.total} />
             </span>
-          </a>
-        </section>
-        <section className="contents" id="contents">
-          <div>
-            <p className="imprint">In this edition</p>
-            <h2>Contents</h2>
+            <h2>Practice questions</h2>
+            <p>
+              Filter by skill, subject, or difficulty. Every answer comes with a
+              worked explanation.
+            </p>
+            <Link href="/practice">Explore the bank ↗</Link>
           </div>
-          <div>
-            {entries.map(([href, title, desc, count], i) => (
-              <Link href={href} key={href}>
-                <small>0{i + 1}</small>
-                <div>
-                  <h3>{title}</h3>
-                  <p>{desc}</p>
-                </div>
-                <span>{count}</span>
-                <b>↗</b>
+          <div className="library-routes">
+            {[
+              [
+                "/vocab",
+                "Vocabulary studio",
+                VOCAB.length.toLocaleString() + " words",
+              ],
+              ["/tests", "Timed practice tests", "Adaptive modules"],
+              ["/resources", "Study resources", "Official material"],
+            ].map(([href, label, desc]) => (
+              <Link key={href} href={href}>
+                <span>{desc}</span>
+                <b>{label}</b>
+                <i aria-hidden="true">↗</i>
               </Link>
             ))}
           </div>
-        </section>
-        <section className="sample" id="sample">
-          <div>
-            <p className="imprint">From the question bank</p>
-            <h2>
-              Work one
-              <br />
-              through.
-            </h2>
-            <p>
-              Choose an answer to see the reasoning. You can try all three
-              questions here.
-            </p>
-          </div>
-          <LandingQuestion items={sampleItems()} />
-        </section>
-        <section className="contents questions">
-          <div>
-            <p className="imprint">Before you start</p>
-            <h2>Field notes</h2>
-          </div>
-          <div>
-            <details>
-              <summary>Do I need an account?</summary>
-              <p>
-                Explore the question bank and vocabulary as a guest. Sign up to
-                save progress and take full-length tests.
-              </p>
+        </Reveal>
+      </section>
+      <section className="lab-notes">
+        <Reveal>
+          <h2>Before you begin</h2>
+          {[
+            [
+              "Do I need an account?",
+              "Practice questions and vocabulary work as a guest. Create an account to save progress and take full-length tests.",
+            ],
+            [
+              "What does it cost?",
+              "Practice, vocabulary, tests, and worked explanations are free. The optional AI tutor uses your ChatGPT plan or OpenAI API billing.",
+            ],
+            [
+              "Are these official SAT questions?",
+              "CodeStarters creates original practice material. ScholarSAT is independent of College Board. The resource library links to official practice.",
+            ],
+          ].map(([q, a]) => (
+            <details key={q}>
+              <summary>{q}</summary>
+              <p>{a}</p>
             </details>
-            <details>
-              <summary>What does it cost?</summary>
-              <p>
-                The practice bank, vocabulary, tests and worked explanations are
-                free. The optional AI tutor uses your own ChatGPT plan or OpenAI
-                API billing.
-              </p>
-            </details>
-            <details>
-              <summary>Are the questions official?</summary>
-              <p>
-                CodeStarters builds original practice material. ScholarSAT is
-                independent of College Board. Find official Bluebook practice in
-                the <Link href="/resources">resource library</Link>.
-              </p>
-            </details>
-          </div>
-        </section>
-      </main>
-      <footer>
-        <Logo size={32} />
+          ))}
+        </Reveal>
+      </section>
+      <footer className="lab-footer">
         <div>
-          <a href={CODESTARTERS}>CodeStarters</a>
-          <a href={REPO}>GitHub</a>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/terms">Terms</Link>
+          <Logo size={34} light />
+          <nav aria-label="Footer">
+            <a href={REPO}>GitHub</a>
+            <Link href="/privacy">Privacy</Link>
+            <Link href="/terms">Terms</Link>
+          </nav>
         </div>
+        <a className="footer-start" href="/practice">
+          Start practicing <i aria-hidden="true">↗</i>
+        </a>
       </footer>
     </div>
   );

@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Owl } from "./Owl";
 import { btn } from "./ui";
 import { IArrowR, ICheckCircle, IXCircle } from "./icons";
 
@@ -21,7 +20,7 @@ export type LandingItem = {
 
 const LETTERS = "ABCD";
 
-/** A real question from the bank that visitors can answer on the landing page. The owl reacts. */
+/** A real question from the bank that visitors can answer on the landing page. Each choice reveals the worked explanation. */
 export function LandingQuestion({ items }: { items: LandingItem[] }) {
   const [idx, setIdx] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
@@ -45,11 +44,7 @@ export function LandingQuestion({ items }: { items: LandingItem[] }) {
 
   return (
     <div className="relative">
-      <div className="pointer-events-none absolute bottom-full right-8 -mb-1.5">
-        <Owl key={`${q.id}-${picked ?? "idle"}`} size={76} mood={!answered ? "idle" : correct ? "celebrate" : "sad"} />
-      </div>
-
-      <section aria-label="Sample question" className="rounded-2xl border border-line bg-bg p-6 shadow-pop sm:p-7">
+      <section key={q.id} aria-label="Sample question" className="rounded-2xl border border-line bg-bg p-6 shadow-pop sm:p-7">
         <div className="flex items-baseline justify-between gap-4">
           <p className="text-[15px] font-medium text-ink">{q.topic}</p>
           <p className="shrink-0 text-[13px] text-muted tabular-nums">
