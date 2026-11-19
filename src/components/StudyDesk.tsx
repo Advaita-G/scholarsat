@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import Link from "next/link";
-import { PracticeSetPicker } from "./PracticeSetPicker";
+import { PracticeSetPicker, practiceSet } from "./PracticeSetPicker";
 import { TestTiming, type TestModule } from "./TestTiming";
 
 const stops = [
@@ -11,7 +11,9 @@ const stops = [
   { id: "tools", label: "Study tools" },
 ];
 
-export function StudyDesk({ counts, total, modules }: { counts: Record<string, number>; total: number; modules: TestModule[] }) {
+export function StudyDesk({ counts, total, modules, signedIn }: { signedIn: boolean; counts: Record<string, number>; total: number; modules: TestModule[] }) {
+  const [chosen, setChosen] = useState<ReturnType<typeof practiceSet> | null>(null);
+  const destination = chosen?.n ? chosen : null;
   const desk = useRef<HTMLElement>(null);
   const [current, setCurrent] = useState("bank");
 
@@ -30,7 +32,7 @@ export function StudyDesk({ counts, total, modules }: { counts: Record<string, n
     return () => observer.disconnect();
   }, []);
 
-  return (
+  return (<>
     <section ref={desk} className="study-desk measure" aria-labelledby="desk-title">
       <div className="desk-contents">
         <h2 id="desk-title">Inside ScholarSAT</h2>
@@ -50,7 +52,7 @@ export function StudyDesk({ counts, total, modules }: { counts: Record<string, n
         <section className="desk-panel" id="bank" aria-labelledby="sets-title">
           <h3 id="sets-title">Build a practice set.</h3>
           <p>Pick a skill for a short drill, with an explanation after every answer.</p>
-          <PracticeSetPicker counts={counts} />
+          <PracticeSetPicker counts={counts} set={chosen ?? practiceSet(counts,"math")} onChoose={setChosen} />
           <Link className="ink-link" href="/practice">Browse all {total.toLocaleString("en-US")} questions ↗</Link>
         </section>
         <section className="desk-panel" id="tests" aria-label="Mock tests"><TestTiming modules={modules} /></section>
@@ -64,5 +66,14 @@ export function StudyDesk({ counts, total, modules }: { counts: Record<string, n
         </section>
       </div>
     </section>
-  );
+    <section className="journey-entry measure" aria-label="Enter ScholarSAT">
+      <div>
+        <h2>Enter <span>ScholarSAT</span></h2>
+        <p key={destination?.href}>{destination ? `Your ${destination.n}-question set on ${destination.selected} is ready. Check each answer and work through its explanation.` : signedIn ? "Your saved progress, missed questions, and next practice session are in your dashboard." : "Choose a skill and start practicing for free. Create an account whenever you want to save your progress."}</p>
+      </div>
+      <Link className="entry-link" href={destination ? destination.href : signedIn ? "/dashboard" : "/practice"}>
+        {destination ? "Start my set" : signedIn ? "Open my dashboard" : "Open the question bank"} <span className="entry-port" aria-hidden="true">↗</span>
+      </Link>
+    </section>
+  </>);
 }

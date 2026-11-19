@@ -23,16 +23,7 @@ export default async function Landing() {
         <StudyPath />
         <LandingStudio question={{ passage: question.passage, stem: question.stem, choices: question.choices,
           answer: question.answer, explanation: question.explanation }} />
-        <StudyDesk modules={MODULES} counts={bank.bySkill} total={bank.total} />
-        <section className="journey-entry measure" aria-label="Enter ScholarSAT">
-          <div>
-            <h2>Enter ScholarSAT</h2>
-            <p>{user ? "Your saved progress, missed questions, and next practice session are in your dashboard." : "Choose a skill and start practicing for free. Create an account whenever you want to save your progress."}</p>
-          </div>
-          <Link className="entry-link" href={user ? "/dashboard" : "/practice"}>
-            {user ? "Open my dashboard" : "Open the question bank"} <span className="entry-port" aria-hidden="true">↗</span>
-          </Link>
-        </section>
+        <StudyDesk signedIn={!!user} modules={MODULES} counts={bank.bySkill} total={bank.total} />
       </main>
       <footer className="lunar-footer measure">
         <div><strong>ScholarSAT</strong><span>Free SAT practice by <a href="https://codestarters.org">CodeStarters</a>.</span></div>

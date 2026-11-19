@@ -38,7 +38,7 @@ export function LandingQuestion({ question }: { question: FeaturedQuestion }) {
             onPointerEnter={e => { if (e.pointerType === "mouse" && !correct) setPreview(i); }}
             onPointerLeave={() => setPreview(null)} onFocus={() => { if (!correct) setPreview(i); }} onBlur={() => setPreview(null)}
             onClick={() => { if (!correct) { setPick(i); setPreview(null); } }}>
-            <span className="choice-key" aria-hidden="true">{pick === i && correct ? "✓" : "ABCD"[i]}</span>{word}
+            <span className="choice-key" aria-hidden="true">{pick === i ? correct ? "✓" : "↺" : "ABCD"[i]}</span>{word}
           </button>
         ))}</div>
       </fieldset>

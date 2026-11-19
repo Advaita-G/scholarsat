@@ -1,25 +1,20 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
 import { SECTION_LABEL, TAXONOMY, type Section } from "@/lib/types";
-export function PracticeSetPicker({
-  counts,
-}: {
-  counts: Record<string, number>;
-}) {
-  const [subject, setSubject] = useState<Section>("math");
-  const [skill, setSkill] = useState("");
-  const groups = TAXONOMY[subject];
-  const selected =
-    skill ||
-    groups.flatMap((group) => group.skills).find((name) => counts[name]) ||
-    "";
+export function practiceSet(counts: Record<string, number>, subject: Section, skill?: string) {
+  const selected = skill || TAXONOMY[subject].flatMap(group => group.skills).find(name => counts[name]) || "";
   const n = Math.min(5, counts[selected] || 0);
-  const query = new URLSearchParams({
-    section: subject,
-    skill: selected,
-    limit: String(n),
-  });
+  const query = new URLSearchParams({section:subject, skill:selected, limit:String(n)});
+  return {subject, selected, n, href:"/practice/play?" + query.toString()};
+}
+
+export function PracticeSetPicker({counts, set, onChoose}: {
+  counts: Record<string, number>;
+  set: ReturnType<typeof practiceSet>;
+  onChoose: (set: ReturnType<typeof practiceSet>) => void;
+}) {
+  const {subject, selected, n, href} = set;
+  const groups = TAXONOMY[subject];
   return (
     <div className="set-picker">
       <div className="subject-choices">
@@ -27,10 +22,7 @@ export function PracticeSetPicker({
           <button
             key={s}
             aria-pressed={subject === s}
-            onClick={() => {
-              setSubject(s);
-              setSkill("");
-            }}
+            onClick={() => onChoose(practiceSet(counts,s))}
           >
             {SECTION_LABEL[s]}
           </button>
@@ -38,7 +30,7 @@ export function PracticeSetPicker({
       </div>
       <label>
         Choose a skill
-        <select value={selected} onChange={(e) => setSkill(e.target.value)}>
+        <select value={selected} onChange={e => onChoose(practiceSet(counts,subject,e.target.value))}>
           {groups.map((group) => (
             <optgroup key={group.domain} label={group.domain}>
               {group.skills
@@ -51,7 +43,7 @@ export function PracticeSetPicker({
         </select>
       </label>
       {n > 0 && (
-        <Link href={"/practice/play?" + query.toString()} className="set-start">
+        <Link href={href} className="set-start">
           Practice {n} questions →
         </Link>
       )}

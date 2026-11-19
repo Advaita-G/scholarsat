@@ -26,14 +26,39 @@ async function verify() {
       const plate = page.locator(".exposure-origin figure").last();
       const transform = () => plate.evaluate(el => getComputedStyle(el).transform);
       const before = await transform();
+      const scrub = page.getByRole("slider", {name:"Explore ten nights"});
+      const reading = page.locator(".phase-readout");
+      const initial = await reading.innerText();
+      assert.match(initial, /03 Jan.*14\.6% lit/i);
+      const sprite = page.locator(".lunar-frame").first();
+      const firstTile = await sprite.evaluate(el => getComputedStyle(el).backgroundPosition);
       await page.evaluate(() => scrollTo(0, innerHeight * .5));
       await settle(page);
-      assert.equal((await transform()) === before, reducedMotion === "reduce");
+      assert.equal((await reading.innerText()) === initial, reducedMotion === "reduce");
+      assert.equal((await sprite.evaluate(el => getComputedStyle(el).backgroundPosition)) === firstTile, reducedMotion === "reduce");
+      if (reducedMotion !== "reduce") {
+        assert.ok(Math.abs((await page.locator(".atlas-stage").boundingBox()).y) < 2);
+        await page.evaluate(() => {
+          const cover = document.querySelector(".atlas-cover").getBoundingClientRect();
+          const stage = document.querySelector(".atlas-stage").getBoundingClientRect();
+          scrollTo(0, scrollY + cover.bottom - stage.height * .5);
+        });
+        await settle(page);
+        assert.notEqual(await transform(), before);
+      }
       if (reducedMotion !== "reduce") assert.ok((await pathOffsets())[0] < pathStart[0]);
       await page.evaluate(() => scrollTo(0,0));
       await settle(page);
       assert.equal(await transform(), before);
       assert.deepEqual(await pathOffsets(), pathStart);
+      assert.equal(await reading.innerText(), initial);
+      await scrub.focus();
+      await page.keyboard.press("End");
+      await settle(page);
+      assert.match(await reading.innerText(), /13 Jan.*99\.6% lit/i);
+      await page.keyboard.press("Home");
+      await settle(page);
+      assert.equal(await reading.innerText(), initial);
 
       await page.getByRole("link", { name: "Enter the passage" }).click();
       await settle(page);
@@ -55,12 +80,13 @@ async function verify() {
       assert.ok(await page.getByRole("link",{name:"Practice five more transitions"}).isVisible());
       await page.getByRole("navigation",{name:"Study options"}).getByRole("link",{name:"Mock tests"}).click();
       await page.getByRole("button",{name:"Math Module 2"}).click();
+      assert.equal(await page.locator(".timer-display strong").innerText(), "35");
       assert.match(await page.locator(".module-detail").innerText(),/22 questions · 35 minutes/);
       await page.getByRole("navigation",{name:"Study options"}).getByRole("link",{name:"Study tools"}).click();
       await page.getByRole("link",{name:/Retry questions you missed/}).waitFor();
       await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
       await settle(page);
-      assert.deepEqual(await pathOffsets(), [0,0,0]);
+      assert.deepEqual(await pathOffsets(), [0,0,0,0,0,0]);
       const entry = page.getByRole("link",{name:"Open the question bank"});
       assert.equal(await entry.getAttribute("href"), "/practice");
       if (reducedMotion !== "reduce") {
@@ -79,7 +105,10 @@ async function verify() {
       await page.getByLabel("Choose a skill").selectOption("Transitions");
       assert.match(await page.locator(".set-start").getAttribute("href"), /section=rw&skill=Transitions&limit=5/);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-      await page.locator(".set-start").click();
+      const chosenEntry = page.locator(".journey-entry").getByRole("link", {name:"Start my set"});
+      assert.equal(await chosenEntry.getAttribute("href"), await page.locator(".set-start").getAttribute("href"));
+      assert.match(await page.locator(".journey-entry p").innerText(), /5-question set on Transitions/);
+      await chosenEntry.click();
       await page.getByText("Question 1 of 5",{exact:true}).first().waitFor();
       await page.locator(".practice-player fieldset label").first().click();
       await page.getByRole("button",{name:"Check",exact:true}).click();

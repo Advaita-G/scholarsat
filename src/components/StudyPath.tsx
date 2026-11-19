@@ -12,6 +12,9 @@ export function StudyPath() {
     const cover = main.querySelector<HTMLElement>(".atlas-cover")!;
     const passage = main.querySelector<HTMLElement>(".reading-spread")!;
     const desk = main.querySelector<HTMLElement>(".study-desk")!;
+    const picker = main.querySelector<HTMLElement>(".set-picker")!;
+    const ruler = main.querySelector<HTMLElement>(".timer-ruler")!;
+    const tools = main.querySelector<HTMLElement>(".tool-paths")!;
     const entry = main.querySelector<HTMLElement>(".entry-port")!;
     const moons = Array.from(main.querySelectorAll<HTMLElement>(".exposure-origin"));
     const lines = Array.from(svg.querySelectorAll<SVGPathElement>(".path-ink"));
@@ -43,14 +46,22 @@ export function StudyPath() {
         const r = el.getBoundingClientRect();
         return { x: (r.left-base.left)/zoom, y: (r.top-base.top)/zoom, w:r.width/zoom, h:r.height/zoom };
       };
+      const stickyOffset = local(main.querySelector(".atlas-stage")!).y - local(cover).y;
       const centers = moons.map(el => {
         const r = local(el);
-        return {x:r.x+r.w/2, y:r.y+r.h/2};
+        return {x:r.x+r.w/2, y:r.y+r.h/2-stickyOffset};
       }).reverse();
       const sheet = local(cover), spread = local(passage), bank = local(desk), port = local(entry);
       const left = sheet.x * .52, right = base.width/zoom-left;
       const seam = bank.y - 5;
       const radius = Math.min(23, sheet.x * .32);
+      const set = local(picker), scale = local(ruler), studyTools = local(tools);
+      const setY = set.y + set.h - 12;
+      const scaleY = scale.y + scale.h + 1;
+      const gutter = scale.x - Math.min(24, sheet.x / 2);
+      const bend = Math.min(radius, (scale.x - gutter) / 1.5);
+      const toolsY = studyTools.y + studyTools.h / 2;
+      const exitY = bank.y + bank.h - 6;
       const x = port.x + port.w/2, y = port.y + port.h/2;
       let arc = `M ${centers[0].x} ${centers[0].y}`;
       for (let i=1; i<centers.length; i++) {
@@ -61,22 +72,26 @@ export function StudyPath() {
       const paths = [
         arc,
         `M ${left} ${spread.y} V ${seam-radius} Q ${left} ${seam} ${left+radius} ${seam} H ${right-radius} Q ${right} ${seam} ${right} ${seam+radius}`,
-        `M ${right} ${seam+radius} V ${y-radius} Q ${right} ${y} ${right-radius} ${y} H ${x}`,
+        `M ${right} ${seam+radius} V ${setY}`,
+        `M ${right} ${setY} V ${scaleY-bend} Q ${right} ${scaleY} ${right-bend} ${scaleY} H ${gutter+bend} Q ${gutter} ${scaleY} ${gutter} ${scaleY+bend}`,
+        `M ${gutter} ${scaleY+bend} V ${toolsY}`,
+        `M ${gutter} ${toolsY} V ${exitY-radius} Q ${gutter} ${exitY} ${gutter+radius} ${exitY} H ${right-radius} Q ${right} ${exitY} ${right} ${exitY+radius} V ${y-radius} Q ${right} ${y} ${right-radius} ${y} H ${x}`,
       ];
       lengths = paths.map((path,i) => {
         lines[i].setAttribute("d",path);
         return lines[i].getTotalLength();
       });
-      const max = Math.max(3, document.documentElement.scrollHeight - innerHeight);
-      const end = Math.min(max, Math.max(3, entry.getBoundingClientRect().bottom + scrollY - innerHeight * .78));
-      const second = Math.min(end-1, Math.max(2, desk.getBoundingClientRect().top + scrollY - innerHeight * .63));
-      const first = Math.min(second-1, Math.max(1, passage.getBoundingClientRect().top + scrollY - innerHeight * .55));
-      stops = [0,first,second,end];
+      const max = Math.max(paths.length, document.documentElement.scrollHeight - innerHeight);
+      const at = (localY: number, viewport: number) => base.top + scrollY + localY * zoom - innerHeight * viewport;
+      stops = [0, at(spread.y,.55), at(bank.y,.63), at(setY,.58), at(scaleY,.52), at(toolsY,.54),
+        Math.min(max, at(port.y + port.h,.78))];
+      // Short pages can show several landmarks together. Keep their arrival order when that happens.
+      for (let i = stops.length-2; i > 0; i--) stops[i] = Math.max(i,Math.min(stops[i],stops[i+1]-1));
       schedule();
     }
     measure();
     const observer = new ResizeObserver(measure);
-    [main,cover,passage,desk,entry,document.body].forEach(el => observer.observe(el));
+    [main,cover,passage,desk,picker,ruler,tools,entry,document.body].forEach(el => observer.observe(el));
     const preference = new MutationObserver(schedule);
     preference.observe(document.documentElement,{attributes:true,attributeFilter:["class"]});
     window.addEventListener("scroll",schedule,{passive:true});
@@ -89,7 +104,7 @@ export function StudyPath() {
     };
   }, []);
   return <svg className="study-path" ref={graphic} aria-hidden="true" focusable="false">
-    {[0,1,2].map(i => <path key={i} className="path-ink" pathLength="1" />)}
+    {[0,1,2,3,4,5].map(i => <path key={i} className="path-ink" pathLength="1" />)}
     <circle r="3.4" />
   </svg>;
 }
