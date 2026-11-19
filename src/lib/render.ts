@@ -20,7 +20,7 @@ export function rich(text: string, mathOutput: "html" | "htmlAndMathml" = "html"
       return esc(p)
         .replace(/&lt;br&gt;/g, "<br/>")
         .replace(/\n/g, "<br/>")
-        .replace(/_{4,}/g, '<span class="blank" aria-label="blank"></span>');
+        .replace(/_{4,}/g, '<span class="blank" role="img" aria-label="blank"></span>');
     })
     .join("");
 }

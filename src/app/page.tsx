@@ -1,5 +1,4 @@
 import Link from "next/link";
-import localFont from "next/font/local";
 import { getUser } from "@/lib/auth";
 import { BY_ID, counts, QUESTIONS } from "@/lib/bank";
 import { rich } from "@/lib/render";
@@ -16,31 +15,41 @@ import { LandingStudio } from "@/components/LandingStudio";
 import "@/components/landing.css";
 
 export const dynamic = "force-dynamic";
-const folioFont = localFont({
-  src: "../../public/fonts/barlow-condensed-600.woff2",
-  weight: "600",
-  display: "swap",
-  variable: "--font-folio",
-});
 const REPO = process.env.NEXT_PUBLIC_REPO_URL ?? "https://github.com/Codestarters-Foundation/scholarsat";
 const CODESTARTERS = "https://codestarters.org";
 const SAMPLES = [
-  { id: "m7cf3173b", label: "Systems", title: "Solve the system.", work: "systems" },
   { id: "r9980c71a", label: "Grammar", title: "Which verb fits the sentence?", work: "grammar" },
+  { id: "m7cf3173b", label: "Systems", title: "Solve the system.", work: "systems" },
   { id: "m30ee0293", label: "Percents", title: "What’s the final price?", work: "percentages" },
 ] as const;
+
+function sentenceParts(text: string, clue: string): LandingItem["sentence"] {
+  const [before, after] = text.split(/_{4,}/);
+  const start = before.indexOf(clue);
+  if (start < 0 || after === undefined) return undefined;
+  return {
+    before: before.slice(0, start),
+    clue,
+    between: before.slice(start + clue.length),
+    after,
+  };
+}
 
 function bankSample(q: Question, tab: Pick<LandingItem, "label" | "title" | "work">): LandingItem[] {
   if (q.type !== "mcq" || !q.choices || q.table || q.passage2) return [];
   const stem = tab.work === "systems"
     ? [...q.stem.split("<br>").slice(0, 2), "At the solution, what is \\(x + y\\)?"].join("<br>")
     : q.stem;
+  const passage = tab.work === "grammar"
+    ? q.passage?.replace(", donated by the author's family,", "").replace(" in the library's main hall", "")
+    : q.passage;
   return [{
     id: q.id,
     ...tab,
     topic: q.section === "math" ? "Math" : "Reading and Writing",
     difficulty: DIFFICULTY_LABEL[q.difficulty],
-    passageHtml: q.passage ? rich(q.passage, "htmlAndMathml") : undefined,
+    passageHtml: passage ? rich(passage, "htmlAndMathml") : undefined,
+    sentence: tab.work === "grammar" && passage ? sentenceParts(passage, "collection") : undefined,
     stemHtml: rich(stem, "htmlAndMathml"),
     choices: q.choices.map((choice) => {
       const number = /^\\\(([-−]?\d+(?:\.\d+)?)\\\)$/.exec(choice)?.[1];
@@ -70,6 +79,7 @@ function sampleItems(): LandingItem[] {
     title: "Which word fits the context?",
     topic: "Words in context",
     stemHtml: rich(lesson.passage),
+    sentence: sentenceParts(lesson.passage, "will be redrawn"),
     choices: lesson.choices.map((word) => ({ html: rich(word), label: word })),
     answer: "ABC"[lesson.choices.indexOf(lesson.word)],
     explanationHtml: rich(lesson.why),
@@ -81,7 +91,7 @@ export default async function Landing() {
   const user = await getUser();
   const bank = counts();
   return (
-    <div className={`scholar-home ${folioFont.variable}`}>
+    <div className="scholar-home">
       <a className="folio-skip" href="#main">Skip to content</a>
       <LandingNav signedIn={!!user} />
       <main id="main">

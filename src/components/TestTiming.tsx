@@ -38,15 +38,7 @@ export function TestTiming({ modules }: { modules: Module[] }) {
         </div>
         <div className="time-remaining">
           <span>Testing time left · hrs/min</span>
-          <strong aria-label={timestamp(total - minute)}>
-            {timestamp(total - minute)
-              .split("")
-              .map((digit, place) => (
-                <span key={place}>
-                  <b key={digit}>{digit}</b>
-                </span>
-              ))}
-          </strong>
+          <strong>{timestamp(total - minute)}</strong>
         </div>
       </div>
       <div className="time-console">
