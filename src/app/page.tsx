@@ -10,6 +10,7 @@ import { LandingNav } from "@/components/LandingNav";
 import { LandingShowcase } from "@/components/LandingShowcase";
 import { PracticeSetPicker } from "@/components/PracticeSetPicker";
 import { LinkButton } from "@/components/ui";
+import { TestTiming } from "@/components/TestTiming";
 import { MODULES } from "@/lib/tests";
 import { LandingStudio } from "@/components/LandingStudio";
 import { Reveal } from "@/components/Reveal";
@@ -96,70 +97,31 @@ export default async function Landing() {
             </Reveal>
           </div>
         </section>
-        <section id="tests" className="prep-width section-space">
+        <div className="prep-width timing-wrap">
           <Reveal>
-            <div className="prep-heading">
-              <div>
-                <h2>Rehearse test day.</h2>
-                <p>
-                  Four timed modules. Your second module in each subject adapts
-                  to your first.
-                </p>
-              </div>
-              <LinkButton href="/tests" variant="secondary">
-                View practice tests →
-              </LinkButton>
-            </div>
-            <ol className="module-track">
-              {MODULES.map((m, i) => (
-                <li
-                  key={i}
-                  className={m.section === "rw" ? "reading" : "math"}
-                  style={{ "--step": i } as React.CSSProperties}
-                >
-                  <span>
-                    {m.section === "rw" ? "Reading & writing" : "Math"} · Module{" "}
-                    {(i % 2) + 1}
-                  </span>
-                  <strong>
-                    {m.minutes}
-                    <small> min</small>
-                  </strong>
-                  <p>{m.n} questions</p>
-                </li>
-              ))}
-            </ol>
+            <TestTiming modules={MODULES} />
           </Reveal>
-        </section>
-        <section className="questions-band" id="faq">
-          <div className="prep-width questions-grid">
+          <aside
+            id="faq"
+            aria-labelledby="access-title"
+            className="timing-notes"
+          >
+            <h2 id="access-title">Before you start</h2>
             <div>
-              <h2>Common questions</h2>
-              <a href="/resources">Browse SAT resources →</a>
+              <p>
+                Practice questions and vocabulary are free.{" "}
+                <Link href="/signup">Create an account</Link> for saved progress
+                and full tests. Optional AI explanations use your own plan or
+                API billing.
+              </p>
+              <p>
+                CodeStarters writes the questions independently of College
+                Board. For official material, visit the{" "}
+                <Link href="/resources">SAT resource library</Link>.
+              </p>
             </div>
-            <div>
-              {[
-                [
-                  "Can I practice without an account?",
-                  "Yes. Use the question bank and vocabulary studio as a guest. A free account saves your progress and gives you access to full-length tests.",
-                ],
-                [
-                  "What’s included for free?",
-                  "The question bank, vocabulary studio, practice tests and written explanations. The optional AI tutor uses your own ChatGPT plan or OpenAI API billing.",
-                ],
-                [
-                  "Who makes the questions?",
-                  "ScholarSAT is a CodeStarters project with original practice questions. It is independent of College Board. The resource library links to official SAT material.",
-                ],
-              ].map(([q, a]) => (
-                <details key={q}>
-                  <summary>{q}</summary>
-                  <p>{a}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
+          </aside>
+        </div>
       </main>
       <footer className="prep-width prep-footer">
         <Logo size={32} />

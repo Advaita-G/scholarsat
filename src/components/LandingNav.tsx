@@ -68,7 +68,7 @@ export function LandingNav({ signedIn, repo }: { signedIn: boolean; repo: string
             <a href="#bank" className="hover:text-ink">Question bank</a>
             <a href="#tests" className="hover:text-ink">Mock tests</a>
             <a href="#tools" className="hover:text-ink">Tools</a>
-            <a href="#faq" className="hover:text-ink">FAQ</a>
+            <a href="#faq" className="hover:text-ink">Study access</a>
             <a href={repo} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 hover:text-ink"><IGithub className="h-4 w-4" /> GitHub</a>
           </nav>
           <div className="flex items-center gap-2">
