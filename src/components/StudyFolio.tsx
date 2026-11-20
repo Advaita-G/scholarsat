@@ -1,5 +1,6 @@
 "use client";
 
+import { quietPlayback } from "./landing-navigation";
 import { useEffect, useRef, type ReactNode } from "react";
 
 const clamp = (n: number) => Math.max(0, Math.min(1, n));
@@ -14,8 +15,13 @@ export function StudyFolio({pages, chapter, onChapter}: {
     const frame = stage.current!;
     const story = frame.closest(".study-desk")!;
     const binding = frame.querySelector<HTMLElement>(".folio-binding")!;
+    const exposure = frame.querySelector<HTMLElement>(".cover-exposure")!;
+    const photograph = exposure.querySelector<HTMLElement>(".exposure-photo")!;
+    const credit = exposure.querySelector<HTMLElement>(".exposure-credit")!;
+    let size = {width:1,height:1,jacketWidth:1,jacketHeight:1,drop:0};
     const panels = Array.from(story.querySelectorAll<HTMLElement>(".book-stop"));
     const leaves = Array.from(frame.querySelectorAll<HTMLElement>(".folio-leaf"));
+    const lastTurn = leaves.map(() => -1);
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
     let stops: number[] = [];
     let raf = 0;
@@ -23,7 +29,7 @@ export function StudyFolio({pages, chapter, onChapter}: {
     let entryStart = 0;
     let lastApproach = -1;
     let grip: {id: number; x: number; y: number; start: number; width: number; forward: boolean; dragged: boolean} | null = null;
-    const reduced = () => motion.matches || document.documentElement.classList.contains("reduce-motion");
+    const reduced = () => quietPlayback(frame, motion);
     function paint() {
       raf = 0;
       let position = 0;
@@ -33,17 +39,27 @@ export function StudyFolio({pages, chapter, onChapter}: {
       if (approach !== lastApproach) {
         lastApproach = approach;
         frame.dataset.exposing = String(approach < 1);
-        frame.style.setProperty("--approach", String(approach * approach * (3 - 2 * approach)));
+        const t = approach * approach * (3-2*approach);
+        const sx = 1 + (size.jacketWidth / size.width - 1) * t;
+        const sy = 1 + (size.jacketHeight * .63 / size.height - 1) * t;
+        const y = (size.jacketHeight * .075 + size.drop) * t;
+        exposure.style.transform = `translate3d(-50%,calc(-50% + ${y}px),0) scale(${sx},${sy})`;
+        // Counter-scale the print to preserve its photographic proportions inside the moving crop.
+        const cover = Math.max(sx, size.height * sy * (880/912) / size.width);
+        photograph.style.transform = `scale(${cover/sx},${cover/sy})`;
+        exposure.style.opacity = String(clamp((1-t)*15));
+        credit.style.opacity = String(clamp(1-t*2.5));
       }
       if (position === previous) return;
       previous = position;
       const turns = leaves.map((leaf,i) => {
         const t = clamp((position-i-.12)/.76);
         const eased = t*t*(3-2*t);
+        if (lastTurn[i] === eased) return eased;
+        lastTurn[i] = eased;
         leaf.style.setProperty("--angle", String(-179.7*eased) + "deg");
         const lift = Math.sin(eased * Math.PI);
         leaf.style.setProperty("--shade", String(.24 * lift));
-        leaf.style.setProperty("--lift", String(lift));
         leaf.style.zIndex = String(eased > .5 ? i+1 : 12-i);
         return eased;
       });
@@ -59,8 +75,9 @@ export function StudyFolio({pages, chapter, onChapter}: {
     function measure() {
       const top = story.getBoundingClientRect().top + scrollY;
       entryStart = top - innerHeight * .65;
-      frame.style.setProperty("--jacket-width", binding.offsetWidth + "px");
-      frame.style.setProperty("--jacket-height", binding.offsetHeight + "px");
+      size = {width:frame.clientWidth, height:frame.clientHeight, jacketWidth:binding.offsetWidth,
+        jacketHeight:binding.offsetHeight, drop:parseFloat(getComputedStyle(binding).top)};
+      lastApproach = -1;
       stops = [top + innerHeight * .30, ...panels.map(el => el.getBoundingClientRect().top + scrollY)];
       schedule();
     }
@@ -141,6 +158,7 @@ export function StudyFolio({pages, chapter, onChapter}: {
       </div>)}
     </div>
     <div className="cover-exposure" aria-hidden="true">
+      <div className="exposure-photo"/>
       <div className="exposure-credit">Apollo 17 <span>Station 6 · NASA</span></div>
     </div>
   </div>;

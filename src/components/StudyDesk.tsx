@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { PracticeSetPicker, practiceSet } from "./PracticeSetPicker";
+import { questionBankSession, turnTo } from "./landing-navigation";
 import { StudyFolio } from "./StudyFolio";
 import { TestTiming, type TestModule } from "./TestTiming";
 
@@ -14,18 +15,9 @@ const stops = [
   { id: "enter", label: "Enter ScholarSAT" },
 ];
 
-function turnTo(id: string, event: {preventDefault: () => void}) {
-  const stop = document.getElementById(id);
-  if (!stop) return;
-  event.preventDefault();
-  if (location.hash !== "#" + id) history.pushState(null, "", "#" + id);
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches || document.documentElement.classList.contains("reduce-motion");
-  stop.scrollIntoView({behavior: reduced ? "instant" : "smooth"});
-}
-
 export type StudyOptions = {signedIn: boolean; counts: Record<string, number>; total: number; modules: TestModule[]};
-export function StudyDesk({ counts, total, modules, signedIn, passage, response, solved }: StudyOptions & {
-  passage: string; response?: string; solved: boolean;
+export function StudyDesk({ counts, total, modules, signedIn, response, solved }: StudyOptions & {
+  response?: string; solved: boolean;
 }) {
   const [chosen, setChosen] = useState<ReturnType<typeof practiceSet> | null>(null);
   const set = chosen ?? practiceSet(counts, "rw", "Transitions");
@@ -33,7 +25,6 @@ export function StudyDesk({ counts, total, modules, signedIn, passage, response,
   const part = modules[moduleIndex];
   const destination = set.n && (chosen || solved) ? set : null;
   const [chapter, setChapter] = useState(0);
-  const [claim, example] = passage.split(/\s*_{4,}\s*/);
   const pages = [
     {
       front: <div className="front-cover">
@@ -55,7 +46,9 @@ export function StudyDesk({ counts, total, modules, signedIn, passage, response,
     },
     {
       front: <section className="press-page" aria-label="Mock tests"><TestTiming modules={modules} index={moduleIndex} onChange={setModuleIndex}/></section>,
-      back: <div className="passage-proof"><span>Reading &amp; writing</span><blockquote>{claim} <mark>{response ?? "_____"}</mark> {example}</blockquote></div>,
+      back: <figure className="proof-plate"><div aria-hidden="true"/>
+        <figcaption><strong>Reading &amp; writing</strong><span>Lunar calendars</span></figcaption>
+      </figure>,
     },
     {
       front: <section className="press-page" aria-labelledby="tools-title"><h3 id="tools-title">Study tools</h3>
@@ -67,10 +60,10 @@ export function StudyDesk({ counts, total, modules, signedIn, passage, response,
       back: <section className="endpaper" aria-label="Enter ScholarSAT">
         <div className="end-orbit" aria-hidden="true"/>
         <div className="end-title"><h3>ScholarSAT</h3>{destination && <p>{destination.selected} · {destination.n} questions</p>}</div>
-        <Link className="press-action" href={destination?.href ?? (signedIn ? "/dashboard" : "/practice")}>
+        <Link className="press-action" href={destination?.href ?? (signedIn ? "/dashboard" : questionBankSession)}>
           {destination ? "Start my set" : signedIn ? "Open my dashboard" : "Open the question bank"} <span>↗</span>
         </Link>
-        {destination && <Link className="end-bank" href="/practice">Open the question bank</Link>}
+        {destination && <Link className="end-bank" href={questionBankSession}>Open the question bank</Link>}
       </section>,
     },
   ];

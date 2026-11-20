@@ -1,5 +1,6 @@
 "use client";
 
+import { quietPlayback } from "./landing-navigation";
 import Link from "next/link";
 import { useLayoutEffect, useRef, useState } from "react";
 
@@ -24,7 +25,7 @@ export function LandingQuestion({ question, pick, setPick }: {
   useLayoutEffect(() => {
     const word = typesetWord.current, from = source.current;
     source.current = null;
-    if (!word || !from || matchMedia("(prefers-reduced-motion:reduce)").matches || document.documentElement.classList.contains("reduce-motion")) return;
+    if (!word || !from || quietPlayback(word)) return;
     const to = word.getBoundingClientRect();
     const zoom = to.width / parseFloat(getComputedStyle(word).width);
     const flight = word.animate([

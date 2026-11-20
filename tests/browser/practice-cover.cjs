@@ -32,6 +32,7 @@ async function verify() {
       assert.equal(await page.locator(".cover-copy").getByText(/Free SAT practice/i).count(), 0);
       assert.equal(await page.getByText("Rehearse the full test.").count(),0);
       assert.equal(await page.getByText(/Start with a missing word/).count(),0);
+      assert.equal(await page.getByText(/Several ancient cultures developed calendars/).count(),1);
       const plate = page.locator(".exposure-origin figure").last();
       const transform = () => plate.evaluate(el => getComputedStyle(el).transform);
       const before = await transform();
@@ -67,8 +68,13 @@ async function verify() {
       await settle(page);
       assert.equal(await reading.innerText(), initial);
 
-      await page.getByRole("link", { name: "Try this question" }).click();
+      await page.getByRole("link", { name: "Try reading & writing" }).click();
       await page.waitForURL("**/#passage");
+      await page.waitForFunction(() => {
+        const section = document.getElementById("passage");
+        const zoom = section.getBoundingClientRect().width / parseFloat(getComputedStyle(section).width);
+        return Math.abs(section.getBoundingClientRect().top - parseFloat(getComputedStyle(section).scrollMarginTop) * zoom) < 3;
+      });
       await settle(page);
       if (reducedMotion !== "reduce") {
         assert.ok(await page.evaluate(() =>
@@ -152,16 +158,16 @@ async function verify() {
       assert.equal(await page.locator(".minute-dial strong").innerText(),"35");
       await chapter("#tools");
       assert.equal(await folio.getAttribute("data-spread"),"3");
-      assert.equal(await page.locator(".passage-proof mark").first().innerText(),"For example,");
+      assert.match(await page.locator(".answer-imprint").innerText(),/For example,/);
       await page.getByRole("link",{name:"Mistake review"}).waitFor();
       await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
       await settle(page);
       assert.equal(await folio.getAttribute("data-spread"),"4");
       const entry = page.getByRole("link",{name:"Open the question bank"});
-      assert.equal(await entry.getAttribute("href"), "/practice");
+      assert.equal(await entry.getAttribute("href"), "/practice/play?section=rw&limit=5");
       await entry.click();
-      await page.waitForURL("**/practice");
-      await page.getByRole("heading", {name: "Question bank", exact: true}).waitFor();
+      await page.waitForURL("**/practice/play?**");
+      await page.getByText("Question 1 of 5",{exact:true}).first().waitFor();
       await page.goBack();
       await page.getByRole("navigation",{name:"Study options"}).getByRole("link",{name:"Practice sets"}).click();
       await page.locator(".subject-choices button").last().click();
@@ -182,6 +188,20 @@ async function verify() {
       console.log(`${width}×${height} · ${reducedMotion} · passage, motion, feedback, mock modules, study tools and graded set passed`);
       await page.close();
     }
+    const cinema = await browser.newPage({viewport:{width:390,height:844}, reducedMotion:"reduce"});
+    await cinema.addInitScript(() => localStorage.setItem("ss_reduce_motion","true"));
+    const full = new URL(url);
+    full.searchParams.set("motion","full");
+    await cinema.goto(full.href);
+    await cinema.locator(".atlas[data-motion=on]").waitFor();
+    assert.equal(await cinema.locator(".opening-word").evaluate(el => getComputedStyle(el).animationDuration),"2.05s");
+    assert.equal(await cinema.locator(".atlas-stage").evaluate(el => getComputedStyle(el).position),"sticky");
+    await cinema.goto(full.href + "#enter");
+    await cinema.locator('.folio-stage[data-spread="4"]').waitFor();
+    await cinema.getByRole("link",{name:/Open the question bank/}).click();
+    await cinema.getByText("Question 1 of 5",{exact:true}).first().waitFor();
+    console.log("Full-motion visit and direct question-bank entry passed");
+    await cinema.close();
   } finally {
     await browser.close();
   }

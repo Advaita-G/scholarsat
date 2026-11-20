@@ -27,7 +27,7 @@
 .account-edition { display:none; }
 @media(min-width:1024px) {
   .account-edition { display:flex; flex-direction:column; justify-content:center; align-items:center; gap:4vh; padding:5vh 5vw; background:#e7decb; color:#282722; border-left:clamp(10px,1.8vw,32px) solid #943a2c; }
-  .account-signature { align-self:flex-start; display:flex; align-items:center; gap:12px; font:400 clamp(44px,5.6vw,110px)/1 "Instrument Serif",Georgia; letter-spacing:-.055em; }
+  .account-signature { align-self:flex-start; display:flex; align-items:center; gap:12px; font:400 clamp(44px,5.6vw,110px)/1 "Mona Sans",system-ui,sans-serif; letter-spacing:-.055em; }
   .account-edition figure { width:100%; }
   .account-edition img { display:block; width:100%; height:min(53vh,630px); object-fit:cover; object-position:center 72%; filter:grayscale(1); }
   .account-edition figcaption { font:450 12px/1.5 var(--font-code); margin-top:12px; }

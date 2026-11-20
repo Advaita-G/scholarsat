@@ -9,13 +9,14 @@ import "@/components/landing.css";
 
 export const dynamic = "force-dynamic";
 
-export default async function Landing() {
+export default async function Landing({searchParams}: {searchParams: Promise<{motion?: string}>}) {
+  const fullMotion = (await searchParams).motion === "full";
   const user = await getUser();
   const bank = counts();
   const question = BY_ID.get("ra970690e");
   if (!question?.passage || !question.choices) throw new Error("Featured transition question is missing");
   return (
-    <div className="lunar-home">
+    <div className="lunar-home" data-full-motion={fullMotion || undefined}>
       <Link className="lunar-skip" href="/#passage">Skip to practice</Link>
       <ScholarOpening />
       <LandingNav signedIn={!!user} />

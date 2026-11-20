@@ -418,7 +418,7 @@
 @keyframes pct-grow { from { transform: scaleX(0); } }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *:not(:where(.lunar-home[data-full-motion] *)) {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
@@ -653,9 +653,9 @@ html.compact .mb-8 {
 }
 
 /* Reduced Motion Mode */
-html.reduce-motion *,
-html.reduce-motion *::before,
-html.reduce-motion *::after {
+html.reduce-motion *:not(:where(.lunar-home[data-full-motion] *)),
+html.reduce-motion *:not(:where(.lunar-home[data-full-motion] *))::before,
+html.reduce-motion *:not(:where(.lunar-home[data-full-motion] *))::after {
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;
   transition-duration: 0.001ms !important;

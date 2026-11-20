@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { quietPlayback, turnTo } from "./landing-navigation";
 import { StudyDesk, type StudyOptions } from "./StudyDesk";
 import { LandingQuestion, type FeaturedQuestion } from "./LandingQuestion";
 
@@ -19,7 +20,6 @@ const clamp = (n: number) => Math.max(0, Math.min(1,n));
 
 export function LandingStudio({question, study}: { question: FeaturedQuestion; study: StudyOptions }) {
   const [pick,setPick] = useState<number | null>(null);
-  const [claim, example] = question.passage.split(/\s*_{4,}\s*/);
   const story = useRef<HTMLElement>(null);
   useEffect(() => {
     const root = story.current!;
@@ -27,10 +27,6 @@ export function LandingStudio({question, study}: { question: FeaturedQuestion; s
     const stage = root.querySelector<HTMLElement>(".atlas-stage")!;
     const scrub = root.querySelector<HTMLInputElement>(".phase-scrub")!;
     const readout = root.querySelector<HTMLOutputElement>(".phase-readout")!;
-    const blank = root.querySelector<HTMLElement>(".prompt-gap")!;
-    const answer = root.querySelector<HTMLElement>(".insertion")!;
-    const rule = root.querySelector<HTMLElement>(".flying-rule")!;
-    let ruleTravel = {x:0, y:0, scale:1};
     const sprites = Array.from(root.querySelectorAll<HTMLElement>(".lunar-frame"));
     const origins = Array.from(root.querySelectorAll<HTMLElement>(".exposure-origin"));
     const plates = origins.map(origin => origin.querySelector<HTMLElement>("figure")!);
@@ -38,6 +34,9 @@ export function LandingStudio({question, study}: { question: FeaturedQuestion; s
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
     let distances: {x: number; y: number; scale: number}[] = [];
+    let coverTop = 0;
+    let lastProgress = -1;
+    let lastTile = -1;
     let hold = 0;
     let stageHeight = 1;
     let lastPosition = -1;
@@ -49,10 +48,11 @@ export function LandingStudio({question, study}: { question: FeaturedQuestion; s
       const sample = position * (illumination.length - 1);
       const index = Math.min(20, Math.floor(sample));
       const nearest = Math.round(sample);
-      sprites.forEach((sprite, i) => {
+      if (index !== lastTile) sprites.forEach((sprite, i) => {
         const tile = Math.min(20, index + i);
         sprite.style.backgroundPosition = `${tile % 5 * 25}% ${Math.floor(tile / 5) * 25}%`;
       });
+      lastTile = index;
       sprites[1].style.opacity = String(sample - index);
       stage.style.setProperty("--observation", String(position));
       stage.style.setProperty("--focus", String(Math.sin(Math.PI * position)));
@@ -66,33 +66,34 @@ export function LandingStudio({question, study}: { question: FeaturedQuestion; s
     }
     function draw() {
       frame = 0;
-      const rect = cover.getBoundingClientRect();
+      const offset = scrollY - coverTop;
       const travel = Math.max(1, stageHeight * .88);
-      const progress = clamp((-rect.top - hold) / travel);
-      const still = motion.matches || document.documentElement.classList.contains("reduce-motion");
-      const observation = still || !hold ? manualIndex / 20 : clamp(-rect.top / hold);
+      const progress = clamp((offset - hold) / travel);
+      const still = quietPlayback(root, motion);
+      const observation = still || !hold ? manualIndex / 20 : clamp(offset / hold);
       const t = progress * progress * (3 - 2 * progress);
+      showTime(observation);
+      if (lastProgress === t) return;
+      lastProgress = t;
       root.dataset.motion = still ? "still" : "on";
       root.style.setProperty("--progress", String(still ? 0 : t));
-      showTime(observation);
-      rule.style.transform = `translate3d(${ruleTravel.x*t}px,${ruleTravel.y*t}px,0) scaleX(${1 + (ruleTravel.scale-1)*t})`;
       plates.forEach((plate,i) => {
         const { x, y, scale } = distances[i];
-        plate.style.transform = still ? "" : `translate3d(${x*t}px,${y*t}px,0) scale(${1+(scale-1)*t})`;
+        const cue = clamp((progress - i * .045) / .865);
+        const step = cue * cue * (3 - 2 * cue);
+        const arc = Math.sin(step * Math.PI);
+        plate.style.transform = still ? "" : `translate3d(${x*step}px,${y*step - arc*stageHeight*.11}px,0) scale(${1+(scale-1)*step})`;
       });
     }
     function schedule() { if (!frame) frame = requestAnimationFrame(draw); }
     function measure() {
+      root.closest(".lunar-home")!.toggleAttribute("data-play-motion", !quietPlayback(root,motion));
       const stageRect = stage.getBoundingClientRect(), coverRect = cover.getBoundingClientRect();
+      coverTop = coverRect.top + scrollY;
+      lastProgress = -1;
       stageHeight = stageRect.height;
       hold = Math.max(0, coverRect.height - stageHeight);
       const remainingHold = coverRect.bottom - stageRect.bottom;
-      const start = blank.getBoundingClientRect(), finish = answer.getBoundingClientRect();
-      const realZoom = stageRect.width / parseFloat(getComputedStyle(stage).width);
-      rule.style.left = (start.left - stageRect.left)/realZoom + "px";
-      rule.style.top = (start.bottom - stageRect.top)/realZoom + "px";
-      rule.style.width = start.width/realZoom + "px";
-      ruleTravel = {x:(finish.left-start.left)/realZoom,y:(finish.bottom-start.bottom-remainingHold)/realZoom,scale:finish.width/start.width};
       distances = origins.map((origin,i) => {
         const a = origin.getBoundingClientRect(), b = targets[i].getBoundingClientRect();
         // The app zooms its root on large screens. DOM rects include that zoom, CSS translations do not.
@@ -109,7 +110,7 @@ export function LandingStudio({question, study}: { question: FeaturedQuestion; s
     scrub.addEventListener("input", seek);
     measure();
     const observer = new ResizeObserver(measure);
-    [cover, stage, blank, answer, ...origins, ...targets, root].forEach(el => observer.observe(el));
+    [cover, stage, ...origins, ...targets, root].forEach(el => observer.observe(el));
     const preferences = new MutationObserver(measure);
     preferences.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     addEventListener("scroll",schedule,{ passive:true });
@@ -121,13 +122,12 @@ export function LandingStudio({question, study}: { question: FeaturedQuestion; s
       <header className="atlas-cover"><div className="atlas-stage">
         <div className="cover-copy">
           <h1>ScholarSAT</h1>
-          <p className="opening-passage"><span>{claim}</span>{" "}<span className="prompt-gap" aria-label="blank">_____</span>{" "}<span>{example}</span></p>
+          <p className="hero-product">Free digital SAT practice</p>
           <div className="opening-actions">
-            <Link className="read-action" href="/#passage"><span className="action-arrow" aria-hidden="true">↓</span>Try this question</Link>
-            <Link className="math-entry" href="/practice?section=math">Practice math <span aria-hidden="true">↗</span></Link>
+            <Link className="read-action" href="/#passage" onNavigate={event => turnTo("passage",event)}><span className="action-arrow" aria-hidden="true">↓</span>Try reading &amp; writing</Link>
+            <Link className="math-entry" href="/practice/play?section=math&limit=5">Practice math <span aria-hidden="true">↗</span></Link>
           </div>
         </div>
-        <i className="flying-rule" aria-hidden="true"/>
         <div className="exposure-field" aria-hidden="true">
           {phases.map(p => <div className="exposure-origin" key={p.frame}><figure>
             <Image unoptimized className="moon-disc" src={`/landing/lunar/${p.frame}.webp`} alt="" width={500} height={500} loading="eager" draggable="false" />
@@ -156,7 +156,7 @@ export function LandingStudio({question, study}: { question: FeaturedQuestion; s
         <LandingQuestion question={question} pick={pick} setPick={setPick} />
       </section>
     </article>
-    <StudyDesk {...study} passage={question.passage} response={pick === null ? undefined : question.choices[pick]}
+    <StudyDesk {...study} response={pick === null ? undefined : question.choices[pick]}
       solved={pick !== null && "ABCD"[pick] === question.answer} />
   </>);
 }
