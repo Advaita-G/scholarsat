@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { StudyDesk, type StudyOptions } from "./StudyDesk";
 import { LandingQuestion, type FeaturedQuestion } from "./LandingQuestion";
 
 const phases = [
@@ -16,7 +17,9 @@ const phases = [
 const illumination = [14.57,18.72,23.28,28.21,33.43,38.87,44.47,50.16,55.84,61.45,66.92,72.16,77.11,81.69,85.86,89.54,92.71,95.32,97.34,98.77,99.6];
 const clamp = (n: number) => Math.max(0, Math.min(1,n));
 
-export function LandingStudio({question}: { question: FeaturedQuestion }) {
+export function LandingStudio({question, study}: { question: FeaturedQuestion; study: StudyOptions }) {
+  const [pick,setPick] = useState<number | null>(null);
+  const [claim, example] = question.passage.split(/\s*_{4,}\s*/);
   const story = useRef<HTMLElement>(null);
   useEffect(() => {
     const root = story.current!;
@@ -24,8 +27,10 @@ export function LandingStudio({question}: { question: FeaturedQuestion }) {
     const stage = root.querySelector<HTMLElement>(".atlas-stage")!;
     const scrub = root.querySelector<HTMLInputElement>(".phase-scrub")!;
     const readout = root.querySelector<HTMLOutputElement>(".phase-readout")!;
-    const caption = root.querySelector<HTMLElement>(".cover-deck")!;
-    const opening = caption.textContent!;
+    const blank = root.querySelector<HTMLElement>(".prompt-gap")!;
+    const answer = root.querySelector<HTMLElement>(".insertion")!;
+    const rule = root.querySelector<HTMLElement>(".flying-rule")!;
+    let ruleTravel = {x:0, y:0, scale:1};
     const sprites = Array.from(root.querySelectorAll<HTMLElement>(".lunar-frame"));
     const origins = Array.from(root.querySelectorAll<HTMLElement>(".exposure-origin"));
     const plates = origins.map(origin => origin.querySelector<HTMLElement>("figure")!);
@@ -55,16 +60,6 @@ export function LandingStudio({question}: { question: FeaturedQuestion }) {
       lastIndex = nearest;
       const day = String(3 + Math.floor((nearest + 1) / 2)).padStart(2, "0");
       const reading = `${day} Jan · ${nearest % 2 ? "00" : "12"}h UTC · ${illumination[nearest].toFixed(1)}% lit`;
-      const note = nearest === 0 ? opening : nearest < 7
-        ? "Watch the sunlit edge widen. Each mark on the scale advances the Moon by twelve hours."
-        : nearest < 20 ? "More than half the near side is now in sunlight. The shadow moves across the same craters."
-        : "Ten nights take a crescent to a nearly full Moon. For early astronomers, a repeating cycle could mark a month.";
-      if (caption.textContent !== note) {
-        caption.textContent = note;
-        if (!motion.matches && !document.documentElement.classList.contains("reduce-motion")) {
-          caption.animate([{opacity: .45, transform: "translateY(4px)"}, {opacity: 1, transform: "none"}], {duration: 180, easing: "ease-out"});
-        }
-      }
       readout.value = reading;
       scrub.value = String(nearest);
       scrub.setAttribute("aria-valuetext", reading);
@@ -80,6 +75,7 @@ export function LandingStudio({question}: { question: FeaturedQuestion }) {
       root.dataset.motion = still ? "still" : "on";
       root.style.setProperty("--progress", String(still ? 0 : t));
       showTime(observation);
+      rule.style.transform = `translate3d(${ruleTravel.x*t}px,${ruleTravel.y*t}px,0) scaleX(${1 + (ruleTravel.scale-1)*t})`;
       plates.forEach((plate,i) => {
         const { x, y, scale } = distances[i];
         plate.style.transform = still ? "" : `translate3d(${x*t}px,${y*t}px,0) scale(${1+(scale-1)*t})`;
@@ -91,6 +87,12 @@ export function LandingStudio({question}: { question: FeaturedQuestion }) {
       stageHeight = stageRect.height;
       hold = Math.max(0, coverRect.height - stageHeight);
       const remainingHold = coverRect.bottom - stageRect.bottom;
+      const start = blank.getBoundingClientRect(), finish = answer.getBoundingClientRect();
+      const realZoom = stageRect.width / parseFloat(getComputedStyle(stage).width);
+      rule.style.left = (start.left - stageRect.left)/realZoom + "px";
+      rule.style.top = (start.bottom - stageRect.top)/realZoom + "px";
+      rule.style.width = start.width/realZoom + "px";
+      ruleTravel = {x:(finish.left-start.left)/realZoom,y:(finish.bottom-start.bottom-remainingHold)/realZoom,scale:finish.width/start.width};
       distances = origins.map((origin,i) => {
         const a = origin.getBoundingClientRect(), b = targets[i].getBoundingClientRect();
         // The app zooms its root on large screens. DOM rects include that zoom, CSS translations do not.
@@ -107,21 +109,26 @@ export function LandingStudio({question}: { question: FeaturedQuestion }) {
     scrub.addEventListener("input", seek);
     measure();
     const observer = new ResizeObserver(measure);
-    [cover, stage, ...origins, ...targets, root].forEach(el => observer.observe(el));
+    [cover, stage, blank, answer, ...origins, ...targets, root].forEach(el => observer.observe(el));
     const preferences = new MutationObserver(measure);
     preferences.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     addEventListener("scroll",schedule,{ passive:true });
     motion.addEventListener("change",measure);
     return () => { cancelAnimationFrame(frame); observer.disconnect(); preferences.disconnect(); removeEventListener("scroll",schedule); motion.removeEventListener("change",measure); scrub.removeEventListener("input",seek); };
   }, []);
-  return (
+  return (<>
     <article className="atlas measure" ref={story}>
       <header className="atlas-cover"><div className="atlas-stage">
         <div className="cover-copy">
-          <h1>Reading <br />the Moon.</h1>
-          <p className="cover-deck">Explore ten nights of lunar change, then try a ScholarSAT passage about how ancient astronomers kept time.</p>
-          <Link className="read-action" href="/#passage"><span className="action-arrow" aria-hidden="true">↓</span>Enter the passage</Link>
+          <h1>ScholarSAT</h1>
+          <p className="cover-deck">Free practice for the digital SAT. Start with a missing word.</p>
+          <p className="opening-passage"><span>{claim}</span>{" "}<span className="prompt-gap" aria-label="blank">_____</span>{" "}<span>{example}</span></p>
+          <div className="opening-actions">
+            <Link className="read-action" href="/#passage"><span className="action-arrow" aria-hidden="true">↓</span>Try this question</Link>
+            <Link className="math-entry" href="/practice?section=math">Practice math <span aria-hidden="true">↗</span></Link>
+          </div>
         </div>
+        <i className="flying-rule" aria-hidden="true"/>
         <div className="exposure-field" aria-hidden="true">
           {phases.map(p => <div className="exposure-origin" key={p.frame}><figure>
             <Image unoptimized className="moon-disc" src={`/landing/lunar/${p.frame}.webp`} alt="" width={500} height={500} loading="eager" draggable="false" />
@@ -147,8 +154,10 @@ export function LandingStudio({question}: { question: FeaturedQuestion }) {
           </div>)}</div>
           <figcaption>Moon phase sequence, January 2025.<br /><a href="https://svs.gsfc.nasa.gov/5415/">NASA Goddard / Ernie Wright ↗</a></figcaption>
         </figure>
-        <LandingQuestion question={question} />
+        <LandingQuestion question={question} pick={pick} setPick={setPick} />
       </section>
     </article>
-  );
+    <StudyDesk {...study} passage={question.passage} response={pick === null ? undefined : question.choices[pick]}
+      solved={pick !== null && "ABCD"[pick] === question.answer} />
+  </>);
 }

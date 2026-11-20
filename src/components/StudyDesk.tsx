@@ -13,18 +13,21 @@ const stops = [
   { id: "enter", label: "Enter ScholarSAT" },
 ];
 
-export function StudyDesk({ counts, total, modules, signedIn, passage }: { passage: string; signedIn: boolean; counts: Record<string, number>; total: number; modules: TestModule[] }) {
+export type StudyOptions = {signedIn: boolean; counts: Record<string, number>; total: number; modules: TestModule[]};
+export function StudyDesk({ counts, total, modules, signedIn, passage, response, solved }: StudyOptions & {
+  passage: string; response?: string; solved: boolean;
+}) {
   const [chosen, setChosen] = useState<ReturnType<typeof practiceSet> | null>(null);
   const set = chosen ?? practiceSet(counts, "rw", "Transitions");
   const [moduleIndex,setModuleIndex] = useState(0);
-  const destination = chosen?.n ? chosen : null;
+  const destination = set.n && (chosen || solved) ? set : null;
   const [chapter,setChapter] = useState(0);
 
   return (
-    <section className="study-desk measure" aria-labelledby="desk-title">
+    <section id="book" className="study-desk measure" aria-labelledby="desk-title">
       <div className="desk-contents">
         <h2 id="desk-title" className="sr-only">Inside ScholarSAT</h2>
-        <StudyFolio modules={modules} index={moduleIndex} skill={set.selected} count={set.n} passage={passage} onChapter={setChapter} />
+        <StudyFolio modules={modules} index={moduleIndex} skill={set.selected} count={set.n} passage={passage} response={response} solved={solved} onChapter={setChapter} />
         <nav aria-label="Study options">
           {stops.map(({ id, label },i) => (
             <Link key={id} href={"/#" + id} aria-current={chapter === i ? "location" : undefined}>
@@ -43,6 +46,7 @@ export function StudyDesk({ counts, total, modules, signedIn, passage }: { passa
         <section className="desk-panel" id="tests" aria-label="Mock tests"><TestTiming modules={modules} index={moduleIndex} onChange={setModuleIndex} /></section>
         <section className="desk-panel" id="tools" aria-labelledby="tools-title">
           <h3 id="tools-title">Review your work</h3>
+          {response && <p className="study-attempt">You chose <strong>{response}</strong> {solved ? "to introduce the Babylonian example." : "for the lunar passage."} <Link href="/#passage">{solved ? "Read the explanation" : "Try another answer"} ↗</Link></p>}
           <div className="tool-paths">
             <Link href="/review"><strong>Mistake review</strong><span>Retry questions you missed.</span><b aria-hidden="true">↗</b></Link>
             <Link href="/diagnostics"><strong>Skill diagnostics</strong><span>See your accuracy by skill.</span><b aria-hidden="true">↗</b></Link>
@@ -57,6 +61,7 @@ export function StudyDesk({ counts, total, modules, signedIn, passage }: { passa
           <Link className="entry-link" href={destination ? destination.href : signedIn ? "/dashboard" : "/practice"}>
             {destination ? "Start my set" : signedIn ? "Open my dashboard" : "Open the question bank"} <span className="entry-port" aria-hidden="true">↗</span>
           </Link>
+          {destination && <Link className="ink-link" href="/practice">Open the question bank</Link>}
         </section>
       </div>
     </section>

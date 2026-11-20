@@ -3,8 +3,8 @@ import { getUser } from "@/lib/auth";
 import { BY_ID, counts } from "@/lib/bank";
 import { MODULES } from "@/lib/tests";
 import { LandingStudio } from "@/components/LandingStudio";
+import { ScholarOpening } from "@/components/ScholarOpening";
 import { LandingNav } from "@/components/LandingNav";
-import { StudyDesk } from "@/components/StudyDesk";
 import "@/components/landing.css";
 
 export const dynamic = "force-dynamic";
@@ -17,11 +17,12 @@ export default async function Landing() {
   return (
     <div className="lunar-home">
       <Link className="lunar-skip" href="/#passage">Skip to practice</Link>
+      <ScholarOpening />
       <LandingNav signedIn={!!user} />
       <main className="practice-journey">
         <LandingStudio question={{ passage: question.passage, stem: question.stem, choices: question.choices,
-          answer: question.answer, explanation: question.explanation }} />
-        <StudyDesk passage={question.passage} signedIn={!!user} modules={MODULES} counts={bank.bySkill} total={bank.total} />
+          answer: question.answer, explanation: question.explanation }}
+          study={{signedIn:!!user,modules:MODULES,counts:bank.bySkill,total:bank.total}} />
       </main>
       <footer className="lunar-footer measure">
         <div><strong>ScholarSAT</strong><span>Free SAT practice by <a href="https://codestarters.org">CodeStarters</a>.</span></div>

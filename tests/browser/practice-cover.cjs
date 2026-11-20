@@ -18,8 +18,8 @@ async function verify() {
       page.on("pageerror", error => errors.push(error.message));
       await page.goto(url);
       await page.locator(".atlas[data-motion]").waitFor();
-      await page.evaluate(() => Promise.all([document.fonts.ready, ...Array.from(document.images, image => image.decode())]));
-      assert.match(await page.getByRole("heading", { level: 1 }).innerText(), /Reading\s+the Moon/);
+      await page.evaluate(() => Promise.all([document.fonts.ready, ...Array.from(document.querySelectorAll(".atlas img"), image => image.decode())]));
+      assert.match(await page.getByRole("heading", { level: 1 }).innerText(), /^ScholarSAT$/);
       assert.equal(await page.getByText("From the question bank", {exact: false}).count(), 0);
       assert.ok((await page.locator("#passage-title").evaluate(el => getComputedStyle(el).fontFamily)).includes("Mona Sans"));
       assert.equal(await page.locator(".cover-copy").getByText(/Free SAT practice/i).count(), 0);
@@ -59,7 +59,8 @@ async function verify() {
       await settle(page);
       assert.equal(await reading.innerText(), initial);
 
-      await page.getByRole("link", { name: "Enter the passage" }).click();
+      await page.getByRole("link", { name: "Try this question" }).click();
+      await page.waitForURL("**/#passage");
       await settle(page);
       if (reducedMotion !== "reduce") {
         assert.ok(await page.evaluate(() =>
@@ -88,6 +89,30 @@ async function verify() {
       };
       await chapter("#bank");
       assert.equal(await folio.getAttribute("data-spread"),"1");
+      await page.locator(".jacket-plate").evaluate(image => image.decode());
+      await chapter("#bank");
+      const fold = await page.locator(".panorama-half").evaluateAll(halves => halves.map(el => {
+        const r = el.getBoundingClientRect();
+        return {left:r.left, right:r.right, top:r.top};
+      }));
+      assert.ok(Math.abs(fold[0].right-fold[1].left) < 3 && Math.abs(fold[0].top-fold[1].top) < 3, "The panoramic plate should meet at the gutter");
+      const binding = await page.locator(".folio-binding").boundingBox();
+      const hand = {x: binding.x + binding.width * .78, y: binding.y + binding.height * .47};
+      await page.mouse.move(hand.x,hand.y);
+      await page.mouse.down();
+      await page.mouse.move(hand.x-binding.width*.46,hand.y,{steps:5});
+      await settle(page);
+      if (reducedMotion !== "reduce") {
+        const angle = await page.locator(".folio-leaf").nth(1).evaluate(el => parseFloat(el.style.getPropertyValue("--angle")));
+        assert.ok(angle < -5 && angle > -172,"A held page should follow the hand");
+      }
+      await page.mouse.move(hand.x,hand.y,{steps:4});
+      await page.mouse.up();
+      await folio.focus();
+      await page.keyboard.press("End");
+      await page.waitForFunction(() => document.querySelector(".folio-stage").getAttribute("aria-valuetext") === "Back cover");
+      await page.keyboard.press("Home");
+      await page.waitForFunction(() => document.querySelector(".folio-stage").getAttribute("aria-valuetext") === "Front cover");
       await chapter("#tests");
       assert.equal(await folio.getAttribute("data-spread"),"2");
       const leafAngle = () => page.locator(".folio-leaf").nth(1).evaluate(el => parseFloat(el.style.getPropertyValue("--angle")));
@@ -106,6 +131,7 @@ async function verify() {
       assert.equal(await page.locator(".response-print [data-selected=true] i").count(),22);
       await chapter("#tools");
       assert.equal(await folio.getAttribute("data-spread"),"3");
+      assert.equal(await page.locator(".proof-key dd").first().innerText(),"For example,");
       await page.getByRole("link",{name:/Retry questions you missed/}).waitFor();
       await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
       await settle(page);

@@ -184,7 +184,7 @@ export function PracticePlayer({ items, signedIn, title, backHref = "/practice" 
         {!q ? (
           <div className="flex flex-1 items-center justify-center"><Owl size={72} mood="loading" title="Loading question" /></div>
         ) : (
-          <div className="scroll-thin flex min-h-0 flex-1 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
+          <div key={q.id} className="question-leaf scroll-thin flex min-h-0 flex-1 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
             <section className="scroll-thin border-b border-line px-6 py-7 lg:w-1/2 lg:overflow-y-auto lg:border-b-0 lg:border-r-4 lg:border-r-surface-2 lg:px-9 lg:py-9" aria-label={split ? "Passage" : "Question"}>
               <div className="mx-auto w-full max-w-[720px]">{split ? <Passage q={q} /> : <Rich text={q.stem} className="text-[18px] text-ink" />}</div>
             </section>

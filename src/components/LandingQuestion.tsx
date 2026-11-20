@@ -15,8 +15,9 @@ function emphasize(text: string, phrase: string) {
   return at === -1 ? text : <>{text.slice(0,at)}<mark>{phrase}</mark>{text.slice(at + phrase.length)}</>;
 }
 
-export function LandingQuestion({ question }: { question: FeaturedQuestion }) {
-  const [pick, setPick] = useState<number | null>(null);
+export function LandingQuestion({ question, pick, setPick }: {
+  question: FeaturedQuestion; pick: number | null; setPick: (index: number) => void;
+}) {
   const [preview, setPreview] = useState<number | null>(null);
   const typesetWord = useRef<HTMLSpanElement>(null);
   const source = useRef<DOMRect | null>(null);
