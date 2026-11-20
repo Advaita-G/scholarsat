@@ -27,9 +27,9 @@ export function ScholarOpening() {
     const arrival = lens?.animate([
       {translate:"15% 10%", rotate:"-13deg", scale:"1.28"},
       {translate:"0 0", rotate:"0deg", scale:"1"}
-    ], {duration:950, delay:Math.max(0,1340-Number(flight.currentTime)), easing:"cubic-bezier(.19,.76,.19,1)", fill:"backwards"});
+    ], {duration:950, delay:Math.max(0,1720-Number(flight.currentTime)), easing:"cubic-bezier(.19,.76,.19,1)", fill:"backwards"});
     document.fonts.ready.then(() => {
-      if (!layer.hidden && Number(flight.currentTime) < 1350) aim();
+      if (!layer.hidden && Number(flight.currentTime) < 1720) aim();
     });
     target.style.opacity = "0";
     function finish() {
@@ -48,6 +48,6 @@ export function ScholarOpening() {
     };
   }, []);
   return <div ref={sheet} className="scholar-opening" aria-hidden="true">
-    <div className="opening-paper"/><div className="opening-word">ScholarSAT</div>
+    <div className="opening-paper"/><div className="opening-word"><span>ScholarSAT</span></div>
   </div>;
 }

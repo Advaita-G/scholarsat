@@ -271,7 +271,7 @@ html[data-theme="dark"] .lunar-home {
 .opening-actions { display:flex; align-items:center; gap:20px; margin-top:12px; }
 .opening-actions .read-action { margin:0; }
 .math-entry { display:inline-flex; align-items:center; gap:6px; min-height:44px; font-size:14px; text-decoration:underline; text-underline-offset:4px; }
-.scholar-opening { display:none; position:fixed; z-index:90; inset:0; place-items:center; pointer-events:none; animation:opening-done 2.05s step-end forwards; }
+.scholar-opening { display:none; position:fixed; z-index:90; inset:0; place-items:center; pointer-events:none; animation:opening-done 2.45s step-end forwards; }
 @media(scripting:enabled) and (prefers-reduced-motion:no-preference) {
   html:not(.reduce-motion):not(:has(:target)) .scholar-opening:not([hidden]) { display:grid; }
 }
@@ -280,11 +280,19 @@ html[data-theme="dark"] .lunar-home {
 }
 @keyframes opening-done { to { visibility:hidden; } }
 
-.opening-paper { position:absolute; inset:0; background:#151918; animation:open-exposure 2.05s both; }
-.opening-word { position:relative; width:max-content; transform-origin:top left; font-size:clamp(56px,15vw,245px); color:#fff8e8; animation:word-flight 2.05s both; }
-@keyframes open-exposure { 0%,67% { opacity:1; } 100% { opacity:0; } }
+.opening-paper { position:absolute; inset:0; background:#151918; animation:open-exposure 2.45s both; }
+.opening-word { position:relative; width:max-content; transform-origin:top left; font-size:clamp(56px,15vw,245px); color:#fff8e8; animation:word-flight 2.45s both; }
+.opening-word > span {
+  display:block; transform-origin:50% 80%; animation:word-arrive .44s both;
+}
+@keyframes word-arrive {
+  0% { opacity:0; transform:translate3d(0,.32em,0) scale(.84); animation-timing-function:cubic-bezier(.2,.78,.22,1); }
+  72% { opacity:1; transform:translate3d(0,-.012em,0) scale(1.015); animation-timing-function:ease-out; }
+  100% { opacity:1; transform:none; }
+}
+@keyframes open-exposure { 0%,72% { opacity:1; } 100% { opacity:0; } }
 @keyframes word-flight {
-  0%,67% { transform:none; animation-timing-function:cubic-bezier(.42,0,.18,1); }
+  0%,72% { transform:none; animation-timing-function:cubic-bezier(.42,0,.18,1); }
   100% { transform:var(--landing,none); }
 }
 @media(min-width:761px) { .atlas[data-motion="on"] .cover-copy { transform:none; } }

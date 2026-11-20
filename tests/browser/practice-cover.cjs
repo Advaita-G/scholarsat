@@ -16,13 +16,24 @@ async function verify() {
       page.setDefaultTimeout(10000);
       const errors = [];
       page.on("pageerror", error => errors.push(error.message));
-      await page.goto(url);
+      await page.addInitScript(() => {
+        document.addEventListener("animationstart", event => {
+          if (event.animationName === "word-arrive") {
+            const arrival = event.target.getAnimations().find(animation => animation.animationName === "word-arrive").effect;
+            window.wordArrival = arrival.getTiming().duration;
+            window.wordStartsHidden = Number(arrival.getKeyframes()[0].opacity) === 0;
+          }
+          if (event.animationName !== "word-flight") return;
+          const effect = event.target.getAnimations().find(animation => animation.animationName === "word-flight")?.effect;
+          if (effect) window.openingHold = effect.getTiming().duration * effect.getKeyframes()[1].offset;
+        });
+      });
+      await page.goto(url, {waitUntil:"domcontentloaded"});
       await page.locator(".atlas[data-motion]").waitFor();
       if (reducedMotion !== "reduce") {
-        const hold = await page.locator(".opening-word").evaluate(el => {
-          const effect = el.getAnimations()[0]?.effect;
-          return effect && effect.getTiming().duration * effect.getKeyframes()[1].offset;
-        });
+        await page.waitForFunction(() => typeof window.openingHold === "number");
+        const hold = await page.evaluate(() => window.openingHold - window.wordArrival);
+        assert.ok(await page.evaluate(() => window.wordStartsHidden && window.wordArrival > 0));
         assert.ok(hold >= 1300, "The centered wordmark needs a readable hold");
       }
       await page.evaluate(() => Promise.all([document.fonts.ready, ...Array.from(document.querySelectorAll(".atlas img"), image => image.decode())]));
@@ -47,7 +58,16 @@ async function verify() {
       assert.equal((await reading.innerText()) === initial, reducedMotion === "reduce");
       assert.equal((await sprite.evaluate(el => getComputedStyle(el).backgroundPosition)) === firstTile, reducedMotion === "reduce");
       if (reducedMotion !== "reduce") {
-        assert.ok(Math.abs((await page.locator(".atlas-stage").boundingBox()).y) < 2);
+        for (const fraction of [.15, .5, .85]) {
+          await page.evaluate(fraction => {
+            const cover = document.querySelector(".atlas-cover").getBoundingClientRect();
+            const stage = document.querySelector(".atlas-stage").getBoundingClientRect();
+            scrollTo(0, scrollY + cover.top + (cover.height - stage.height) * fraction);
+          }, fraction);
+          await settle(page);
+          const stage = await page.locator(".atlas-stage").boundingBox();
+          assert.ok(Math.abs(stage.y) < 2 && stage.y + stage.height >= height - 1, "The pinned lunar scene must fill the viewport");
+        }
         await page.evaluate(() => {
           const cover = document.querySelector(".atlas-cover").getBoundingClientRect();
           const stage = document.querySelector(".atlas-stage").getBoundingClientRect();
@@ -194,7 +214,7 @@ async function verify() {
     full.searchParams.set("motion","full");
     await cinema.goto(full.href);
     await cinema.locator(".atlas[data-motion=on]").waitFor();
-    assert.equal(await cinema.locator(".opening-word").evaluate(el => getComputedStyle(el).animationDuration),"2.05s");
+    assert.equal(await cinema.locator(".opening-word").evaluate(el => getComputedStyle(el).animationDuration),"2.45s");
     assert.equal(await cinema.locator(".atlas-stage").evaluate(el => getComputedStyle(el).position),"sticky");
     await cinema.goto(full.href + "#enter");
     await cinema.locator('.folio-stage[data-spread="4"]').waitFor();
