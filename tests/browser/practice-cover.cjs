@@ -44,6 +44,11 @@ async function verify() {
       assert.equal(await page.getByText("Rehearse the full test.").count(),0);
       assert.equal(await page.getByText(/Start with a missing word/).count(),0);
       assert.equal(await page.getByText(/Several ancient cultures developed calendars/).count(),1);
+      const headerNav = page.getByRole("navigation", {name:width < 1024 ? "Mobile navigation" : "Main navigation"});
+      if (width < 1024) await page.getByLabel("Navigation menu").click();
+      assert.deepEqual(await headerNav.getByRole("link").allTextContents(), ["Question bank", "Mock tests", "Tools", "FAQ", " GitHub", ...(width < 1024 ? ["Log in"] : [])]);
+      assert.equal(await headerNav.getByRole("link", {name:"Question bank"}).getAttribute("href"), "/practice/play?section=rw&limit=5");
+      if (width < 1024) await page.keyboard.press("Escape");
       const plate = page.locator(".exposure-origin figure").last();
       const transform = () => plate.evaluate(el => getComputedStyle(el).transform);
       const before = await transform();
@@ -62,11 +67,13 @@ async function verify() {
           await page.evaluate(fraction => {
             const cover = document.querySelector(".atlas-cover").getBoundingClientRect();
             const stage = document.querySelector(".atlas-stage").getBoundingClientRect();
-            scrollTo(0, scrollY + cover.top + (cover.height - stage.height) * fraction);
+            const header = document.querySelector(".landing-header").getBoundingClientRect();
+            scrollTo(0, scrollY + cover.top - header.height + (cover.height - stage.height) * fraction);
           }, fraction);
           await settle(page);
           const stage = await page.locator(".atlas-stage").boundingBox();
-          assert.ok(Math.abs(stage.y) < 2 && stage.y + stage.height >= height - 1, "The pinned lunar scene must fill the viewport");
+          const header = await page.locator(".landing-header").boundingBox();
+          assert.ok(Math.abs(header.y) < 2 && Math.abs(stage.y - header.height) < 2 && stage.y + stage.height >= height - 1, "The header and pinned lunar scene must fill the viewport");
         }
         await page.evaluate(() => {
           const cover = document.querySelector(".atlas-cover").getBoundingClientRect();

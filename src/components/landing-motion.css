@@ -20,7 +20,7 @@
   }
 
   @media(scripting:enabled) and (min-height:520px) {
-    .atlas .atlas-stage { position: sticky; top: 0; height: calc(100dvh / var(--zoom, 1)); }
+    .atlas .atlas-stage { position: sticky; top: var(--nav-height); height: calc(100dvh / var(--zoom, 1) - var(--nav-height)); }
     .atlas .atlas-cover::after { content: ""; display: block; height: min(68svh,640px); }
     .limb-scale { scale: calc(1.03 + .025 * var(--observation,0)); }
   }

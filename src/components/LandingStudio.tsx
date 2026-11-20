@@ -89,7 +89,8 @@ export function LandingStudio({question, study}: { question: FeaturedQuestion; s
     function measure() {
       root.closest(".lunar-home")!.toggleAttribute("data-play-motion", !quietPlayback(root,motion));
       const stageRect = stage.getBoundingClientRect(), coverRect = cover.getBoundingClientRect();
-      coverTop = coverRect.top + scrollY;
+      const navHeight = root.closest(".lunar-home")!.querySelector(".landing-header")!.getBoundingClientRect().height;
+      coverTop = coverRect.top + scrollY - navHeight;
       lastProgress = -1;
       stageHeight = stageRect.height;
       hold = Math.max(0, coverRect.height - stageHeight);
@@ -104,7 +105,7 @@ export function LandingStudio({question, study}: { question: FeaturedQuestion; s
     }
     function seek() {
       manualIndex = Number(scrub.value);
-      if (hold) window.scrollTo({ top: scrollY + cover.getBoundingClientRect().top + hold * manualIndex / 20, behavior: "instant" });
+      if (hold) window.scrollTo({ top: coverTop + hold * manualIndex / 20, behavior: "instant" });
       schedule();
     }
     scrub.addEventListener("input", seek);

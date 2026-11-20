@@ -6,6 +6,7 @@
   src:url("https://cdn.fontshare.com/wf/OTYYUXNCZZI6EV6RSCAQFTGEGQ7JTD6B/45FLQUBI6DWIP6NYFVBTMKS6YPU3VYPT/GHZ524YD2KXKRX4PZ2S7DE3HKNPE2EKH.woff2") format("woff2");
 }
 .lunar-home {
+  --nav-height: 60px;
   --sheet: #f4f1e9;
   --carbon: #242421;
   --quiet: #5e6059;
@@ -31,16 +32,19 @@ html[data-theme="dark"] .lunar-home {
 .lunar-home button,.lunar-home select { cursor: pointer; }
 .lunar-home :where(a:hover) { text-decoration-color: currentColor; }
 .measure { width: min(89.5%, 1392px); margin-inline: auto; }
-.lunar-skip { position: absolute; z-index: 5; left: 1rem; top: -8rem; padding: 10px; background: var(--sheet); }
+.lunar-skip { position: absolute; z-index: 50; left: 1rem; top: -8rem; padding: 10px; background: var(--sheet); }
 .lunar-skip:focus { top: 12px; }
-.lunar-nav,.lunar-nav nav,.masthead,.account-link,.lunar-footer,.lunar-footer nav { display: flex; align-items: center; }
-.lunar-nav { min-height: 76px; justify-content: space-between; gap: 20px; border-bottom: 1px solid var(--rule); }
-.lunar-nav a,.lunar-footer nav a { display: inline-flex; align-items: center; min-height: 44px; }
-.masthead { gap: 7px; font-size: 23px; font-weight: 660; letter-spacing: -.055em; }
-.lunar-nav nav { gap: clamp(18px,3vw,48px); }
-.lunar-nav nav a,.account-link { font-size: 14px; font-weight: 530; }
-.account-link { gap: 8px; }
-.lunar-nav :where(nav a,.account-link):hover,.lunar-footer a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.landing-header {
+  --bg: #121316; --ink: #f5f6f8; --muted: #adb0bd; --line: #23252d;
+  --red: #ff8095; --accent-fill: #a50c26; --red-700: #9f122d;
+  height: var(--nav-height); color-scheme: dark;
+}
+.landing-header nav a:hover, .landing-header a.text-muted:hover { color: var(--ink); }
+.landing-menu nav a { padding: 10px 12px; }
+.landing-menu summary::-webkit-details-marker { display: none; }
+.lunar-footer,.lunar-footer nav { display: flex; align-items: center; }
+.lunar-footer nav a { display: inline-flex; align-items: center; min-height: 44px; }
+.lunar-footer a:hover { text-decoration: underline; text-underline-offset: 4px; }
 
 .atlas { position: relative; --progress: 0; }
 .atlas-cover { position: relative; }
@@ -62,7 +66,7 @@ html[data-theme="dark"] .lunar-home {
 
 
 .reading-spread { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0,1.45fr); gap: clamp(45px, 8vw, 126px); }
-.reading-spread { padding: clamp(38px,6vw,82px) 0 clamp(32px,4.5vw,66px); scroll-margin-top: 12px; align-items: start; }
+.reading-spread { padding: clamp(38px,6vw,82px) 0 clamp(32px,4.5vw,66px); scroll-margin-top: var(--nav-height); align-items: start; }
 .lunar-archive { padding-top: 6px; }
 .archive-strip { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 9px; align-items: end; }
 .archive-slot { width: 100%; aspect-ratio: 1; }
@@ -108,8 +112,6 @@ html[data-theme="dark"] .lunar-home {
 @keyframes rule-in { from { transform: scaleX(.18); } }
 @media(max-width:760px) {
   .measure { width: calc(100% - 40px); }
-  .lunar-nav { min-height: 62px; }
-  .lunar-nav nav { display: none; }
   .atlas-stage { height: min(calc(100svh - 62px),650px); min-height: 590px; }
   .cover-copy { width: 100%; top: 28px; }
   .cover-copy h1 { font-size: clamp(64px,13vw,92px); margin: 14px 0 12px; }
@@ -136,7 +138,6 @@ html[data-theme="dark"] .lunar-home {
   .exposure-date b { display: none; }
 }
 
-.account-actions { display: flex; align-items: center; gap: 20px; font-size: 14px; }
 .footer-fine { max-width: 54ch; }
 .footer-fine summary { cursor: pointer; font-size: 13px; color: var(--quiet); }
 .footer-fine details p { font-size: 14px; margin: 8px 0; }
@@ -194,7 +195,7 @@ html[data-theme="dark"] .lunar-home {
 }
 .study-desk { display:grid; position:relative; isolation:isolate; --press:"Barlow Condensed","Arial Narrow",sans-serif; }
 .desk-contents,.study-stops { grid-area:1 / 1; }
-.desk-contents { position:sticky; top:0; align-self:start; height:100svh; display:flex; flex-direction:column; z-index:1; }
+.desk-contents { position:sticky; top:var(--nav-height); align-self:start; height:calc(100dvh / var(--zoom,1) - var(--nav-height)); display:flex; flex-direction:column; z-index:1; }
 .study-stops { padding-top:96svh; pointer-events:none; }
 .book-stop { height:66svh; }
 .book-stop:last-child { height:100svh; }
