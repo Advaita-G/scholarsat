@@ -38,7 +38,7 @@ export function LandingQuestion({ question, pick, setPick }: {
   const [first, second] = question.passage.split(/\s*_{4,}\s*/);
   return (
     <div className="passage-copy" data-solved={correct}>
-      <h2 id="passage-title" tabIndex={-1}>Connect the ideas.</h2>
+      <h2 id="passage-title" tabIndex={-1}>Which word fits?</h2>
       <p className="reading-text">
         <span className="claim">{emphasize(first,"Several ancient cultures")}</span>{" "}
         <span className="insertion" data-filled={shown !== null}>

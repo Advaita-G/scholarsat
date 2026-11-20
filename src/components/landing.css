@@ -1,5 +1,9 @@
 @import "./practice-type.css";
 
+@font-face {
+  font-family:"Supreme"; font-weight:500; font-style:normal; font-display:swap;
+  src:url("https://cdn.fontshare.com/wf/OTYYUXNCZZI6EV6RSCAQFTGEGQ7JTD6B/45FLQUBI6DWIP6NYFVBTMKS6YPU3VYPT/GHZ524YD2KXKRX4PZ2S7DE3HKNPE2EKH.woff2") format("woff2");
+}
 .lunar-home {
   --sheet: #f4f1e9;
   --carbon: #242421;
@@ -44,7 +48,6 @@ html[data-theme="dark"] .lunar-home {
 .cover-copy { position: absolute; z-index: 2; top: clamp(40px,7vh,82px); left: 0; width: 42%; }
 .plate-index,.archive-strip > div > span { text-transform: uppercase; letter-spacing: .075em; }
 .cover-copy h1 { margin: 17px 0 13px; font: 400 clamp(76px,min(8.7vw,13vh),143px)/.88 var(--display); letter-spacing: -.045em; }
-.cover-deck { max-width: 33ch; font-size: clamp(15px,1.26vw,19px); line-height: 1.5; color: var(--quiet); }
 .read-action { display: inline-flex; align-items: center; min-height: 44px; gap: 11px; margin-top: 17px; font-weight: 580; }
 .action-arrow { display: inline-grid; place-items: center; width: 37px; height: 37px; border: 1px solid var(--signal); border-radius: 50%; color: var(--signal); transition: background .18s,color .18s; }
 .read-action:hover .action-arrow { color: var(--sheet); background: var(--signal); }
@@ -59,7 +62,7 @@ html[data-theme="dark"] .lunar-home {
 .plate-index { position: absolute; inset: auto 0 15px; display: flex; align-items: center; gap: 13px; color: var(--quiet); }
 
 
-.reading-spread,.study-desk { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0,1.45fr); gap: clamp(45px, 8vw, 126px); }
+.reading-spread { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0,1.45fr); gap: clamp(45px, 8vw, 126px); }
 .reading-spread { padding: clamp(38px,6vw,82px) 0 clamp(32px,4.5vw,66px); scroll-margin-top: 12px; align-items: start; }
 .lunar-archive { padding-top: 6px; }
 .archive-strip { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 9px; align-items: end; }
@@ -69,7 +72,7 @@ html[data-theme="dark"] .lunar-home {
 .lunar-archive figcaption { color: var(--quiet); margin-top: 12px; letter-spacing: 0; }
 .lunar-archive figcaption a { text-decoration: underline; text-underline-offset: 3px; }
 .passage-copy { min-width: 0; }
-.passage-copy h2,.desk-panel h3,.desk-contents h2,.journey-entry h2 {
+.passage-copy h2 {
   font: 630 clamp(30px,2.8vw,46px)/1.06 var(--sans);
   font-stretch: 94%; letter-spacing: -.046em;
 }
@@ -83,7 +86,7 @@ html[data-theme="dark"] .lunar-home {
   background: linear-gradient(var(--signal-wash),var(--signal-wash)) left 90% / 100% .22em no-repeat;
 }
 .word-bank { border: 0; margin: 21px 0 0; padding: 0; min-width: 0; }
-.word-bank legend,.desk-panel > p { font-size: 15px; color: var(--quiet); }
+.word-bank legend { font-size: 16px; color: var(--carbon); }
 .word-bank legend { margin-bottom: 11px; }
 .word-bank > div { display: grid; grid-template-columns: repeat(2,1fr); border-top: 1px solid var(--rule); column-gap: 23px; }
 .word-bank button { display: flex; gap: 12px; align-items: center; text-align: left; min-height: 50px; border-bottom: 1px solid var(--rule); font-weight: 540; transition: color .15s, background .15s; }
@@ -96,18 +99,6 @@ html[data-theme="dark"] .lunar-home {
 .reading-note strong { font-weight: 650; }
 .ink-link { display: inline-flex; gap: 12px; align-items: center; min-height: 44px; margin-top: 6px; color: var(--signal); text-decoration: underline; text-underline-offset: 4px; font-weight: 550; }
 
-.study-desk { border-top: 1px solid var(--rule); padding-block: clamp(28px,4vw,62px); }
-.desk-panel > p { margin-top: 9px; }
-.set-picker { margin-top: 16px; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 14px; align-items: end; }
-.subject-choices { display: flex; gap: 18px; grid-column: 1/-1; border-bottom: 1px solid var(--rule); }
-.subject-choices button { min-height: 42px; color: var(--quiet); font-weight: 550; }
-.subject-choices button[aria-pressed="true"] { box-shadow: inset 0 -2px var(--signal); color: var(--carbon); }
-.set-picker label { display: grid; gap: 4px; font-size: 13px; }
-.set-picker select { padding: 8px; min-height: 44px; border: 1px solid var(--rule); width: 100%; background: var(--sheet); color: var(--carbon); font: 500 14px var(--sans); }
-.set-start { display: inline-grid; place-content: center; min-height: 44px; padding: 7px 15px; background: var(--carbon); color: var(--sheet); font-weight: 560; }
-.tool-paths a { display: grid; grid-template-columns: 1fr auto; align-items: center; border-bottom: 1px solid var(--rule); padding: 8px 0; }
-.tool-paths span { grid-column: 1; font-size: 14px; color: var(--quiet); }
-.tool-paths b { grid-column: 2; grid-row: span 2 / 3; color: var(--signal); }
 .lunar-footer { justify-content: space-between; gap: 15px; flex-wrap: wrap; padding-block: 20px; border-top: 1px solid var(--rule); }
 .lunar-footer strong { display: block; font-size: 20px; letter-spacing: -.035em; }
 .lunar-footer span,.lunar-footer nav { font-size: 13px; color: var(--quiet); }
@@ -130,13 +121,12 @@ html[data-theme="dark"] .lunar-home {
   .cover-copy { width: 100%; top: 28px; }
   .cover-copy h1 { font-size: clamp(64px,13vw,92px); margin: 14px 0 12px; }
   .cover-copy h1 br { display: none; }
-  .cover-deck { max-width: 31ch; font-size: 16px; }
   .read-action { margin-top: 12px; }
   .exposure-origin:nth-child(1) { width: 8%; left: 0; bottom: 10%; }
   .exposure-origin:nth-child(2) { width: 13%; left: 14%; bottom: 14%; }
   .exposure-origin:nth-child(3) { width: 23%; left: 31%; bottom: 18%; }
   .exposure-origin:nth-child(4) { width: 41%; right: 0; bottom: 23%; }
-  .reading-spread,.study-desk { grid-template-columns: 1fr; gap: 24px; }
+  .reading-spread { grid-template-columns: 1fr; gap: 24px; }
   .lunar-archive { display: grid; grid-template-columns: minmax(135px,1fr) minmax(100px,.8fr); align-items: end; gap: 18px; padding: 0; }
   .archive-strip { gap: 5px; }
   .archive-strip > div > span { font-size: 8px; letter-spacing: 0; margin-top: 6px; }
@@ -144,7 +134,6 @@ html[data-theme="dark"] .lunar-home {
   .reading-text { font-size: clamp(19px,4.9vw,25px); }
   .word-bank > div { gap: 0 10px; }
   .word-bank button { font-size: 15px; gap: 8px; }
-  .set-picker { grid-template-columns: 1fr; }
 }
 
 .exposure-date { position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%); white-space: nowrap; color: var(--quiet); font: 500 10px/1.4 var(--mono); text-transform: uppercase; letter-spacing: .06em; opacity: clamp(0, calc(1 - var(--progress) * 5), 1); }
@@ -162,15 +151,6 @@ html[data-theme="dark"] .lunar-home {
 .practice-journey { position: relative; isolation: isolate; }
 .archive-meter { height: 3px; background: var(--rule); margin-top: 5px; }
 .archive-meter i { display: block; height: 100%; background: var(--signal); transform-origin: left; }
-.desk-intro,.journey-entry p { color: var(--quiet); font-size: 15px; line-height: 1.55; max-width: 47ch; margin-top: 10px; }
-.journey-entry { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: clamp(30px,5vw,76px) 0; border-top: 1px solid var(--rule); }
-.entry-link { display: inline-flex; align-items: center; gap: 15px; font-weight: 600; flex-shrink: 0; }
-.entry-port { display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%; font-size: 24px; color: var(--sheet); background: var(--signal); transition: transform .2s ease-out; }
-@media (hover:hover) and (prefers-reduced-motion:no-preference) { html:not(.reduce-motion) .entry-link:hover .entry-port { transform: rotate(45deg); } }
-@media(max-width:760px) {
-  .journey-entry { display: grid; }
-  .entry-link { justify-self: end; }
-}
 @media(prefers-reduced-motion:no-preference) {
   @supports(animation-timeline:view()) {
     html:not(.reduce-motion) .archive-meter i {
@@ -187,13 +167,10 @@ html[data-theme="dark"] .lunar-home {
       animation-range: entry 0% cover 32%;
     }
     html:not(.reduce-motion) .insertion { position: relative; border-color: var(--rule); }
-    html:not(.reduce-motion) .entry-port {
-      animation: port-arrive auto linear both; animation-timeline: view(); animation-range: entry 0% entry 100%;
-    }
   }
 }
 @keyframes heading-arrive { from { transform: translateY(.48em); clip-path: inset(0 0 48% 0); } to { transform: none; clip-path: inset(0); } }
-@keyframes port-arrive { from { rotate: -45deg; } to { rotate: 0deg; } }
+
 
 /* A native scroll hold gives the observation time to develop before the plates travel. */
 .observation-lens { position: absolute; inset: 0; opacity: clamp(0, calc(1 - var(--progress) * 8), 1); }
@@ -217,7 +194,6 @@ html[data-theme="dark"] .lunar-home {
 .phase-scrub::-webkit-slider-thumb { appearance: none; background: var(--signal); width: 4px; height: 22px; border-radius: 0; }
 .phase-scrub::-moz-range-thumb { background: var(--signal); width: 4px; height: 22px; border: 0; border-radius: 0; }
 .phase-readout { font-variant-numeric: tabular-nums; color: var(--signal); }
-.cover-deck { min-height: 4.5em; }
 @media(scripting:enabled) and (prefers-reduced-motion:no-preference) and (min-height:520px) {
   html:not(.reduce-motion) .atlas .atlas-stage { position: sticky; top: 0; }
   html:not(.reduce-motion) .atlas .atlas-cover::after { content: ""; display: block; height: min(68svh,640px); }
@@ -233,8 +209,6 @@ html[data-theme="dark"] .lunar-home {
   .phase-scrub { grid-column: 1/-1; grid-row: 2; width: 100%; }
 }
 
-.journey-entry h2 { font-size: clamp(32px,4.7vw,76px); }
-.journey-entry h2 span { display: inline-block; }
 @media(prefers-reduced-motion:no-preference) {
   html:not(.reduce-motion) .passage-copy[data-solved="true"] mark {
     box-decoration-break: clone; -webkit-box-decoration-break: clone;
@@ -242,20 +216,9 @@ html[data-theme="dark"] .lunar-home {
   }
   html:not(.reduce-motion) .passage-copy[data-solved="true"] .example mark { animation-delay: .2s; }
   html:not(.reduce-motion) .word-bank button[data-state="retry"] .choice-key { animation: reconsider .28s ease-out; }
-  html:not(.reduce-motion) .tool-paths b { transition: transform .16s ease-out; }
-  html:not(.reduce-motion) .tool-paths a:is(:hover,:focus-visible) b { transform: translate(3px,-3px); }
-  @supports(animation-timeline:view()) {
-    .tool-paths { view-timeline: --tools block; }
-    html:not(.reduce-motion) .tool-paths a { animation: trace-tool linear both; animation-timeline: --tools; animation-range: entry 0% cover 21%; }
-    html:not(.reduce-motion) .tool-paths a:nth-child(2) { animation-range: entry 20% cover 27%; }
-    html:not(.reduce-motion) .tool-paths a:nth-child(3) { animation-range: entry 40% cover 33%; }
-    html:not(.reduce-motion) .journey-entry h2 span { animation: meet-entry linear both; animation-timeline: view(); animation-range: entry 0% cover 18%; }
-  }
 }
 @keyframes annotate { from {background-size: 0% .22em;} to {background-size: 100% .22em;} }
 @keyframes reconsider { 35% {transform: translateX(-3px);} 70% {transform: translateX(2px);} }
-@keyframes trace-tool { from { transform: translateX(14px); clip-path: inset(0 9% 0 0); } to { transform: none; clip-path: inset(0); } }
-@keyframes meet-entry { from { translate: .32em 0; } to { translate: 0 0; } }
 
 @media(prefers-reduced-motion:no-preference) {
   html:not(.reduce-motion) .observation-lens {
@@ -271,16 +234,39 @@ html[data-theme="dark"] .lunar-home {
 .plate-index,.archive-strip > div > span,.lunar-archive figcaption,.choice-key { font: 500 11px/1.55 var(--mono); }
 
 /* A single physical binding follows the reader from the lunar plates into their set. */
-.study-desk { scroll-margin-top:25svh; grid-template-columns: minmax(0,1.28fr) minmax(0,.85fr); align-items: start; gap: clamp(25px,5vw,85px); padding: 0; }
-.desk-contents { position: sticky; top: max(10px,calc((100svh - min(53vw,78svh,710px) - 70px)/2)); align-self: start; z-index: 2; }
-.folio-stage {
-  width: 100%; height: min(53vw,78svh,710px); position: relative; container-type: inline-size;
-  display: grid; align-items: center; --open: 0; --close: 0;
+@font-face {
+  font-family: "Barlow Condensed"; src: url("/fonts/barlow-condensed-600.woff2") format("woff2");
+  font-weight: 600; font-style: normal; font-display: swap;
 }
+.study-desk { display:grid; position:relative; isolation:isolate; --press:"Barlow Condensed","Arial Narrow",sans-serif; }
+.desk-contents,.study-stops { grid-area:1 / 1; }
+.desk-contents { position:sticky; top:0; align-self:start; height:100svh; display:flex; flex-direction:column; z-index:1; }
+.study-stops { padding-top:96svh; pointer-events:none; }
+.book-stop { height:66svh; }
+.book-stop:last-child { height:100svh; }
+.folio-stage { flex:1; min-height:0; display:grid; align-items:center; overflow:clip; container-type:inline-size; position:relative; --open:0; --close:0; --approach:1; }
+/* The same photographic crop moves from a full-width plate into the jacket. */
+.cover-exposure {
+  display:none; position:absolute; z-index:2; left:50%; pointer-events:none;
+  top:calc(50% + var(--jacket-height) * .075 * var(--approach));
+  width:calc(100% * (1 - var(--approach)) + var(--jacket-width) * var(--approach));
+  height:calc(100% * (1 - var(--approach)) + var(--jacket-height) * .63 * var(--approach));
+  transform:translate(-50%,-50%); overflow:hidden;
+  background:#232422 url("/landing/lunar/apollo-17-station-6.webp") 48% 61% / cover no-repeat;
+  filter:grayscale(1); opacity:clamp(0,calc((1 - var(--approach)) * 15),1);
+}
+.folio-stage[data-exposing="true"] .cover-exposure { display:block; }
+.exposure-credit {
+  position:absolute; inset:auto auto 6% 5%; padding:8px 12px; color:#fff9ea; background:#24231f;
+  font:600 clamp(16px,2.6vw,35px)/1 var(--press);
+  opacity:clamp(0,calc(1 - var(--approach) * 2.5),1);
+}
+.exposure-credit span { font:500 .65em var(--sans); margin-left:.65em; }
 .folio-binding {
-  width:46%; aspect-ratio:.75; position:relative; left:50%; perspective:1250px; perspective-origin:48% 41%;
-  transform:translateX(calc(-50% + var(--open)*50% + var(--close)*50%)) rotate(calc(-4deg + var(--open)*4deg + var(--close)*2deg));
-  --book-ink:#221f1b; --book-paper:#f6f1e6; --book-red:#943a2c; --book-rule:#b5ac99;
+  width:min(42%,54svh,510px); aspect-ratio:.76; position:relative; left:50%; perspective:1900px; perspective-origin:13% 47%;
+  transform:translateX(calc(-50% + var(--open)*50% + var(--close)*50%));
+  --book-ink:#201f1b; --book-paper:#faf6ea; --book-red:#9d3326; --book-rule:#9a9280;
+  color-scheme:light;
 }
 /* The block casts the resting shadow. The moving leaf carries its own narrow shadow. */
 .folio-binding::before,.folio-binding::after {
@@ -312,84 +298,6 @@ html[data-theme="dark"] .lunar-home {
   background:linear-gradient(90deg,#392816,transparent 40%,#fffbea 85%,#3e3324);
 }
 .leaf-reverse::after { transform:scaleX(-1); }
-.folio-cover,.printed-page { position:absolute; inset:0; display:flex; flex-direction:column; }
-.folio-cover {
-  background:#e7decb; padding:8% 6.7% 7.5% 15%; color:var(--book-ink);
-  background-image:repeating-linear-gradient(5deg,transparent 0 2px,#67572b06 2px 3px),repeating-linear-gradient(89deg,transparent 0 2px,#fff8e82b 2px 3px);
-}
-.folio-cover::before {
-  content:""; position:absolute; inset:0 auto 0 0; width:9%; background-color:var(--book-red);
-  background-image:linear-gradient(90deg,#31171055,transparent 15%,#f4b79d25 72%,#34170f61 82%,transparent 95%),
-    repeating-linear-gradient(0deg,transparent 0 1px,#381f172b 1px 2px),repeating-linear-gradient(90deg,transparent 0 2px,#f9d4a830 2px 3px);
-  box-shadow:1px 0 0 #f5ead6,2px 0 2px #3c291d30;
-}
-.folio-cover strong { font:400 7.6cqw/.96 var(--display); letter-spacing:-.055em; }
-.front-cover p { font:510 2.05cqw/1.15 var(--sans); margin-top:1.45cqw; }
-.jacket-plate { position:absolute; left:15%; right:6.7%; width:78.3%; top:32%; height:55%; object-fit:cover; object-position:50% 72%; filter:grayscale(1); }
-.front-cover small { display:flex; justify-content:space-between; margin-top:auto; }
-.folio-cover small,.printed-page small,.printed-page footer { font:500 clamp(7px,1.35cqw,13px)/1.3 var(--mono); }
-.printed-page { padding:8.5% 8.5% 7% 10%; background:var(--book-paper); }
-.leaf-reverse .printed-page { padding-left:8.5%; padding-right:10%; }
-.printed-page > small { padding-bottom:4%; border-bottom:1px solid var(--book-rule); color:#605a50; }
-.printed-page strong { display:block; margin-top:8%; font:400 5.55cqw/.99 var(--display); letter-spacing:-.035em; overflow-wrap:break-word; }
-.set-imprint strong { font-size:4.62cqw; }
-.set-imprint[data-long-title="true"] strong { font-size:3.55cqw; }
-.printed-page footer { margin-top:auto; color:#5b554a; }
-.panorama-half { position:absolute; inset:53% 0 auto; height:32%; background:#161614 url("/landing/lunar/taurus-littrow.webp") no-repeat; background-size:200% auto; }
-.panorama-left { background-position:left center; }
-.panorama-right { background-position:right center; }
-.module-register { display:grid; gap:2cqw; margin-block:auto; }
-.response-print section { color:#635f54; }
-.response-print section[data-selected="true"] { color:var(--book-red); }
-.response-print section div { display:grid; grid-template-columns:repeat(14,1fr); gap:.34cqw; margin-top:.6cqw; }
-.response-print section i { border:1px solid currentColor; border-radius:50%; width:75%; aspect-ratio:1; }
-.response-print section[data-selected="true"] i { background:currentColor; }
-.print-clock { display:flex; align-items:baseline; gap:.7cqw; margin-top:auto; color:var(--book-red); font:400 15cqw/.85 var(--display); letter-spacing:-.075em; }
-.print-clock span { font:400 3.9cqw/1 var(--display); letter-spacing:-.03em; }
-.module-imprint footer { margin-top:7%; padding-top:4%; border-top:1px solid var(--book-rule); }
-.proof-print p,.proof-key dd { font:400 2.55cqw/1.25 var(--display); }
-.proof-print p { margin-top:7%; }
-.proof-print mark { background:transparent; color:var(--book-red); border-bottom:1px solid currentColor; }
-.proof-key dl { margin:auto 0; }
-.proof-key dt { font:540 1.5cqw/1.4 var(--sans); color:var(--book-red); }
-.proof-key dd { padding-block:2% 7%; font-size:3.5cqw; }
-.proof-key dt + dd + dt { border-top:1px solid var(--book-rule); padding-top:7%; }
-.back-cover { justify-content:flex-end; padding:9% 16% 9% 9%; }
-.back-cover::before { left:auto; right:0; transform:scaleX(-1); }
-.jacket-credit { margin-bottom:auto; align-self:stretch; }
-.jacket-credit p { font:450 1.9cqw/1.35 var(--sans); margin-top:4%; }
-.back-cover strong { font-size:5.5cqw; padding-top:4%; border-top:1px solid var(--book-ink); }
-.desk-contents nav { display:flex; justify-content:center; gap:clamp(9px,1.6vw,24px); }
-.desk-contents nav a { display:inline-flex; align-items:center; min-height:44px; font-size:13px; color:var(--quiet); }
-.desk-contents nav [aria-current] { color:var(--signal); text-decoration:underline; text-underline-offset:5px; }
-.desk-contents nav a span { display:none; }
-.study-stops { min-width:0; }
-.desk-panel { min-height: min(82svh,790px); display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding-block: clamp(35px,6vh,80px); scroll-margin-top:7svh; }
-.desk-panel h3,.desk-panel.journey-entry h2 { font:610 clamp(32px,3.35vw,60px)/1.05 var(--sans); letter-spacing:-.055em; }
-.desk-panel > p,.desk-panel.journey-entry p { max-width:38ch; margin-top:12px; font-size:clamp(15px,1.16vw,18px); }
-.desk-panel .set-picker { width:100%; display:flex; flex-direction:column; align-items:stretch; }
-.set-picker label,.module-picker { display:grid; gap:4px; color:var(--quiet); font-size:13px; }
-.module-picker { width:100%; margin-top:22px; }
-.module-picker select,.set-picker select { min-height:46px; border:0; border-bottom:1px solid var(--rule); background:var(--sheet); color:var(--carbon); padding:5px 3px; font:530 16px var(--sans); }
-.set-start { align-self:flex-start; padding-inline:17px; }
-.desk-panel .tool-paths { width:100%; margin-top:14px; }
-.desk-panel .tool-paths a { padding:13px 0; }
-.journey-entry { border:0; gap:16px; }
-.journey-entry .entry-link { align-self:flex-start; }
-@media(max-width:760px) {
-  .study-desk { display:block; }
-  .desk-contents { top:0; background:var(--sheet); }
-  .folio-stage { height:clamp(175px,34svh,300px); max-width: min(100%,44svh); margin:auto; }
-  .folio-binding { width:44%; }
-  .desk-contents nav { gap:12px; border-bottom:1px solid var(--rule); }
-  .desk-contents nav a { font-size:clamp(10px,3vw,13px); }
-  .desk-panel { min-height:56svh; scroll-margin-top:calc(clamp(175px,34svh,300px) + 45px); padding:28px 1px; }
-}
-@media(max-width:760px) and (max-height:560px) {
-  .desk-contents { position:static; }
-  .desk-panel { min-height:auto; padding-block:35px; scroll-margin-top:16px; }
-}
-
 .typeset-word { position:relative; z-index:2; display:inline-block; transform-origin:top left; }
 .word-bank > div { display:flex; flex-wrap:wrap; gap:0 clamp(15px,2.3vw,36px); border-top:0; }
 .word-bank button { border-bottom:1px solid var(--rule); gap:6px; }
@@ -402,16 +310,9 @@ html[data-theme="dark"] .lunar-home {
 .folio-leaf { cursor:grab; }
 .folio-stage[data-held] .folio-leaf { cursor:grabbing; }
 .folio-leaf img { -webkit-user-drag:none; pointer-events:none; }
-.folio-gesture {
-  position:absolute; inset:auto 0 0; text-align:center; color:var(--quiet);
-  font:450 11px/1.4 var(--sans); pointer-events:none;
-}
-@media(max-width:760px) { .folio-gesture { font-size:10px; } }
-
-.cover-copy h1,.opening-word { font:400 clamp(65px,7.7vw,119px)/.96 var(--display); letter-spacing:-.056em; }
+.cover-copy h1,.opening-word { font:500 clamp(59px,7.2vw,112px)/.96 "Supreme",var(--sans); letter-spacing:-.052em; }
 .cover-copy { width:44%; }
 .cover-copy h1 { margin:0 0 12px; width:max-content; }
-.cover-deck { min-height:0; max-width:38ch; }
 .opening-passage { max-width:36ch; margin-top:clamp(16px,2.6vh,32px); font:480 clamp(17px,1.52vw,23px)/1.4 var(--sans); letter-spacing:-.025em; text-wrap:pretty; }
 .opening-passage span:first-child,.opening-passage span:last-child { background:linear-gradient(var(--signal-wash),var(--signal-wash)) left 99% / clamp(0%,calc(var(--observation,0) * 240%),100%) .15em no-repeat; box-decoration-break:clone; -webkit-box-decoration-break:clone; }
 .opening-passage span:last-child { background-size:clamp(0%,calc((var(--observation,0) - .54)*240%),100%) .15em; }
@@ -423,19 +324,91 @@ html[data-theme="dark"] .lunar-home {
 .atlas[data-motion="on"] .flying-rule { display:block; opacity:clamp(0,calc(var(--progress)*10),1); }
 .scholar-opening { position:fixed; z-index:90; inset:0; display:grid; place-items:center; pointer-events:none; }
 .scholar-opening[hidden] { display:none; }
-.opening-paper { position:absolute; inset:0; background:var(--sheet); animation:open-exposure 1.05s cubic-bezier(.68,0,.2,1) both; }
-.opening-word { position:relative; width:max-content; transform-origin:top left; font-size:clamp(72px,16vw,260px); color:var(--carbon); }
+.opening-paper { position:absolute; inset:0; background:var(--sheet); animation:open-exposure 2.1s cubic-bezier(.68,0,.2,1) both; }
+.opening-word { position:relative; width:max-content; transform-origin:top left; font-size:clamp(56px,15vw,245px); color:var(--carbon); }
 .opening-word span { position:absolute; inset:0; color:transparent; background:var(--signal) url("/landing/lunar/apollo-17-station-6.webp") center 64% / cover; background-clip:text; -webkit-background-clip:text; animation:ink-register .62s cubic-bezier(.18,.68,.25,1) both; }
-@keyframes open-exposure { 0%,39% {clip-path:inset(0)} 100% {clip-path:inset(0 0 100%)} }
+@keyframes open-exposure { 0%,68% {clip-path:inset(0)} 100% {clip-path:inset(0 0 100%)} }
 @keyframes ink-register { 0% {clip-path:inset(0); translate:.028em .04em} 40% {clip-path:inset(0); translate:0 0} 100% {clip-path:inset(0 0 0 100%);translate:0 0} }
 @media(min-width:761px) { .atlas[data-motion="on"] .cover-copy { transform:none; } }
 @media(max-width:760px) {
   .cover-copy { width:100%; top:20px; }
   .cover-copy h1 { font-size:clamp(58px,15vw,88px); margin-bottom:6px; }
-  .cover-deck { font-size:15px; max-width:32ch; }
   .opening-passage { font-size:clamp(15px,3.95vw,20px); margin-top:12px; }
   .opening-actions { margin-top:5px; gap:16px; }
   .atlas-stage { min-height:630px; }
 }
-.study-attempt a { color:var(--signal); text-decoration:underline; text-underline-offset:3px; }
-.study-attempt strong { color:var(--carbon); }
+
+/* Each right-hand page is the live product. The facing plate carries its context. */
+.leaf-face { container-type:inline-size; }
+.leaf-face[inert] { pointer-events:none; }
+.front-cover,.press-page,.passage-proof,.field-plate,.endpaper,.clock-plate { position:absolute; inset:0; }
+.front-cover { background:#932e22; color:#fff6e5; overflow:hidden; }
+.jacket-plate { position:absolute; bottom:11%; width:100%; height:63%; object-fit:cover; object-position:48% 61%; filter:grayscale(1); }
+.jacket-title { position:absolute; inset:0 0 auto; padding:5% 8% 0; }
+.jacket-title > span,.jacket-colophon { font:620 clamp(13px,3.8cqw,19px)/1.2 var(--sans); letter-spacing:-.025em; }
+.jacket-title strong { display:block; font:600 23.5cqw/.8 var(--press); letter-spacing:-.032em; margin-top:4%; text-shadow:0 1px 1px #2a191d38; }
+.jacket-colophon { position:absolute; inset:auto 0 0; height:11%; display:flex; align-items:center; justify-content:space-between; padding:0 8%; }
+.jacket-colophon a { display:inline-flex; align-items:center; min-height:44px; font-size:.86em; }
+.front-cover::after { content:""; position:absolute; inset:0 auto 0 0; width:3%; background:linear-gradient(90deg,#35191069,transparent 40%,#f9e3ce52 63%,transparent); pointer-events:none; }
+.field-plate { background:#202323 url("/landing/lunar/taurus-littrow.webp") 62% 50% / cover; color:white; }
+.field-plate figcaption { position:absolute; left:0; right:0; bottom:0; background:#222321; padding:5% 8%; display:flex; align-items:baseline; justify-content:space-between; gap:8px; font:600 5.5cqw/1.1 var(--press); }
+.field-plate figcaption span { font:500 2.9cqw/1.2 var(--sans); }
+.press-page,.endpaper,.passage-proof { display:flex; flex-direction:column; padding:9% 9% 6%; }
+.press-page { overflow-y:auto; scrollbar-width:thin; color:var(--book-ink); }
+.press-page h3 { margin:0; font:600 clamp(36px,14cqw,76px)/.92 var(--press); letter-spacing:-.025em; }
+.set-picker,.review-links,.module-sequence { margin-top:clamp(17px,9cqw,50px); }
+.set-picker { display:grid; gap:clamp(14px,5.5cqw,28px); }
+.subject-choices { display:flex; border-bottom:1px solid var(--book-rule); gap:5%; }
+.subject-choices button { min-height:44px; font:550 clamp(13px,3.8cqw,19px)/1.25 var(--sans); }
+.subject-choices button[aria-pressed="true"] { color:var(--book-red); box-shadow:inset 0 -3px currentColor; }
+.set-picker label { display:grid; font:600 clamp(14px,3.8cqw,19px)/1.3 var(--sans); gap:3px; }
+.set-picker select { background:transparent; width:100%; min-width:0; min-height:44px; font:500 clamp(16px,4.5cqw,23px) var(--sans); border:0; border-bottom:1px solid var(--book-ink); color:inherit; border-radius:0; }
+.set-start,.press-action { align-self:flex-start; justify-self:start; display:inline-flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 15px; min-height:44px; background:#26261f; color:#fff9e9; font-weight:570; }
+.page-foot { margin-top:auto; padding-top:9px; display:flex; align-items:center; justify-content:space-between; min-height:44px; border-top:1px solid var(--book-rule); font-size:clamp(14px,3.9cqw,20px); font-weight:570; }
+.page-foot span,.review-links span { color:var(--book-red); }
+.module-sequence { display:grid; grid-template-columns:repeat(4,1fr); border-block:1px solid var(--book-rule); }
+.module-sequence button { min-height:44px; font:600 clamp(19px,5.8cqw,29px)/1 var(--press); }
+.module-sequence button[aria-pressed="true"] { background:var(--book-red); color:#fff9e9; }
+.module-detail { margin:7% 0; }
+.module-detail h4 { font:560 clamp(17px,5.2cqw,27px)/1.15 var(--sans); letter-spacing:-.035em; }
+.module-detail p { font:450 clamp(14px,3.9cqw,20px)/1.45 var(--sans); margin-top:3%; }
+.clock-plate { display:grid; place-items:center; background:#973421; color:#fff4de; }
+.minute-dial { position:relative; width:82%; aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:50%; border:1px solid #f9e6c7; }
+.minute-dial::before { content:""; position:absolute; inset:3%; border-radius:50%; background:repeating-conic-gradient(currentColor 0 .6deg, transparent .7deg 6deg); mask:radial-gradient(closest-side,transparent 92%,black 93%); }
+.minute-dial strong { font:600 36cqw/.84 var(--press); font-variant-numeric:tabular-nums; letter-spacing:-.04em; }
+.minute-dial span { font:550 4cqw var(--sans); }
+.minute-hand { position:absolute; inset:0; }
+.minute-hand::before { content:""; display:block; width:2.5%; height:14%; margin:auto; background:currentColor; }
+.answer-imprint { margin-top:7%; font:600 clamp(20px,6cqw,30px)/1.1 var(--press); color:var(--book-red); }
+.answer-imprint span { display:block; font:550 14px/1.5 var(--sans); color:var(--book-ink); }
+.answer-imprint + .review-links { margin-top:4%; }
+.review-links { display:grid; }
+.review-links a { display:flex; align-items:center; justify-content:space-between; min-height:44px; padding-block:3%; border-bottom:1px solid var(--book-rule); font:530 clamp(16px,4.6cqw,24px)/1.2 var(--sans); }
+.passage-proof { justify-content:space-between; background:#e7deca; color:var(--book-ink); }
+.passage-proof > span { font:560 3.8cqw var(--sans); }
+.passage-proof blockquote { font:400 clamp(18px,7cqw,36px)/1.12 var(--display); letter-spacing:-.015em; }
+.passage-proof mark { color:var(--book-red); background:transparent; text-decoration:underline; text-underline-offset:.1em; }
+.endpaper { overflow:hidden; justify-content:flex-end; background:#8c2e21; color:#fff5df; }
+.end-orbit { flex:1; min-height:0; margin-bottom:6%; background:url("/landing/lunar/0301.webp") center / contain no-repeat; mix-blend-mode:screen; }
+.end-title h3 { font:500 clamp(35px,13cqw,70px)/1 "Supreme",var(--sans); letter-spacing:-.052em; }
+.end-title p { font-weight:550; margin-top:4%; }
+.press-action { background:#fff5df; color:#362019; align-self:stretch; margin-top:6%; }
+.end-bank { align-self:flex-start; display:flex; align-items:center; min-height:44px; text-decoration:underline; text-underline-offset:3px; }
+.desk-contents nav { display:flex; justify-content:center; padding:0 12px max(12px,2svh); gap:clamp(8px,2.7vw,40px); }
+.desk-contents nav a { min-height:44px; display:flex; align-items:center; font:560 clamp(12px,1.15vw,16px) var(--sans); border-bottom:2px solid transparent; }
+.desk-contents nav a[aria-current] { color:var(--signal); border-color:currentColor; }
+.lunar-archive figcaption,.footer-fine summary,.lunar-footer span,.lunar-footer nav,.plate-index,.choice-key,.exposure-date { color:var(--carbon); }
+@media(max-width:760px) {
+  .folio-binding { width:min(88%,58svh); transform:translateX(calc(-50% + var(--close)*100%)); }
+  .desk-contents nav { justify-content:space-evenly; gap:4px; padding-inline:5px; }
+}
+@media(max-height:520px) and (min-width:600px) {
+  .folio-binding { width:min(42%,68svh); aspect-ratio:1; }
+  .press-page { padding:5% 7%; }
+  .set-picker,.module-sequence,.review-links { margin-top:10px; }
+  .set-picker { gap:7px; }
+}
+@media(prefers-reduced-motion:no-preference) {
+  html:not(.reduce-motion) .minute-hand { transition:rotate .32s cubic-bezier(.2,.8,.2,1); }
+  html:not(.reduce-motion) .module-detail { animation:mark-in .22s ease-out; }
+}

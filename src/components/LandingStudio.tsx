@@ -121,7 +121,6 @@ export function LandingStudio({question, study}: { question: FeaturedQuestion; s
       <header className="atlas-cover"><div className="atlas-stage">
         <div className="cover-copy">
           <h1>ScholarSAT</h1>
-          <p className="cover-deck">Free practice for the digital SAT. Start with a missing word.</p>
           <p className="opening-passage"><span>{claim}</span>{" "}<span className="prompt-gap" aria-label="blank">_____</span>{" "}<span>{example}</span></p>
           <div className="opening-actions">
             <Link className="read-action" href="/#passage"><span className="action-arrow" aria-hidden="true">↓</span>Try this question</Link>

@@ -18,12 +18,20 @@ async function verify() {
       page.on("pageerror", error => errors.push(error.message));
       await page.goto(url);
       await page.locator(".atlas[data-motion]").waitFor();
+      if (reducedMotion !== "reduce") {
+        const hold = await page.locator(".opening-word").evaluate(el => {
+          const effect = el.getAnimations()[0]?.effect;
+          return effect && effect.getTiming().duration * effect.getKeyframes()[1].offset;
+        });
+        assert.ok(hold >= 1300, "The centered wordmark needs a readable hold");
+      }
       await page.evaluate(() => Promise.all([document.fonts.ready, ...Array.from(document.querySelectorAll(".atlas img"), image => image.decode())]));
       assert.match(await page.getByRole("heading", { level: 1 }).innerText(), /^ScholarSAT$/);
       assert.equal(await page.getByText("From the question bank", {exact: false}).count(), 0);
       assert.ok((await page.locator("#passage-title").evaluate(el => getComputedStyle(el).fontFamily)).includes("Mona Sans"));
       assert.equal(await page.locator(".cover-copy").getByText(/Free SAT practice/i).count(), 0);
       assert.equal(await page.getByText("Rehearse the full test.").count(),0);
+      assert.equal(await page.getByText(/Start with a missing word/).count(),0);
       const plate = page.locator(".exposure-origin figure").last();
       const transform = () => plate.evaluate(el => getComputedStyle(el).transform);
       const before = await transform();
@@ -83,21 +91,34 @@ async function verify() {
       const chapter = async (id, offset = 0) => {
         await page.locator(id).evaluate((el, offset) => {
           const r = el.getBoundingClientRect();
-          scrollTo(0, scrollY+r.top+r.height/2-innerHeight*(innerWidth <= 760 ? .72 : .53)+offset);
+          scrollTo(0, scrollY + r.top + offset);
         },offset);
         await settle(page);
       };
+      await chapter("#book",-height*.5);
+      const plateWidth = () => page.locator(".cover-exposure").evaluate(el => el.getBoundingClientRect().width);
+      const initialWidth = await plateWidth();
+      await chapter("#book",height*.29);
+      if (reducedMotion === "reduce") assert.equal(initialWidth, 0);
+      else {
+        assert.ok(await plateWidth() < initialWidth, "The photograph should contract into the jacket");
+        const jacket = await page.locator(".jacket-plate").boundingBox();
+        const exposure = await page.locator(".cover-exposure").boundingBox();
+        for (const key of ["x","y","width","height"]) assert.ok(Math.abs(jacket[key] - exposure[key]) < 3, "Photographic handoff: " + key);
+      }
       await chapter("#bank");
       assert.equal(await folio.getAttribute("data-spread"),"1");
       await page.locator(".jacket-plate").evaluate(image => image.decode());
       await chapter("#bank");
-      const fold = await page.locator(".panorama-half").evaluateAll(halves => halves.map(el => {
+      // The selected page is the actual product surface, including touch hit targets.
+      const skill = page.getByLabel("Choose a skill");
+      assert.ok(await skill.evaluate(el => {
         const r = el.getBoundingClientRect();
-        return {left:r.left, right:r.right, top:r.top};
-      }));
-      assert.ok(Math.abs(fold[0].right-fold[1].left) < 3 && Math.abs(fold[0].top-fold[1].top) < 3, "The panoramic plate should meet at the gutter");
+        return r.left >= 0 && r.right <= innerWidth && r.top > 0 && r.bottom < innerHeight &&
+          el === document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);
+      }), "The skill picker should be legible and operable on the page");
       const binding = await page.locator(".folio-binding").boundingBox();
-      const hand = {x: binding.x + binding.width * .78, y: binding.y + binding.height * .47};
+      const hand = {x: binding.x + binding.width * .95, y: binding.y + binding.height * .06};
       await page.mouse.move(hand.x,hand.y);
       await page.mouse.down();
       await page.mouse.move(hand.x-binding.width*.46,hand.y,{steps:5});
@@ -110,9 +131,9 @@ async function verify() {
       await page.mouse.up();
       await folio.focus();
       await page.keyboard.press("End");
-      await page.waitForFunction(() => document.querySelector(".folio-stage").getAttribute("aria-valuetext") === "Back cover");
+      await page.waitForFunction(() => document.querySelector(".folio-stage").dataset.spread === "4");
       await page.keyboard.press("Home");
-      await page.waitForFunction(() => document.querySelector(".folio-stage").getAttribute("aria-valuetext") === "Front cover");
+      await page.waitForFunction(() => document.querySelector(".folio-stage").dataset.spread === "0");
       await chapter("#tests");
       assert.equal(await folio.getAttribute("data-spread"),"2");
       const leafAngle = () => page.locator(".folio-leaf").nth(1).evaluate(el => parseFloat(el.style.getPropertyValue("--angle")));
@@ -125,14 +146,14 @@ async function verify() {
       }
       await page.getByRole("navigation",{name:"Study options"}).getByRole("link",{name:"Mock tests"}).click();
       await page.waitForURL("**/#tests");
-      await page.getByLabel("Explore a module").selectOption("3");
+      await page.getByRole("button",{name:"Math · Module 2"}).click();
       assert.match(await page.locator(".module-detail").innerText(),/22 questions · 35 minutes/);
-      assert.match(await page.locator(".module-imprint").innerText(),/Math/);
-      assert.equal(await page.locator(".response-print [data-selected=true] i").count(),22);
+      assert.match(await page.locator(".module-detail h4").innerText(),/Math/);
+      assert.equal(await page.locator(".minute-dial strong").innerText(),"35");
       await chapter("#tools");
       assert.equal(await folio.getAttribute("data-spread"),"3");
-      assert.equal(await page.locator(".proof-key dd").first().innerText(),"For example,");
-      await page.getByRole("link",{name:/Retry questions you missed/}).waitFor();
+      assert.equal(await page.locator(".passage-proof mark").first().innerText(),"For example,");
+      await page.getByRole("link",{name:"Mistake review"}).waitFor();
       await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
       await settle(page);
       assert.equal(await folio.getAttribute("data-spread"),"4");
@@ -145,12 +166,13 @@ async function verify() {
       await page.getByRole("navigation",{name:"Study options"}).getByRole("link",{name:"Practice sets"}).click();
       await page.locator(".subject-choices button").last().click();
       await page.getByLabel("Choose a skill").selectOption("Transitions");
-      assert.equal(await page.locator(".set-imprint strong").innerText(), "Transitions");
+      assert.equal(await skill.inputValue(), "Transitions");
       assert.match(await page.locator(".set-start").getAttribute("href"), /section=rw&skill=Transitions&limit=5/);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
-      const chosenEntry = page.locator(".journey-entry").getByRole("link", {name:"Start my set"});
+      await chapter("#enter");
+      const chosenEntry = page.locator(".endpaper").getByRole("link", {name:"Start my set"});
       assert.equal(await chosenEntry.getAttribute("href"), await page.locator(".set-start").getAttribute("href"));
-      assert.match(await page.locator(".journey-entry p").innerText(), /5-question set on Transitions/);
+      assert.match(await page.locator(".endpaper p").innerText(), /Transitions · 5 questions/);
       await chosenEntry.click();
       await page.getByText("Question 1 of 5",{exact:true}).first().waitFor();
       await page.locator(".practice-player fieldset label").first().click();
